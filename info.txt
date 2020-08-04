@@ -1,0 +1,8 @@
+Assembly language is converted into executable machine code by a utility program referred to as an assembler like NASM, MASM, etc.
+
+Useful links:
+	https://www.tutorialspoint.com/assembly_programming
+	https://github.com/avocadohooman/42-Corewar/wiki
+
+	x86 Assembly crash course
+	https://www.youtube.com/watch?v=75gBFiFtAb8
