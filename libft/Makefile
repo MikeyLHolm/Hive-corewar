@@ -3,112 +3,63 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+         #
+#    By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2019/10/16 09:28:21 by mlindhol          #+#    #+#              #
-#    Updated: 2020/03/04 14:08:27 by mlindhol         ###   ########.fr        #
+#    Created: 2019/10/16 18:05:28 by sadawi            #+#    #+#              #
+#    Updated: 2020/08/12 19:35:29 by sadawi           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libft.a
 
-CC = gcc 
-FLAGS = -Wall -Wextra -Werror
-
-LIBFT_SRC =	ft_atoi.c ft_bzero.c ft_isalnum.c ft_isalpha.c ft_isascii.c \
-			ft_isdigit.c ft_isprint.c ft_itoa.c	ft_memalloc.c ft_memccpy.c \
-			ft_memchr.c ft_memcmp.c ft_memcpy.c ft_memdel.c ft_memmove.c \
-			ft_memset.c ft_putchar.c ft_putchar_fd.c ft_putendl.c ft_putendl_fd.c \
-			ft_putnbr.c ft_putnbr_fd.c ft_putstr.c ft_putstr_fd.c ft_strcat.c \
-			ft_strchr.c ft_strclr.c ft_strcmp.c ft_strcpy.c ft_strdel.c \
-			ft_strdup.c ft_strequ.c ft_striter.c ft_striteri.c ft_strjoin.c \
-			ft_strlcat.c ft_strlen.c ft_strmap.c ft_strmapi.c ft_strncat.c \
-			ft_strncmp.c ft_strncpy.c ft_strnequ.c ft_strnew.c ft_strnstr.c \
-			ft_strrchr.c ft_strsplit.c ft_strstr.c ft_strsub.c ft_strtrim.c \
-			ft_tolower.c ft_toupper.c ft_lstnew.c ft_lstdelone.c ft_lstdel.c \
-			ft_lstadd.c ft_lstiter.c ft_lstmap.c \
-			ft_swap.c ft_islower.c ft_isupper.c ft_abs.c ft_intlen.c \
-			ft_isspace.c ft_word_count.c ft_strndup.c ft_itoa_uimax.c \
-			ft_intlen_uimax.c ft_itoa_base.c ft_ftoa.c ft_pow.c ft_tolower_str.c \
-			ft_toupper_str.c ft_strlen_int.c ft_atoimax.c ft_strsplit_free.c
-
-FT_PRINTF_DIR = ./ft_printf/
-FT_PRINTF_SRC_DIR = $(FT_PRINTF_DIR)srcs/
-FT_PRINTF_SRC = display_c.c display_d.c display_s.c preparse.c \
-		ft_printf.c parsing.c display_p.c utility.c \
-		display_pct.c length_conversions.c display_u.c \
-		display_o.c display_x.c display_f.c display_b.c
-FT_PRINTF_SOURCES = $(addprefix $(FT_PRINTF_SRC_DIR), $(FT_PRINTF_SRC))
-
-GNL_DIR = ./gnl/
-GNL_SRC = get_next_line.c
-
-OBJ_DIR = ./objs/
-OBJECTS = $(LIBFT_SRC:.c=.o)
-OBJECTS += $(FT_PRINTF_SOURCES:.c=.o)
-OBJECTS += $(GNL_DIR)$(GNL_SRC:.c=.o)
-
-HEADERS += $(FT_PRINTF_DIR)includes/ft_printf.h
-HEADERS += $(GNL_DIR)includes/get_next_line.h
-HEADERS += ./includes/libft.h
-
-INCLUDES = -I$(HEADERS)
-
-# FT_PRINTF_OBJ_DIR = ./objs/
-# FT_PRINTF_OBJ_FILES = $(FT_PRINTF_SOURCES:.c=.o)
-# FT_PRINTF_OBJECTS = $(addprefix $(FT_PRINTF_OBJ_DIR), $(FT_PRINTF_OBJ_FILES))
-# GNL_OBJ_DIR = ./objs/
-# GNL_OBJ_FILES = $(GNL_DIR)$(GNL_SRC:.c=.o)
-# GNL_OBJECTS = = $(GNL_OBJ_DIR)$(GNL_OBJ_FILES))
-# SRCS = $(FT_PRINTF_SOURCES) $(GNL_SRC) $(LIBFT_SRC)
-
-#INCLUDES = -I/includes -I/get_next_line/includes -I./ft_printf/includes
-
-COLOR_RESET = \033[0m
-COLOR_DELETE = \033[0;31m
-COLOR_PENDING = \033[01;33m
-COLOR_SUCCESS = \033[1;32m
-COLOR_DEFAULT = \033[1;34m
+CLIBFT = libft/ft_atoi.c libft/ft_bzero.c libft/ft_isalnum.c \
+libft/ft_isalpha.c libft/ft_isascii.c libft/ft_isdigit.c libft/ft_isprint.c \
+libft/ft_itoa.c libft/ft_lstadd.c libft/ft_lstdel.c libft/ft_lstdelone.c \
+libft/ft_lstiter.c libft/ft_lstmap.c libft/ft_lstnew.c libft/ft_memalloc.c \
+libft/ft_memccpy.c libft/ft_memchr.c libft/ft_memcmp.c libft/ft_memcpy.c \
+libft/ft_memdel.c libft/ft_memmove.c libft/ft_memset.c libft/ft_putchar.c \
+libft/ft_putchar_fd.c libft/ft_putendl.c libft/ft_putendl_fd.c \
+libft/ft_putnbr.c libft/ft_putnbr_fd.c libft/ft_putstr.c libft/ft_putstr_fd.c \
+libft/ft_strcat.c libft/ft_strchr.c libft/ft_strclr.c libft/ft_strcmp.c \
+libft/ft_strcpy.c libft/ft_strdel.c libft/ft_strdup.c libft/ft_strequ.c \
+libft/ft_striter.c libft/ft_striteri.c libft/ft_strjoin.c libft/ft_strlcat.c \
+libft/ft_strlen.c libft/ft_strmap.c libft/ft_strmapi.c libft/ft_strncat.c \
+libft/ft_strncmp.c libft/ft_strncpy.c libft/ft_strnequ.c libft/ft_strnew.c \
+libft/ft_strnstr.c libft/ft_strrchr.c libft/ft_strsplit.c libft/ft_strstr.c \
+libft/ft_strsub.c libft/ft_strtrim.c libft/ft_tolower.c libft/ft_toupper.c \
+libft/ft_putlst.c libft/ft_lstevery.c libft/ft_strfill.c \
+libft/ft_strsplitlst.c libft/ft_swap.c libft/ft_longlen.c libft/ft_foreach.c \
+libft/ft_putlong.c libft/ft_ulonglen.c libft/ft_putulong.c \
+libft/ft_itoa_base.c libft/ft_itoa_base_low.c libft/ft_itoa_base_ul.c \
+libft/ft_itoa_base_ul_low.c libft/ft_putdouble.c libft/ft_itoa_double.c \
+libft/ft_chartostr.c libft/ft_atoilong.c libft/ft_strjoinfree.c \
+libft/ft_isdigit_neg.c libft/ft_strcatfree.c
+CFT_PRINTF = ft_printf/ft_printf.c ft_printf/handle_digit_datatypes.c \
+ft_printf/handle_string_datatypes.c ft_printf/handle_flags.c \
+ft_printf/handle_format_flags.c ft_printf/handle_width.c \
+ft_printf/handle_char.c ft_printf/handle_data.c
+CGET_NEXT_LINE = get_next_line/get_next_line.c
+SRCS= $(addprefix srcs/, $(CLIBFT)) $(addprefix srcs/, $(CFT_PRINTF)) \
+$(addprefix srcs/, $(CGET_NEXT_LINE))
+OBJS=$(addprefix objs/, $(notdir $(SRCS:.c=.o)))
+FLAGS=-Wall -Wextra -Werror
 
 all: $(NAME)
 
-$(NAME): $(OBJ_DIR) $(OBJECTS)
-	@echo "[$(COLOR_PENDING)Creating $@$(COLOR_RESET)]"
-	@ar rc $(NAME) $(OBJECTS)
-	@mv *.o $(OBJ_DIR)
-	@mv $(FT_PRINTF_SRC_DIR)*.o $(OBJ_DIR)
-	@mv $(GNL_DIR)*.o $(OBJ_DIR)
-	@ranlib $(NAME)
-	@echo "\033[A\033[K\033[A"
-	@echo "Libft: [$(COLOR_SUCCESS)Object files created$(COLOR_RESET)]"
-
-$(OBJ_DIR):
-	@mkdir -p $(OBJ_DIR)
-	@echo "Libft: [$(COLOR_SUCCESS)$(OBJ_DIR) was created$(RESET)]"
-
-# $(OBJ_DIR)%.o: $(SRCS)%.c $(HEADERS)
-# 	@echo "$(NAME)		[$(COLOR_PENDING)Compiling...$(COLOR_RESET)]"
-# 	@$(CC) $(FLAGS) -I$(HEADERS) -c $< -o $@
-# 	@echo "\033[A\033[K\033[A"
-# 	@echo "$(NAME)		[$(COLOR_SUCCESS)OK$(COLOR_RESET)]"
-# 	@echo "[$(COLOR_SUCCESS)FINISHED$(COLOR_RESET)]"
-
-norme:
-	norminette .
-
-run:
-	@$(CC) $(FLAGS) -I . -c main.c
-	@$(CC) $(FLAGS) -o run main.o libft.a
+$(NAME): $(SRCS)
+	@rm -rf objs
+	@echo Compiling $(NAME)...
+	@gcc $(FLAGS) -c -I includes $(SRCS)
+	@mkdir objs
+	@mv $(notdir $(SRCS:.c=.o)) objs
+	@ar rc $(NAME) $(OBJS)
+	@echo $(NAME) compiled succesfully!
 
 clean:
-	@echo "Libft: [$(COLOR_DELETE)Object files were removed$(COLOR_RESET)]"
-	@rm -rf $(OBJ_DIR)
-	@echo "Libft: [$(COLOR_DELETE)Objects folder was removed$(COLOR_RESET)]"
+	@/bin/rm -f $(OBJS)
+	@rm -rf objs
 
 fclean: clean
-	@rm -f $(NAME)
-	@echo "[$(COLOR_SUCCESS)$(NAME) is no more$(COLOR_RESET)]"
+	@/bin/rm -f $(NAME)
 
 re: fclean all
-
-.PHONY: all clean fclean re
