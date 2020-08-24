@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/08/24 18:37:00 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/24 19:56:57 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,40 @@ void	print_file(t_file *head)
 	}
 }
 
+char	*get_output_filename(char *input_filename)
+{
+	*ft_strrchr(input_filename, '.') = '\0';
+	return (ft_strjoin(input_filename, ".cor"));
+}
+
+void	write_header(int fd)
+{
+	int		magic_number;
+	char 	buf[4];
+	int		i;
+
+	magic_number = COREWAR_EXEC_MAGIC;
+	i = 0;
+	while (i < 4)
+	{
+		buf[i++] = magic_number % 256;
+		magic_number /= 256;
+	}
+	while (--i >= 0)
+		 write(fd, &buf[i], 1);
+}
+
+void	handle_writing(t_file *file, char *input_filename)
+{
+	int		fd;
+	char	*output_filename;
+
+	(void)file;
+	output_filename = get_output_filename(input_filename);
+	fd = open(output_filename, O_WRONLY|O_CREAT|O_TRUNC, 0666);
+	write_header(fd);
+}
+
 int		main(int argc, char **argv)
 {
 	t_file *file;
@@ -74,5 +108,6 @@ int		main(int argc, char **argv)
 		handle_error("./asm [filename.s]");
 	file = read_file(argv[1]);
 	print_file(file);
+	handle_writing(file, argv[1]);
 	return (0);
 }
