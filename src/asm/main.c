@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/08/24 19:56:57 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/24 20:55:38 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,14 +100,85 @@ void	handle_writing(t_file *file, char *input_filename)
 	write_header(fd);
 }
 
+t_asm	*init_assm(void)
+{
+	t_asm *assm;
+
+	assm = (t_asm*)ft_memalloc(sizeof(t_asm));
+	return (assm);
+}
+
+char	*get_champion_name(t_file *cur)
+{
+	char	*name;
+
+	name = NULL;
+	name = ft_strjoin(name, ft_strchr(cur->line, '"') + 1);
+	if (!name)
+		handle_error("Champion name invalid");
+	cur = cur->next;
+	while (!ft_strchr(name, '"') && cur)
+	{
+		name = ft_strjoinfree(name, ft_strdup("\n"));
+		name = ft_strjoinfree(name, ft_strdup(cur->line));
+		if (ft_strchr(name, '"'))
+			break ;
+		cur = cur->next;
+	}
+	*ft_strrchr(name, '"') = '\0';
+	return (name);
+}
+
+char	*get_champion_comment(t_file *cur)
+{
+	char	*name;
+
+	name = NULL;
+	name = ft_strjoin(name, ft_strchr(cur->line, '"') + 1);
+	if (!name)
+		handle_error("Champion name invalid");
+	cur = cur->next;
+	while (!ft_strchr(name, '"') && cur)
+	{
+		name = ft_strjoinfree(name, ft_strdup("\n"));
+		name = ft_strjoinfree(name, ft_strdup(cur->line));
+		if (ft_strchr(name, '"'))
+			break ;
+		cur = cur->next;
+	}
+	*ft_strrchr(name, '"') = '\0';
+	return (name);
+}
+
+void	tokenize_file(t_asm *assm)
+{
+	t_file *cur;
+
+	cur = assm->file;
+	while (cur)
+	{
+		if (ft_strnequ(cur->line, NAME_CMD_STRING, ft_strlen(NAME_CMD_STRING)))
+			assm->name = get_champion_name(cur);
+		if (ft_strnequ(cur->line, COMMENT_CMD_STRING, ft_strlen(COMMENT_CMD_STRING)))
+			assm->comment = get_champion_comment(cur);
+		if (assm->name && assm->comment)
+			break ;
+		cur = cur->next;
+	}
+	ft_printf("NAME: %s\nCOMMENT: %s\n\n\n", assm->name, assm->comment);
+}
+
 int		main(int argc, char **argv)
 {
-	t_file *file;
+	t_asm	*assm;
 
 	if (argc != 2)
 		handle_error("./asm [filename.s]");
-	file = read_file(argv[1]);
-	print_file(file);
-	handle_writing(file, argv[1]);
+	assm = init_assm();
+	assm->file = read_file(argv[1]);
+	//check_file(assm->file);
+	tokenize_file(assm);
+	print_file(assm->file);
+	handle_writing(assm->file, argv[1]);
 	return (0);
 }

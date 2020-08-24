@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/17 12:41:59 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/24 19:19:20 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/24 20:06:59 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,5 +22,12 @@ typedef struct		s_file
 	char			*line;
 	struct s_file	*next;
 }					t_file;
+
+typedef struct		s_asm
+{
+	char			*name;
+	char			*comment;
+	t_file			*file;
+}					t_asm;
 
 #endif
