@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/08/25 19:50:41 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/25 21:20:06 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,105 @@ void	write_exec_code_size_placeholder(int fd)
 	write(fd, "\0\0\0\0", 4);
 }
 
+void	write_statement(t_token *token, int fd)
+{
+	unsigned char	buf;
+
+	buf = token->instruction_index + 1;
+	write(fd, &buf, 1);
+}
+
+void	write_argument_type_code(t_token *token, int fd)
+{
+	unsigned char	buf;
+
+	if (g_op_tab[token->instruction_index].atc)
+	{
+		buf = token->argument_type_code;
+		write(fd, &buf, 1);
+	}
+}
+
+int		get_arg_type(char *arg)
+{
+	if (!arg)
+		return (0);
+	if (ft_strchr(arg, '%'))
+		return (DIR_CODE);
+	if (ft_strnequ(arg, "r", 1) && ft_isdigit(arg[1]))
+		return (REG_CODE);
+	return (IND_CODE);
+}
+
+void	write_registry(char *arg, int fd)
+{
+	unsigned char	buf;
+
+	buf = ft_atoi(&arg[1]);
+	write(fd, &buf, 1);
+}
+
+void	write_direct(t_token *token, char *arg, int fd)
+{
+	short bytes;
+
+	if (!g_op_tab[token->instruction_index].label_size)
+		write(fd, "\0\0", 2);
+	bytes = ft_atoi(&arg[1]);
+	write(fd, &((unsigned char*)&bytes)[1], 1);
+	write(fd, &((unsigned char*)&bytes)[0], 1);
+}
+
+void	write_indirect(char *arg, int fd)
+{
+	short bytes;
+
+	bytes = ft_atoi(arg);
+	write(fd, &((unsigned char*)&bytes)[1], 1);
+	write(fd, &((unsigned char*)&bytes)[0], 1);
+}
+
+void	write_arguments(t_token *token, int fd)
+{
+	int	type;
+
+	type = get_arg_type(token->arg1);
+	if (type == REG_CODE)
+		write_registry(token->arg1, fd);
+	else if (type == DIR_CODE)
+		write_direct(token, token->arg1, fd);
+	else if (type == IND_CODE)
+		write_indirect(token->arg1, fd);
+	type = get_arg_type(token->arg2);
+	if (type == REG_CODE)
+		write_registry(token->arg2, fd);
+	else if (type == DIR_CODE)
+		write_direct(token,  token->arg2, fd);
+	else if (type == IND_CODE)
+		write_indirect(token->arg2, fd);
+	type = get_arg_type(token->arg3);
+	if (type == REG_CODE)
+		write_registry(token->arg3, fd);
+	else if (type == DIR_CODE)
+		write_direct(token, token->arg3, fd);
+	else if (type == IND_CODE)
+		write_indirect(token->arg3, fd);
+}
+
+void	write_instructions(t_asm *assm, int fd)
+{
+	t_token	*token;
+
+	token = assm->token;
+	while (token)
+	{
+		write_statement(token, fd);
+		write_argument_type_code(token, fd);
+		write_arguments(token, fd);
+		token = token->next;
+	}
+}
+
 void	handle_writing(t_asm *assm, char *input_filename)
 {
 	int		fd;
@@ -144,6 +243,7 @@ void	handle_writing(t_asm *assm, char *input_filename)
 	write_name(assm, fd);
 	write_exec_code_size_placeholder(fd);
 	write_comment(assm, fd);
+	write_instructions(assm, fd);
 }
 
 t_asm	*init_assm(void)
@@ -299,23 +399,13 @@ void	print_token_info(t_token *token)
 {
 	ft_printf("LABEL: %s\n", token->label);
 	ft_printf("INSTRUCTION: %s\n", token->instruction);
+	ft_printf("INSTRUCTION_INDEX: %d\n", token->instruction_index);
 	ft_printf("ARG1: %s\n", token->arg1);
 	ft_printf("ARG2: %s\n", token->arg2);
 	ft_printf("ARG3: %s\n", token->arg3);
 	ft_printf("ARGUMENT TYPE CODE: %x\n", token->argument_type_code);
 	ft_printf("SIZE: %d\n",  token->size);
 	ft_printf("\n\n");
-}
-
-int		get_arg_type(char *arg)
-{
-	if (!arg)
-		return (0);
-	if (ft_strchr(arg, '%'))
-		return (DIR_CODE);
-	if (ft_strnequ(arg, "r", 1) && ft_isdigit(arg[1]))
-		return (REG_CODE);
-	return (IND_CODE);
 }
 
 char	get_argument_type_code(t_token *token)
@@ -502,6 +592,10 @@ int		main(int argc, char **argv)
 	convert_labels(assm);
 	print_tokens(assm->token);
 	print_file(assm->file);
+	int byte;
+	byte = -19;
+	ft_printf("BYTE: %hx\n", byte);
+	ft_printf("%02hx\n", 15);
 	handle_writing(assm, argv[1]);
 	return (0);
 }
