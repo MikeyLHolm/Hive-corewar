@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/08/25 12:08:54 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/25 12:25:47 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ void	write_name(t_asm *assm, int fd)
 	}
 	i = 0;
 	write(fd, buf, PROG_NAME_LENGTH);
+	write(fd, "\0\0\0\0", 4);
 }
 
 void	write_comment(t_asm *assm, int fd)
@@ -119,6 +120,12 @@ void	write_comment(t_asm *assm, int fd)
 	}
 	i = 0;
 	write(fd, buf, COMMENT_LENGTH);
+	write(fd, "\0\0\0\0", 4);
+}
+
+void	write_exec_code_size_placeholder(int fd)
+{
+	write(fd, "\0\0\0\0", 4);
 }
 
 void	handle_writing(t_asm *assm, char *input_filename)
@@ -130,6 +137,7 @@ void	handle_writing(t_asm *assm, char *input_filename)
 	fd = open(output_filename, O_WRONLY|O_CREAT|O_TRUNC, 0666);
 	write_header(fd);
 	write_name(assm, fd);
+	write_exec_code_size_placeholder(fd);
 	write_comment(assm, fd);
 }
 
