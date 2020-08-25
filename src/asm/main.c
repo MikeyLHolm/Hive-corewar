@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/08/25 13:45:41 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/25 15:03:07 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -298,6 +298,19 @@ t_token	*new_token(t_asm *assm)
 	return (token);
 }
 
+int		line_contains_instruction(t_file *cur)
+{
+	int i;
+
+	i = 0;
+	if (!cur->line)
+		return (0);
+	while (cur->line[i])
+		if (!ft_isspace(cur->line[i++]))
+			return (1);
+	return (0);
+}
+
 void	tokenize_file(t_asm *assm)
 {
 	t_token	*cur_token;
@@ -309,17 +322,20 @@ void	tokenize_file(t_asm *assm)
 	assm->cur = assm->cur->next;
 	while (assm->cur)
 	{
-		if (!assm->token)
+		if (line_contains_instruction(assm->cur))
 		{
-			cur_token = new_token(assm);
-			assm->token  = cur_token;
+			if (!assm->token)
+			{
+				cur_token = new_token(assm);
+				assm->token  = cur_token;
+			}
+			else
+			{
+				cur_token->next = new_token(assm);
+				cur_token = cur_token->next;
+			}
 		}
-		else
-		{
-			cur_token->next = new_token(assm);
-			cur_token = cur_token->next;
-		}
-		assm->cur = assm->cur->next;
+			assm->cur = assm->cur->next;
 	}
 }
 
