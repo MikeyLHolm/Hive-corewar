@@ -1,33 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   asm.h                                              :+:      :+:    :+:   */
+/*   ft_isalnum.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/08/17 12:41:59 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/24 20:06:59 by sadawi           ###   ########.fr       */
+/*   Created: 2019/10/18 11:53:10 by sadawi            #+#    #+#             */
+/*   Updated: 2019/10/18 12:01:32 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ASM_H
-# define ASM_H
+#include "libft.h"
 
-# include "../libft/includes/libft.h"
-# include "fcntl.h"
-# include "op.h"
-
-typedef struct		s_file
+int		ft_isalnum(int c)
 {
-	char			*line;
-	struct s_file	*next;
-}					t_file;
-
-typedef struct		s_asm
-{
-	char			*name;
-	char			*comment;
-	t_file			*file;
-}					t_asm;
-
-#endif
+	return (ft_isdigit(c) || ft_isalpha(c));
+}

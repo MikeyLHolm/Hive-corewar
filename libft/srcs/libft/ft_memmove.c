@@ -1,33 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   asm.h                                              :+:      :+:    :+:   */
+/*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/08/17 12:41:59 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/24 20:06:59 by sadawi           ###   ########.fr       */
+/*   Created: 2019/10/18 14:54:37 by sadawi            #+#    #+#             */
+/*   Updated: 2019/11/06 13:47:00 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ASM_H
-# define ASM_H
+#include "libft.h"
 
-# include "../libft/includes/libft.h"
-# include "fcntl.h"
-# include "op.h"
-
-typedef struct		s_file
+void	*ft_memmove(void *dst, const void *src, size_t len)
 {
-	char			*line;
-	struct s_file	*next;
-}					t_file;
+	size_t	i;
 
-typedef struct		s_asm
-{
-	char			*name;
-	char			*comment;
-	t_file			*file;
-}					t_asm;
-
-#endif
+	if (!dst && !src)
+		return (dst);
+	i = 0;
+	if (src > dst)
+		while (i < len)
+		{
+			((unsigned char*)dst)[i] = ((unsigned char*)src)[i];
+			i++;
+		}
+	else
+	{
+		i = 1;
+		while (i <= len)
+		{
+			((unsigned char*)dst)[len - i] = ((unsigned char*)src)[len - i];
+			i++;
+		}
+	}
+	return (dst);
+}

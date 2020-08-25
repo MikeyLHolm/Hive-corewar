@@ -1,33 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   asm.h                                              :+:      :+:    :+:   */
+/*   ft_isdigit_neg.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/08/17 12:41:59 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/24 20:06:59 by sadawi           ###   ########.fr       */
+/*   Created: 2019/10/18 11:49:48 by sadawi            #+#    #+#             */
+/*   Updated: 2020/02/19 17:34:09 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ASM_H
-# define ASM_H
+#include "libft.h"
 
-# include "../libft/includes/libft.h"
-# include "fcntl.h"
-# include "op.h"
-
-typedef struct		s_file
+int		ft_isdigit_neg(char *str)
 {
-	char			*line;
-	struct s_file	*next;
-}					t_file;
-
-typedef struct		s_asm
-{
-	char			*name;
-	char			*comment;
-	t_file			*file;
-}					t_asm;
-
-#endif
+	return (str[0] == '-' && ft_isdigit(str[1]));
+}

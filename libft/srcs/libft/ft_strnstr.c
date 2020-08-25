@@ -1,33 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   asm.h                                              :+:      :+:    :+:   */
+/*   ft_strnstr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/08/17 12:41:59 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/24 20:06:59 by sadawi           ###   ########.fr       */
+/*   Created: 2019/10/17 17:53:01 by sadawi            #+#    #+#             */
+/*   Updated: 2019/11/06 13:54:04 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ASM_H
-# define ASM_H
+#include "libft.h"
 
-# include "../libft/includes/libft.h"
-# include "fcntl.h"
-# include "op.h"
-
-typedef struct		s_file
+char	*ft_strnstr(const char *haystack, const char *needle, size_t len)
 {
-	char			*line;
-	struct s_file	*next;
-}					t_file;
+	size_t i;
+	size_t j;
 
-typedef struct		s_asm
-{
-	char			*name;
-	char			*comment;
-	t_file			*file;
-}					t_asm;
-
-#endif
+	i = 0;
+	j = 0;
+	if (*needle == 0)
+		return ((char*)haystack);
+	while (haystack[i])
+	{
+		while (haystack[i + j] == needle[j] && i + j < len)
+		{
+			if (!needle[j + 1])
+				return ((char*)&haystack[i]);
+			j++;
+		}
+		i++;
+		j = 0;
+	}
+	return (NULL);
+}

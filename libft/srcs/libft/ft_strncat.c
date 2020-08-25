@@ -1,33 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   asm.h                                              :+:      :+:    :+:   */
+/*   ft_strncat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/08/17 12:41:59 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/24 20:06:59 by sadawi           ###   ########.fr       */
+/*   Created: 2019/10/17 15:33:02 by sadawi            #+#    #+#             */
+/*   Updated: 2019/11/06 13:52:15 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ASM_H
-# define ASM_H
+#include "libft.h"
 
-# include "../libft/includes/libft.h"
-# include "fcntl.h"
-# include "op.h"
-
-typedef struct		s_file
+char	*ft_strncat(char *s1, const char *s2, size_t n)
 {
-	char			*line;
-	struct s_file	*next;
-}					t_file;
+	size_t i;
+	size_t j;
 
-typedef struct		s_asm
-{
-	char			*name;
-	char			*comment;
-	t_file			*file;
-}					t_asm;
-
-#endif
+	i = 0;
+	j = 0;
+	while (s1[i])
+		i++;
+	while (s2[j] && n - j > 0)
+	{
+		s1[i + j] = s2[j];
+		j++;
+	}
+	s1[i + j] = '\0';
+	return (s1);
+}

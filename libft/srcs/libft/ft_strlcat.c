@@ -1,33 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   asm.h                                              :+:      :+:    :+:   */
+/*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/08/17 12:41:59 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/24 20:06:59 by sadawi           ###   ########.fr       */
+/*   Created: 2019/10/17 15:33:02 by sadawi            #+#    #+#             */
+/*   Updated: 2019/10/23 16:39:21 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ASM_H
-# define ASM_H
+#include "libft.h"
 
-# include "../libft/includes/libft.h"
-# include "fcntl.h"
-# include "op.h"
-
-typedef struct		s_file
+size_t	ft_strlcat(char *dst, const char *src, size_t dstsize)
 {
-	char			*line;
-	struct s_file	*next;
-}					t_file;
+	int		i;
+	int		j;
+	size_t	len;
 
-typedef struct		s_asm
-{
-	char			*name;
-	char			*comment;
-	t_file			*file;
-}					t_asm;
-
-#endif
+	i = 0;
+	j = 0;
+	len = ft_strlen(dst);
+	if (dstsize == 0 || len > dstsize)
+		return (ft_strlen(src) + dstsize);
+	while (dst[i])
+		i++;
+	while (src[j])
+	{
+		if (i + j < (int)dstsize - 1)
+			dst[i + j] = src[j];
+		j++;
+		if (i + j < (int)dstsize)
+			dst[i + j] = '\0';
+	}
+	return (i + j);
+}

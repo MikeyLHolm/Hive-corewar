@@ -1,33 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   asm.h                                              :+:      :+:    :+:   */
+/*   ft_memalloc.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/08/17 12:41:59 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/24 20:06:59 by sadawi           ###   ########.fr       */
+/*   Created: 2019/10/21 13:37:22 by sadawi            #+#    #+#             */
+/*   Updated: 2019/11/06 13:44:30 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ASM_H
-# define ASM_H
+#include "libft.h"
+#include <stdlib.h>
 
-# include "../libft/includes/libft.h"
-# include "fcntl.h"
-# include "op.h"
-
-typedef struct		s_file
+void	*ft_memalloc(size_t size)
 {
-	char			*line;
-	struct s_file	*next;
-}					t_file;
+	unsigned char	*ptr;
+	size_t			i;
 
-typedef struct		s_asm
-{
-	char			*name;
-	char			*comment;
-	t_file			*file;
-}					t_asm;
-
-#endif
+	if (!(ptr = (unsigned char*)malloc(size)))
+		return (NULL);
+	i = 0;
+	while (i < size)
+	{
+		ptr[i++] = 0;
+	}
+	return ((void *)ptr);
+}

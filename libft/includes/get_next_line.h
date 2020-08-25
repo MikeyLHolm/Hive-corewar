@@ -1,33 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   asm.h                                              :+:      :+:    :+:   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/08/17 12:41:59 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/24 20:06:59 by sadawi           ###   ########.fr       */
+/*   Created: 2019/10/25 14:36:39 by sadawi            #+#    #+#             */
+/*   Updated: 2020/03/23 13:16:02 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ASM_H
-# define ASM_H
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
 
-# include "../libft/includes/libft.h"
-# include "fcntl.h"
-# include "op.h"
+# define BUFF_SIZE 128
 
-typedef struct		s_file
+typedef struct		s_fd
 {
-	char			*line;
-	struct s_file	*next;
-}					t_file;
+	char			*str;
+	int				fd;
+	struct s_fd		*next;
+}					t_fd;
 
-typedef struct		s_asm
-{
-	char			*name;
-	char			*comment;
-	t_file			*file;
-}					t_asm;
+int					get_next_line(const int fd, char **line);
 
 #endif
