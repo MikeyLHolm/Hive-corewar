@@ -6,11 +6,16 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/08/25 12:25:47 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/25 13:45:41 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asm.h"
+
+int		ft_isspace(int c)
+{
+	return (c == ' ' || c == '\t');
+}
 
 void	handle_error(char *message)
 {
@@ -192,7 +197,7 @@ char	*get_champion_comment(t_file *cur)
 	return (name);
 }
 
-void	tokenize_file(t_asm *assm)
+void	get_name_and_comment(t_asm *assm)
 {
 	t_file *cur;
 
@@ -207,7 +212,115 @@ void	tokenize_file(t_asm *assm)
 			break ;
 		cur = cur->next;
 	}
-	ft_printf("NAME: %s\nCOMMENT: %s\n\n\n", assm->name, assm->comment);
+}
+
+char	*get_label(char *line)
+{
+	int i;
+
+	i  = 0;
+	while (line[i] && line[i] != LABEL_CHAR)
+		if (!ft_strchr(LABEL_CHARS, line[i++]))
+			return (NULL);
+	i = 0;
+	while (line[i] != LABEL_CHAR)
+		i++;
+	return (ft_strsub(line, 0, i));
+}
+
+char	*get_instruction(t_asm *assm)
+{
+	int i;
+	int j;
+	int len;
+
+	i = 0;
+	while (ft_strchr(LABEL_CHARS, assm->cur->line[i]))
+		i++;
+	if (assm->cur->line[i] == LABEL_CHAR)
+		i++;
+	len = 0;
+	while (!len)
+	{
+		while (assm->cur->line[i] && ft_isspace(assm->cur->line[i]))
+			i++;
+		j = i;
+		while (assm->cur->line[j])
+		{
+			if (ft_isalpha(assm->cur->line[j++]))
+				len++;
+			else
+				break;
+		}
+		if (len)
+			return (ft_strsub(assm->cur->line, i, len));
+		assm->cur = assm->cur->next;
+		i = 0;
+		while (!ft_isalpha(assm->cur->line[i]))
+			i++;
+	}
+	return (NULL);
+}
+
+void	get_arguments(t_asm *assm, t_token *token)
+{
+	int		i;
+	char	*line;
+	char	**args;
+
+	i = 0;
+	line = assm->cur->line;
+	while (line[i] && line[i] != SEPARATOR_CHAR)
+		i++;
+	while (i > 1 && !ft_isspace(line[i - 1]))
+		i--;
+	args = ft_strsplit(&line[i], SEPARATOR_CHAR);
+	token->arg1 = (*args ? *args++ : NULL);
+	token->arg2 = (*args ? *args++ : NULL);
+	token->arg3 = (*args ? *args++ : NULL);
+}
+
+t_token	*new_token(t_asm *assm)
+{
+	t_token *token;
+
+	if (!(token = (t_token*)ft_memalloc(sizeof(t_token))))
+		handle_error("Malloc failed");
+	token->label = get_label(assm->cur->line);
+	ft_printf("LABEL: %s\n", token->label);
+	token->instruction =  get_instruction(assm);
+	ft_printf("INSTRUCTION: %s\n", token->instruction);
+	get_arguments(assm,  token);
+	ft_printf("ARG1: %s\n", token->arg1);
+	ft_printf("ARG2: %s\n", token->arg2);
+	ft_printf("ARG3: %s\n", token->arg3);
+	ft_printf("\n\n");
+	return (token);
+}
+
+void	tokenize_file(t_asm *assm)
+{
+	t_token	*cur_token;
+
+	get_name_and_comment(assm);
+	assm->cur = assm->file;
+	while (assm->cur->line && assm->cur->line[0] == '.')
+		assm->cur = assm->cur->next;
+	assm->cur = assm->cur->next;
+	while (assm->cur)
+	{
+		if (!assm->token)
+		{
+			cur_token = new_token(assm);
+			assm->token  = cur_token;
+		}
+		else
+		{
+			cur_token->next = new_token(assm);
+			cur_token = cur_token->next;
+		}
+		assm->cur = assm->cur->next;
+	}
 }
 
 int		main(int argc, char **argv)
