@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/08/25 17:19:51 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/25 17:51:52 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,7 +214,7 @@ void	get_name_and_comment(t_asm *assm)
 	}
 }
 
-char	*get_label(char *line)
+char	*get_token_label(char *line)
 {
 	int i;
 
@@ -228,7 +228,7 @@ char	*get_label(char *line)
 	return (ft_strsub(line, 0, i));
 }
 
-char	*get_instruction(t_asm *assm)
+char	*get_token_instruction(t_asm *assm)
 {
 	int i;
 	int j;
@@ -262,7 +262,21 @@ char	*get_instruction(t_asm *assm)
 	return (NULL);
 }
 
-void	get_arguments(t_asm *assm, t_token *token)
+int		get_instruction_index(char *instruction)
+{
+	int i;
+
+	i = 0;
+	while (g_op_tab[i].id)
+	{
+		if (ft_strequ(instruction, g_op_tab[i].name))
+			return (i);
+		i++;
+	}
+	return (-1);
+}
+
+void	get_token_arguments(t_asm *assm, t_token *token)
 {
 	int		i;
 	char	*line;
@@ -288,7 +302,8 @@ void	print_token_info(t_token *token)
 	ft_printf("ARG1: %s\n", token->arg1);
 	ft_printf("ARG2: %s\n", token->arg2);
 	ft_printf("ARG3: %s\n", token->arg3);
-	ft_printf("ARGUMENT TYPE CODE: %x", token->argument_type_code);
+	ft_printf("ARGUMENT TYPE CODE: %x\n", token->argument_type_code);
+	ft_printf("SIZE: %d\n",  token->size);
 	ft_printf("\n\n");
 }
 
@@ -327,16 +342,50 @@ char	get_argument_type_code(t_token *token)
 	return (byte);
 }
 
+int		get_token_size(t_token *token)
+{
+	int type;
+	int size;
+
+	size = 1;
+	if (g_op_tab[token->instruction_index].atc)
+		size += 1;
+	type = get_arg_type(token->arg1);
+	if (type == REG_CODE)
+		size += 1;
+	else if (type == IND_CODE)
+		size += 2;
+	else if (type == DIR_CODE)
+		size += (g_op_tab[token->instruction_index].label_size ? 2 : 4);
+	type = get_arg_type(token->arg2);
+	if (type == REG_CODE)
+		size += 1;
+	else if (type == IND_CODE)
+		size += 2;
+	else if (type == DIR_CODE)
+		size += (g_op_tab[token->instruction_index].label_size ? 2 : 4);
+	type = get_arg_type(token->arg3);
+	if (type == REG_CODE)
+		size += 1;
+	else if (type == IND_CODE)
+		size += 2;
+	else if (type == DIR_CODE)
+		size += (g_op_tab[token->instruction_index].label_size ? 2 : 4);
+	return (size);
+}
+
 t_token	*new_token(t_asm *assm)
 {
 	t_token *token;
 
 	if (!(token = (t_token*)ft_memalloc(sizeof(t_token))))
 		handle_error("Malloc failed");
-	token->label = get_label(assm->cur->line);
-	token->instruction = get_instruction(assm);
-	get_arguments(assm, token);
+	token->label = get_token_label(assm->cur->line);
+	token->instruction = get_token_instruction(assm);
+	token->instruction_index = get_instruction_index(token->instruction);
+	get_token_arguments(assm, token);
 	token->argument_type_code = get_argument_type_code(token);
+	token->size = get_token_size(token);
 	print_token_info(token);
 	return (token);
 }
