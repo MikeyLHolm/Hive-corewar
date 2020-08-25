@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/10/04 11:33:27 by zaz               #+#    #+#             */
-/*   Updated: 2020/08/25 16:17:31 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/25 17:39:51 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ typedef struct					s_op
 	int							id;
 	int							cycles;
 	char						description[50];
-	int							acb;
+	int							atc;
 	int							label_size;
 }								t_op;
 
