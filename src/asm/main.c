@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/08/24 20:55:38 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/25 08:53:54 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,8 @@ t_asm	*init_assm(void)
 {
 	t_asm *assm;
 
-	assm = (t_asm*)ft_memalloc(sizeof(t_asm));
+	if (!(assm = (t_asm*)ft_memalloc(sizeof(t_asm))))
+		handle_error("Malloc failed");
 	return (assm);
 }
 
