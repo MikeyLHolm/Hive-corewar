@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   op.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/10/04 11:33:27 by zaz               #+#    #+#             */
-/*   Updated: 2020/08/17 14:28:53 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/08/25 16:17:31 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,5 +69,17 @@ typedef struct					s_header
 	unsigned int				prog_size;
 	char						comment[COMMENT_LENGTH + 1];
 }								t_header;
+
+typedef struct					s_op
+{
+	char						name[5];
+	int							nb_params;
+	char						params_type[3];
+	int							id;
+	int							cycles;
+	char						description[50];
+	int							acb;
+	int							label_size;
+}								t_op;
 
 #endif
