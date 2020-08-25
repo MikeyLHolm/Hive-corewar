@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/17 12:41:59 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/24 20:06:59 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/25 12:05:46 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,16 @@
 # include "../libft/includes/libft.h"
 # include "fcntl.h"
 # include "op.h"
+
+typedef struct		s_token
+{
+	char			*label;
+	char			*instruction;
+	char			*arg1;
+	char			*arg2;
+	char			*arg3;
+	struct s_token	*next;
+}					t_token;
 
 typedef struct		s_file
 {
