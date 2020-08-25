@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/08/25 15:03:07 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/25 17:19:51 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -280,6 +280,53 @@ void	get_arguments(t_asm *assm, t_token *token)
 	token->arg3 = (*args ? *args++ : NULL);
 }
 
+
+void	print_token_info(t_token *token)
+{
+	ft_printf("LABEL: %s\n", token->label);
+	ft_printf("INSTRUCTION: %s\n", token->instruction);
+	ft_printf("ARG1: %s\n", token->arg1);
+	ft_printf("ARG2: %s\n", token->arg2);
+	ft_printf("ARG3: %s\n", token->arg3);
+	ft_printf("ARGUMENT TYPE CODE: %x", token->argument_type_code);
+	ft_printf("\n\n");
+}
+
+int		get_arg_type(char *arg)
+{
+	if (!arg)
+		return (0);
+	if (ft_strchr(arg, '%'))
+		return (DIR_CODE);
+	if (ft_strnequ(arg, "r", 1) && ft_isdigit(arg[1]))
+		return (REG_CODE);
+	return (IND_CODE);
+}
+
+char	get_argument_type_code(t_token *token)
+{
+	int				type;
+	unsigned char	byte;
+
+	byte =  0;
+	type = get_arg_type(token->arg1);
+	if (type == DIR_CODE || type == IND_CODE)
+		byte |= 1UL << 7;
+	if (type == REG_CODE || type == IND_CODE)
+		byte |= 1UL << 6;
+	type = get_arg_type(token->arg2);
+	if (type == DIR_CODE || type == IND_CODE)
+		byte |= 1UL << 5;
+	if (type == REG_CODE || type == IND_CODE)
+		byte |= 1UL << 4;
+	type = get_arg_type(token->arg3);
+	if (type == DIR_CODE || type == IND_CODE)
+		byte |= 1UL << 3;
+	if (type == REG_CODE || type == IND_CODE)
+		byte |= 1UL << 2;
+	return (byte);
+}
+
 t_token	*new_token(t_asm *assm)
 {
 	t_token *token;
@@ -287,14 +334,10 @@ t_token	*new_token(t_asm *assm)
 	if (!(token = (t_token*)ft_memalloc(sizeof(t_token))))
 		handle_error("Malloc failed");
 	token->label = get_label(assm->cur->line);
-	ft_printf("LABEL: %s\n", token->label);
-	token->instruction =  get_instruction(assm);
-	ft_printf("INSTRUCTION: %s\n", token->instruction);
-	get_arguments(assm,  token);
-	ft_printf("ARG1: %s\n", token->arg1);
-	ft_printf("ARG2: %s\n", token->arg2);
-	ft_printf("ARG3: %s\n", token->arg3);
-	ft_printf("\n\n");
+	token->instruction = get_instruction(assm);
+	get_arguments(assm, token);
+	token->argument_type_code = get_argument_type_code(token);
+	print_token_info(token);
 	return (token);
 }
 
