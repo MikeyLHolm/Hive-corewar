@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/08/24 20:55:38 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/25 12:05:35 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,15 +89,48 @@ void	write_header(int fd)
 		 write(fd, &buf[i], 1);
 }
 
-void	handle_writing(t_file *file, char *input_filename)
+void	write_name(t_asm *assm, int fd)
+{
+	char 	buf[PROG_NAME_LENGTH];
+	size_t	i;
+
+	ft_bzero(buf, PROG_NAME_LENGTH);
+	i = 0;
+	while (i < ft_strlen(assm->name))
+	{
+		buf[i] = assm->name[i];
+		i++;
+	}
+	i = 0;
+	write(fd, buf, PROG_NAME_LENGTH);
+}
+
+void	write_comment(t_asm *assm, int fd)
+{
+	char 	buf[COMMENT_LENGTH];
+	size_t	i;
+
+	ft_bzero(buf, COMMENT_LENGTH);
+	i = 0;
+	while (i < ft_strlen(assm->comment))
+	{
+		buf[i] = assm->comment[i];
+		i++;
+	}
+	i = 0;
+	write(fd, buf, COMMENT_LENGTH);
+}
+
+void	handle_writing(t_asm *assm, char *input_filename)
 {
 	int		fd;
 	char	*output_filename;
 
-	(void)file;
 	output_filename = get_output_filename(input_filename);
 	fd = open(output_filename, O_WRONLY|O_CREAT|O_TRUNC, 0666);
 	write_header(fd);
+	write_name(assm, fd);
+	write_comment(assm, fd);
 }
 
 t_asm	*init_assm(void)
@@ -179,6 +212,6 @@ int		main(int argc, char **argv)
 	//check_file(assm->file);
 	tokenize_file(assm);
 	print_file(assm->file);
-	handle_writing(assm->file, argv[1]);
+	handle_writing(assm, argv[1]);
 	return (0);
 }
