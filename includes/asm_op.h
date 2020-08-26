@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/25 14:29:20 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/26 09:34:31 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/08/26 09:53:07 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # define T_DIR					2
 # define T_IND					4
 
-typedef struct 		s_op_tab
+typedef struct		s_op_tab
 {
 	int				args_n;
 	int				args_type[3];
