@@ -161,7 +161,7 @@ int		get_arg_type(char *arg)
 		return (0);
 	if (ft_strchr(arg, '%'))
 		return (DIR_CODE);
-	if (ft_strnequ(arg, "r", 1) && ft_isdigit(arg[1]))
+	if (ft_strchr(arg, 'r') && !ft_strchr(arg, LABEL_CHAR))
 		return (REG_CODE);
 	return (IND_CODE);
 }
@@ -170,7 +170,7 @@ void	write_registry(char *arg, int fd)
 {
 	unsigned char	buf;
 
-	buf = ft_atoi(&arg[1]);
+	buf = ft_atoi(ft_strchr(arg, 'r') + 1);
 	write(fd, &buf, 1);
 }
 
