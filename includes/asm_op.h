@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/25 14:29:20 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/26 08:47:58 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/08/26 09:34:31 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ static const	t_op_tab		g_op_tab[16] =
 		.args_n = 1,
 		.args_type = {T_DIR, 0, 0},
 		.args_type_code = 0,
-		.size_t_dir = 2
+		.size_t_dir = 1
 	},
 	{
 		.op = 13,
