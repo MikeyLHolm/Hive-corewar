@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/26 14:37:40 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/08/26 15:35:37 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,11 @@
 
 typedef struct 			s_player
 {
+	char				*code;
 	char				*comment;
 	char				*name;
-	int					nbr;
+	int					id;
+	int					size;
 }						t_player;
 
 typedef struct 			s_input

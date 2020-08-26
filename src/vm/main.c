@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/26 15:13:10 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/08/26 15:36:37 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,14 @@ t_vm		*init_vm(void)
 // 		vm->flags = vm->flags | VISUALIZER;
 // }
 
+void		save_player(t_vm *vm, char **argv)
+{
+	
+
+
+
+}
+
 void		parse_input(t_vm *vm, int argc, char **argv)
 {
 	int			i;
@@ -51,10 +59,14 @@ void		parse_input(t_vm *vm, int argc, char **argv)
 		else if (ft_strequ(argv[i], "-x"))
 			vm->flags = vm->flags | LEAKS;
 		else if (ft_strequ(argv[i], "-n"))
+		{
 			vm->flags = vm->flags | N;
+
+		}
 		else if (ft_strequ(argv[i], "-v"))
 			vm->flags = vm->flags | VISUALIZER;
-
+		else
+			save_player(vm, argv[i]);
 
 	}
 }
