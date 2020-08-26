@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/25 14:29:20 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/25 14:41:04 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/08/26 08:47:58 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,10 @@ typedef struct 		s_op_tab
 	int				size_t_dir;
 }					t_op_tab;
 
+/*
+**	args_type_code: 0 = N, 1 = Y
+**	size_t_dir: 0 = 4 bytes, 1 = 2 bytes
+*/
 
 static const	t_op_tab		g_op_tab[16] =
 {
@@ -43,34 +47,138 @@ static const	t_op_tab		g_op_tab[16] =
 	{
 		.op = 2,
 		.op_code = 0x02,
-		.op_name = ,
-		.args_n = ,
-		.args_type = {T_DIR, 0, 0},
-		.args_type_code = ,
-		.size_t_dir = 
+		.op_name = "ld",
+		.args_n = 2,
+		.args_type = {T_DIR | T_IND, T_REG, 0},
+		.args_type_code = 1,
+		.size_t_dir = 0
 	},
-	{"ld", 2, {T_DIR | T_IND, T_REG}, 2, 5, "load", 1, 0},
-	{"st", 2, {T_REG, T_IND | T_REG}, 3, 5, "store", 1, 0},
-	{"add", 3, {T_REG, T_REG, T_REG}, 4, 10, "addition", 1, 0},
-	{"sub", 3, {T_REG, T_REG, T_REG}, 5, 10, "soustraction", 1, 0},
-	{"and", 3, {T_REG | T_DIR | T_IND, T_REG | T_IND | T_DIR, T_REG}, 6, 6,
-		"et (and  r1, r2, r3   r1&r2 -> r3", 1, 0},
-	{"or", 3, {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG}, 7, 6,
-		"ou  (or   r1, r2, r3   r1 | r2 -> r3", 1, 0},
-	{"xor", 3, {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG}, 8, 6,
-		"ou (xor  r1, r2, r3   r1^r2 -> r3", 1, 0},
-	{"zjmp", 1, {T_DIR}, 9, 20, "jump if zero", 0, 1},
-	{"ldi", 3, {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG}, 10, 25,
-		"load index", 1, 1},
-	{"sti", 3, {T_REG, T_REG | T_DIR | T_IND, T_DIR | T_REG}, 11, 25,
-		"store index", 1, 1},
-	{"fork", 1, {T_DIR}, 12, 800, "fork", 0, 1},
-	{"lld", 2, {T_DIR | T_IND, T_REG}, 13, 10, "long load", 1, 0},
-	{"lldi", 3, {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG}, 14, 50,
-		"long load index", 1, 1},
-	{"lfork", 1, {T_DIR}, 15, 1000, "long fork", 0, 1},
-	{"aff", 1, {T_REG}, 16, 2, "aff", 1, 0},
-	{0, 0, {0}, 0, 0, 0, 0, 0}
+	{
+		.op = 3,
+		.op_code = 0x03,
+		.op_name = "st",
+		.args_n = 2,
+		.args_type = {T_REG, T_IND | T_REG, 0},
+		.args_type_code = 1,
+		.size_t_dir = 0
+	},
+	{
+		.op = 4,
+		.op_code = 0x04,
+		.op_name = "add",
+		.args_n = 3,
+		.args_type = {T_REG, T_REG, T_REG},
+		.args_type_code = 1,
+		.size_t_dir = 0
+	},
+	{
+		.op = 5,
+		.op_code = 0x05,
+		.op_name = "sub",
+		.args_n = 3,
+		.args_type = {T_REG, T_REG, T_REG},
+		.args_type_code = 1,
+		.size_t_dir = 0
+	},
+	{
+		.op = 6,
+		.op_code = 0x06,
+		.op_name = "and",
+		.args_n = 3,
+		.args_type = {T_REG | T_DIR | T_IND, T_REG | T_IND | T_DIR, T_REG},
+		.args_type_code = 1,
+		.size_t_dir = 0
+	},
+	{
+		.op = 7,
+		.op_code = 0x07,
+		.op_name = "or",
+		.args_n = 3,
+		.args_type = {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG},
+		.args_type_code = 1,
+		.size_t_dir = 0
+	},
+	{
+		.op = 8,
+		.op_code = 0x08,
+		.op_name = "xor",
+		.args_n = 3,
+		.args_type = {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG},
+		.args_type_code = 1,
+		.size_t_dir = 0
+	},
+	{
+		.op = 9,
+		.op_code = 0x09,
+		.op_name = "zjmp",
+		.args_n = 1,
+		.args_type = {T_DIR, 0, 0},
+		.args_type_code = 0,
+		.size_t_dir = 1
+	},
+	{
+		.op = 10,
+		.op_code = 0x0a,
+		.op_name = "ldi",
+		.args_n = 3,
+		.args_type = {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG},
+		.args_type_code = 1,
+		.size_t_dir = 1
+	},
+	{
+		.op = 11,
+		.op_code = 0x0b,
+		.op_name = "sti",
+		.args_n = 3,
+		.args_type = {T_REG, T_REG | T_DIR | T_IND, T_DIR | T_REG},
+		.args_type_code = 1,
+		.size_t_dir = 1
+	},
+	{
+		.op = 12,
+		.op_code = 0x0c,
+		.op_name = "fork",
+		.args_n = 1,
+		.args_type = {T_DIR, 0, 0},
+		.args_type_code = 0,
+		.size_t_dir = 2
+	},
+	{
+		.op = 13,
+		.op_code = 0x0d,
+		.op_name = "lld",
+		.args_n = 2,
+		.args_type = {T_DIR | T_IND, T_REG, 0},
+		.args_type_code = 1,
+		.size_t_dir = 0
+	},
+	{
+		.op = 14,
+		.op_code = 0x0e,
+		.op_name = "lldi",
+		.args_n = 3,
+		.args_type = {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG},
+		.args_type_code = 1,
+		.size_t_dir = 1
+	},
+	{
+		.op = 15,
+		.op_code = 0x0f,
+		.op_name = "lfork",
+		.args_n = 1,
+		.args_type = {T_DIR, 0, 0},
+		.args_type_code = 0,
+		.size_t_dir = 1
+	},
+	{
+		.op = 16,
+		.op_code = 0x10,
+		.op_name = "aff",
+		.args_n = 1,
+		.args_type = {T_REG, 0, 0},
+		.args_type_code = 1,
+		.size_t_dir = 0
+	}
 };
 
 #endif
