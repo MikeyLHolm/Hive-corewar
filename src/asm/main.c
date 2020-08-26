@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/08/26 13:22:27 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/26 13:51:55 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,9 +128,12 @@ void	write_comment(t_asm *assm, int fd)
 	write(fd, "\0\0\0\0", 4);
 }
 
-void	write_exec_code_size_placeholder(int fd)
+void	write_exec_code_size_placeholder(t_asm *assm, int fd)
 {
-	write(fd, "\0\0\0\0", 4);
+	write(fd, &((unsigned char*)&assm->champion_size)[3], 1);
+	write(fd, &((unsigned char*)&assm->champion_size)[2], 1);
+	write(fd, &((unsigned char*)&assm->champion_size)[1], 1);
+	write(fd, &((unsigned char*)&assm->champion_size)[0], 1);
 }
 
 void	write_statement(t_token *token, int fd)
@@ -241,7 +244,7 @@ void	handle_writing(t_asm *assm, char *input_filename)
 	fd = open(output_filename, O_WRONLY|O_CREAT|O_TRUNC, 0666);
 	write_header(fd);
 	write_name(assm, fd);
-	write_exec_code_size_placeholder(fd);
+	write_exec_code_size_placeholder(assm, fd);
 	write_comment(assm, fd);
 	write_instructions(assm, fd);
 }
@@ -476,6 +479,7 @@ t_token	*new_token(t_asm *assm)
 	get_token_arguments(assm, token);
 	token->argument_type_code = get_argument_type_code(token);
 	token->size = get_token_size(token);
+	assm->champion_size += token->size;
 	print_token_info(token);
 	return (token);
 }

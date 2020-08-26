@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/17 12:41:59 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/26 13:26:04 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/26 13:30:35 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ typedef struct		s_asm
 	t_file			*file;
 	t_file			*cur;
 	t_token			*token;
+	int				champion_size;
 }					t_asm;
 
 #endif
