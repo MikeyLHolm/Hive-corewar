@@ -379,6 +379,19 @@ int		get_instruction_index(char *instruction)
 	return (-1);
 }
 
+int		get_first_arg_index(char *line, char *instruction)
+{
+	char	*ptr;
+	int		i;
+
+	ptr = ft_strstr(line, instruction);
+	ptr += ft_strlen(instruction);
+	i = ptr - line;
+	while (line[i] && ft_isspace(line[i]))
+		i++;
+	return (i);
+}
+
 void	get_token_arguments(t_asm *assm, t_token *token)
 {
 	int		i;
@@ -387,10 +400,7 @@ void	get_token_arguments(t_asm *assm, t_token *token)
 
 	i = 0;
 	line = assm->cur->line;
-	while (line[i] && line[i] != SEPARATOR_CHAR)
-		i++;
-	while (i > 1 && !ft_isspace(line[i - 1]))
-		i--;
+	i = get_first_arg_index(line, token->instruction);
 	args = ft_strsplit(&line[i], SEPARATOR_CHAR);
 	token->arg1 = (*args ? *args++ : NULL);
 	token->arg2 = (*args ? *args++ : NULL);
@@ -591,6 +601,7 @@ int		main(int argc, char **argv)
 		handle_error("./asm [filename.s]");
 	assm = init_assm();
 	assm->file = read_file(argv[1]);
+	//remove_file_comments(assm->file);
 	//check_file(assm->file);
 	tokenize_file(assm);
 	convert_labels(assm);
