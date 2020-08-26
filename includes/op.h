@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/10/04 11:33:27 by zaz               #+#    #+#             */
-/*   Updated: 2020/08/17 14:28:53 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/08/26 13:23:40 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 */
 
 #ifndef OP_H
-
 # define OP_H
 
 # define IND_SIZE				2
