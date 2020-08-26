@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/26 14:37:40 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/08/26 17:00:31 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,13 @@
 
 typedef struct 			s_player
 {
+	char				*code;
 	char				*comment;
 	char				*name;
-	int					nbr;
+	int					id;
+	int					n;
+	int					size;
+	struct s_player		*next;
 }						t_player;
 
 typedef struct 			s_input
@@ -43,6 +47,7 @@ typedef struct 			s_input
 typedef struct 			s_vm
 {
 	int					flags;
+	int					player_n;
 	int					players;
 	t_player			*player;
 	t_input				*file;

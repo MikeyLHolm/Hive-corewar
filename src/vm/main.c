@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/26 15:13:10 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/08/26 17:23:54 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ t_vm		*init_vm(void)
 	if (!(vm = (t_vm*)ft_memalloc(sizeof(t_vm))))
 		handle_error("Malloc failed at VM init");
 	vm->flags = 0;
+	vm->player_n = 0;
 	vm->players = 0;
 	return (vm);
 }
@@ -37,9 +38,31 @@ t_vm		*init_vm(void)
 // 		vm->flags = vm->flags | VISUALIZER;
 // }
 
+void		sort_players(t_player *players)
+{
+	while (players)
+	{
+		ft_printf("id = %d || n = %d\n", players->id, players->n);
+		players = players->next;
+	}
+}
+
+t_player	*save_player(t_vm *vm, char **argv, char *n)
+{
+	t_player	*player;
+
+	if (!(player = (t_player*)ft_memalloc(sizeof(t_player))))
+		handle_error("Malloc failed at save_player.");
+	player->id = 0;
+	player->n = !n ? ft_atoi(n) : 0;
+	//read_file(player);
+	return (player);
+}
+
 void		parse_input(t_vm *vm, int argc, char **argv)
 {
 	int			i;
+	t_player	*players;
 
 	i = 0;
 	while (++i < argc)
@@ -51,12 +74,22 @@ void		parse_input(t_vm *vm, int argc, char **argv)
 		else if (ft_strequ(argv[i], "-x"))
 			vm->flags = vm->flags | LEAKS;
 		else if (ft_strequ(argv[i], "-n"))
+		{
 			vm->flags = vm->flags | N;
+			if (argv[i + 1] && argv[i + 2])
+				players = save_player(vm, argv[i + 2], argv[i + 1]);
+			else
+				handle_error("-n flag in wrong place");
+			i += 2;
+		}
 		else if (ft_strequ(argv[i], "-v"))
 			vm->flags = vm->flags | VISUALIZER;
-
-
+		else
+			players = save_player(vm, argv[i], NULL);
+		players = players->next;
 	}
+	players = NULL;
+	sort_players(players);
 }
 
 int			main(int argc, char **argv)
@@ -70,11 +103,9 @@ int			main(int argc, char **argv)
 	//read_input();
 	//validate();
 	//init_arena();
-
 	//introduce_contestants();
 	//fight();
-
-
-
+	if (vm->flags & LEAKS)
+		system("leaks corewar");
 	return (0);
 }
