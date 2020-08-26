@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/08/26 18:21:54 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/26 18:25:36 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -522,8 +522,12 @@ int		line_contains_instruction(t_file *cur)
 	if (!cur->line)
 		return (0);
 	while (cur->line[i])
+	{
+		if (cur->line[i] == '.' || cur->line[i] == COMMENT_CHAR || cur->line[i] == ALT_COMMENT_CHAR)
+			return (0);
 		if (!ft_isspace(cur->line[i++]))
 			return (1);
+	}
 	return (0);
 }
 
@@ -551,7 +555,7 @@ void	tokenize_file(t_asm *assm)
 				cur_token = cur_token->next;
 			}
 		}
-			assm->cur = assm->cur->next;
+		assm->cur = assm->cur->next;
 	}
 }
 
@@ -620,10 +624,13 @@ void	remove_file_comments(t_file *file)
 	cur = file;
 	while (cur)
 	{
-		if (ft_strchr(cur->line, COMMENT_CHAR))
-			*ft_strchr(cur->line, COMMENT_CHAR) = '\0';
-		if (ft_strchr(cur->line, ALT_COMMENT_CHAR))
-			*ft_strchr(cur->line, ALT_COMMENT_CHAR) = '\0';
+		if (line_contains_instruction(cur))
+		{
+			if (ft_strchr(cur->line, COMMENT_CHAR))
+				*ft_strchr(cur->line, COMMENT_CHAR) = '\0';
+			if (ft_strchr(cur->line, ALT_COMMENT_CHAR))
+				*ft_strchr(cur->line, ALT_COMMENT_CHAR) = '\0';
+		}
 		cur = cur->next;
 	}
 }
