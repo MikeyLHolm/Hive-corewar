@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/08/25 21:20:06 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/26 13:22:27 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ void	write_argument_type_code(t_token *token, int fd)
 {
 	unsigned char	buf;
 
-	if (g_op_tab[token->instruction_index].atc)
+	if (g_op_tab[token->instruction_index].args_type_code)
 	{
 		buf = token->argument_type_code;
 		write(fd, &buf, 1);
@@ -175,7 +175,7 @@ void	write_direct(t_token *token, char *arg, int fd)
 {
 	short bytes;
 
-	if (!g_op_tab[token->instruction_index].label_size)
+	if (!g_op_tab[token->instruction_index].size_t_dir)
 		write(fd, "\0\0", 2);
 	bytes = ft_atoi(&arg[1]);
 	write(fd, &((unsigned char*)&bytes)[1], 1);
@@ -367,9 +367,9 @@ int		get_instruction_index(char *instruction)
 	int i;
 
 	i = 0;
-	while (g_op_tab[i].id)
+	while (i < OP_CODE_AMOUNT)
 	{
-		if (ft_strequ(instruction, g_op_tab[i].name))
+		if (ft_strequ(instruction, g_op_tab[i].op_name))
 			return (i);
 		i++;
 	}
@@ -438,7 +438,7 @@ int		get_token_size(t_token *token)
 	int size;
 
 	size = 1;
-	if (g_op_tab[token->instruction_index].atc)
+	if (g_op_tab[token->instruction_index].args_type_code)
 		size += 1;
 	type = get_arg_type(token->arg1);
 	if (type == REG_CODE)
@@ -446,21 +446,21 @@ int		get_token_size(t_token *token)
 	else if (type == IND_CODE)
 		size += 2;
 	else if (type == DIR_CODE)
-		size += (g_op_tab[token->instruction_index].label_size ? 2 : 4);
+		size += (g_op_tab[token->instruction_index].size_t_dir ? 2 : 4);
 	type = get_arg_type(token->arg2);
 	if (type == REG_CODE)
 		size += 1;
 	else if (type == IND_CODE)
 		size += 2;
 	else if (type == DIR_CODE)
-		size += (g_op_tab[token->instruction_index].label_size ? 2 : 4);
+		size += (g_op_tab[token->instruction_index].size_t_dir ? 2 : 4);
 	type = get_arg_type(token->arg3);
 	if (type == REG_CODE)
 		size += 1;
 	else if (type == IND_CODE)
 		size += 2;
 	else if (type == DIR_CODE)
-		size += (g_op_tab[token->instruction_index].label_size ? 2 : 4);
+		size += (g_op_tab[token->instruction_index].size_t_dir ? 2 : 4);
 	return (size);
 }
 

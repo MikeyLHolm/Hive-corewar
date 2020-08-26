@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/17 12:41:59 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/25 17:40:36 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/26 13:26:04 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,7 @@
 # include "../libft/includes/libft.h"
 # include "fcntl.h"
 # include "op.h"
-
-extern t_op			g_op_tab[17];
+# include "asm_op.h"
 
 typedef struct		s_token
 {
