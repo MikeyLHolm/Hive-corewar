@@ -6,12 +6,12 @@
 #    By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/04/10 19:26:38 by sadawi            #+#    #+#              #
-#    Updated: 2020/08/25 17:48:28 by sadawi           ###   ########.fr        #
+#    Updated: 2020/08/26 13:23:02 by sadawi           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = asm
-CFILES = main.c op.c
+CFILES = main.c
 SRCS = $(addprefix src/asm/, $(CFILES))
 OBJS = $(addprefix objs/, $(notdir $(SRCS:.c=.o)))
 INCLUDES = -I libft/includes -I includes

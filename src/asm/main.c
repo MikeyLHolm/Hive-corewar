@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/08/26 16:11:22 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/26 16:13:56 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	print_file(t_file *head)
 char	*get_output_filename(char *input_filename)
 {
 	*ft_strrchr(input_filename, '.') = '\0';
-	return (ft_strjoin(input_filename, ".cor"));
+	return (ft_strjoin(input_filename, ".cor.sadawi"));
 }
 
 void	write_header(int fd)
@@ -128,9 +128,12 @@ void	write_comment(t_asm *assm, int fd)
 	write(fd, "\0\0\0\0", 4);
 }
 
-void	write_exec_code_size_placeholder(int fd)
+void	write_exec_code_size_placeholder(t_asm *assm, int fd)
 {
-	write(fd, "\0\0\0\0", 4);
+	write(fd, &((unsigned char*)&assm->champion_size)[3], 1);
+	write(fd, &((unsigned char*)&assm->champion_size)[2], 1);
+	write(fd, &((unsigned char*)&assm->champion_size)[1], 1);
+	write(fd, &((unsigned char*)&assm->champion_size)[0], 1);
 }
 
 void	write_statement(t_token *token, int fd)
@@ -145,7 +148,7 @@ void	write_argument_type_code(t_token *token, int fd)
 {
 	unsigned char	buf;
 
-	if (g_op_tab[token->instruction_index].atc)
+	if (g_op_tab[token->instruction_index].args_type_code)
 	{
 		buf = token->argument_type_code;
 		write(fd, &buf, 1);
@@ -158,7 +161,7 @@ int		get_arg_type(char *arg)
 		return (0);
 	if (ft_strchr(arg, '%'))
 		return (DIR_CODE);
-	if (ft_strnequ(arg, "r", 1) && ft_isdigit(arg[1]))
+	if (ft_strchr(arg, 'r') && !ft_strchr(arg, LABEL_CHAR))
 		return (REG_CODE);
 	return (IND_CODE);
 }
@@ -167,7 +170,7 @@ void	write_registry(char *arg, int fd)
 {
 	unsigned char	buf;
 
-	buf = ft_atoi(&arg[1]);
+	buf = ft_atoi(ft_strchr(arg, 'r') + 1);
 	write(fd, &buf, 1);
 }
 
@@ -245,7 +248,7 @@ void	handle_writing(t_asm *assm, char *input_filename)
 	free(output_filename);
 	write_header(fd);
 	write_name(assm, fd);
-	write_exec_code_size_placeholder(fd);
+	write_exec_code_size_placeholder(assm, fd);
 	write_comment(assm, fd);
 	write_instructions(assm, fd);
 }
@@ -371,9 +374,9 @@ int		get_instruction_index(char *instruction)
 	int i;
 
 	i = 0;
-	while (g_op_tab[i].id)
+	while (i < OP_CODE_AMOUNT)
 	{
-		if (ft_strequ(instruction, g_op_tab[i].name))
+		if (ft_strequ(instruction, g_op_tab[i].op_name))
 			return (i);
 		i++;
 	}
@@ -419,10 +422,7 @@ void	get_token_arguments(t_asm *assm, t_token *token)
 
 	i = 0;
 	line = assm->cur->line;
-	while (line[i] && line[i] != SEPARATOR_CHAR)
-		i++;
-	while (i > 1 && !ft_isspace(line[i - 1]))
-		i--;
+	i = get_first_arg_index(line, token->instruction);
 	args = ft_strsplit(&line[i], SEPARATOR_CHAR);
 	if (args[0] && args[1] && args[2])
 	{
@@ -485,7 +485,7 @@ int		get_token_size(t_token *token)
 	int size;
 
 	size = 1;
-	if (g_op_tab[token->instruction_index].atc)
+	if (g_op_tab[token->instruction_index].args_type_code)
 		size += 1;
 	type = get_arg_type(token->arg1);
 	if (type == REG_CODE)
@@ -493,21 +493,21 @@ int		get_token_size(t_token *token)
 	else if (type == IND_CODE)
 		size += 2;
 	else if (type == DIR_CODE)
-		size += (g_op_tab[token->instruction_index].label_size ? 2 : 4);
+		size += (g_op_tab[token->instruction_index].size_t_dir ? 2 : 4);
 	type = get_arg_type(token->arg2);
 	if (type == REG_CODE)
 		size += 1;
 	else if (type == IND_CODE)
 		size += 2;
 	else if (type == DIR_CODE)
-		size += (g_op_tab[token->instruction_index].label_size ? 2 : 4);
+		size += (g_op_tab[token->instruction_index].size_t_dir ? 2 : 4);
 	type = get_arg_type(token->arg3);
 	if (type == REG_CODE)
 		size += 1;
 	else if (type == IND_CODE)
 		size += 2;
 	else if (type == DIR_CODE)
-		size += (g_op_tab[token->instruction_index].label_size ? 2 : 4);
+		size += (g_op_tab[token->instruction_index].size_t_dir ? 2 : 4);
 	return (size);
 }
 
