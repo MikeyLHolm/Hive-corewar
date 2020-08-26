@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/26 17:07:41 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/08/26 17:23:54 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,15 @@ t_vm		*init_vm(void)
 // 		vm->flags = vm->flags | VISUALIZER;
 // }
 
+void		sort_players(t_player *players)
+{
+	while (players)
+	{
+		ft_printf("id = %d || n = %d\n", players->id, players->n);
+		players = players->next;
+	}
+}
+
 t_player	*save_player(t_vm *vm, char **argv, char *n)
 {
 	t_player	*player;
@@ -46,7 +55,7 @@ t_player	*save_player(t_vm *vm, char **argv, char *n)
 		handle_error("Malloc failed at save_player.");
 	player->id = 0;
 	player->n = !n ? ft_atoi(n) : 0;
-
+	//read_file(player);
 	return (player);
 }
 
@@ -80,7 +89,7 @@ void		parse_input(t_vm *vm, int argc, char **argv)
 		players = players->next;
 	}
 	players = NULL;
-	//sort_players();
+	sort_players(players);
 }
 
 int			main(int argc, char **argv)
@@ -94,10 +103,8 @@ int			main(int argc, char **argv)
 	//read_input();
 	//validate();
 	//init_arena();
-
 	//introduce_contestants();
 	//fight();
-
 	if (vm->flags & LEAKS)
 		system("leaks corewar");
 	return (0);
