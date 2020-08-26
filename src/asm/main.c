@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/08/26 16:07:04 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/26 18:25:36 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,11 +176,14 @@ void	write_registry(char *arg, int fd)
 
 void	write_direct(t_token *token, char *arg, int fd)
 {
-	short bytes;
+	int bytes;
 
-	if (!g_op_tab[token->instruction_index].size_t_dir)
-		write(fd, "\0\0", 2);
 	bytes = ft_atoi(&arg[1]);
+	if (!g_op_tab[token->instruction_index].size_t_dir)
+	{
+		write(fd, &((unsigned char*)&bytes)[3], 1);
+		write(fd, &((unsigned char*)&bytes)[2], 1);
+	}
 	write(fd, &((unsigned char*)&bytes)[1], 1);
 	write(fd, &((unsigned char*)&bytes)[0], 1);
 }
@@ -242,6 +245,7 @@ void	handle_writing(t_asm *assm, char *input_filename)
 
 	output_filename = get_output_filename(input_filename);
 	fd = open(output_filename, O_WRONLY|O_CREAT|O_TRUNC, 0666);
+	free(output_filename);
 	write_header(fd);
 	write_name(assm, fd);
 	write_exec_code_size_placeholder(assm, fd);
@@ -381,13 +385,17 @@ int		get_instruction_index(char *instruction)
 
 int		get_first_arg_index(char *line, char *instruction)
 {
-	char	*ptr;
 	int		i;
 
-	ptr = ft_strstr(line, instruction);
-	ptr += ft_strlen(instruction);
-	i = ptr - line;
-	while (line[i] && ft_isspace(line[i]))
+	i = 0;
+	while (ft_strchr(LABEL_CHARS, line[i]))
+		i++;
+	if (line[i] == LABEL_CHAR)
+		i++;
+	while (ft_isspace(line[i]))
+		i++;
+	i += ft_strlen(instruction);
+	while (ft_isspace(line[i]))
 		i++;
 	return (i);
 }
@@ -402,11 +410,23 @@ void	get_token_arguments(t_asm *assm, t_token *token)
 	line = assm->cur->line;
 	i = get_first_arg_index(line, token->instruction);
 	args = ft_strsplit(&line[i], SEPARATOR_CHAR);
-	token->arg1 = (*args ? *args++ : NULL);
-	token->arg2 = (*args ? *args++ : NULL);
-	token->arg3 = (*args ? *args++ : NULL);
+	if (args[0] && args[1] && args[2])
+	{
+		token->arg3 = ft_strtrim(args[2]);
+		free(args[2]);
+	}
+	if (args[0] && args[1])
+	{
+		token->arg2 = ft_strtrim(args[1]);
+		free(args[1]);
+	}
+	if (args[0])
+	{
+		token->arg1 = ft_strtrim(args[0]);
+		free(args[0]);
+	}
+	free(args);
 }
-
 
 void	print_token_info(t_token *token)
 {
@@ -490,7 +510,7 @@ t_token	*new_token(t_asm *assm)
 	token->argument_type_code = get_argument_type_code(token);
 	token->size = get_token_size(token);
 	assm->champion_size += token->size;
-	print_token_info(token);
+	//print_token_info(token);
 	return (token);
 }
 
@@ -502,8 +522,12 @@ int		line_contains_instruction(t_file *cur)
 	if (!cur->line)
 		return (0);
 	while (cur->line[i])
+	{
+		if (cur->line[i] == '.' || cur->line[i] == COMMENT_CHAR || cur->line[i] == ALT_COMMENT_CHAR)
+			return (0);
 		if (!ft_isspace(cur->line[i++]))
 			return (1);
+	}
 	return (0);
 }
 
@@ -531,7 +555,7 @@ void	tokenize_file(t_asm *assm)
 				cur_token = cur_token->next;
 			}
 		}
-			assm->cur = assm->cur->next;
+		assm->cur = assm->cur->next;
 	}
 }
 
@@ -593,6 +617,24 @@ void	print_tokens(t_token *token)
 	}
 }
 
+void	remove_file_comments(t_file *file)
+{
+	t_file *cur;
+
+	cur = file;
+	while (cur)
+	{
+		if (line_contains_instruction(cur))
+		{
+			if (ft_strchr(cur->line, COMMENT_CHAR))
+				*ft_strchr(cur->line, COMMENT_CHAR) = '\0';
+			if (ft_strchr(cur->line, ALT_COMMENT_CHAR))
+				*ft_strchr(cur->line, ALT_COMMENT_CHAR) = '\0';
+		}
+		cur = cur->next;
+	}
+}
+
 int		main(int argc, char **argv)
 {
 	t_asm	*assm;
@@ -601,7 +643,7 @@ int		main(int argc, char **argv)
 		handle_error("./asm [filename.s]");
 	assm = init_assm();
 	assm->file = read_file(argv[1]);
-	//remove_file_comments(assm->file);
+	remove_file_comments(assm->file);
 	//check_file(assm->file);
 	tokenize_file(assm);
 	convert_labels(assm);
@@ -612,5 +654,7 @@ int		main(int argc, char **argv)
 	ft_printf("BYTE: %hx\n", byte);
 	ft_printf("%02hx\n", 15);
 	handle_writing(assm, argv[1]);
+	//system("leaks asm");
+	exit(0);
 	return (0);
 }

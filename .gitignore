@@ -1,3 +1,8 @@
 *.o
 .DS_Store
 .vscode/
+*.cor*
+*.s
+*.a
+asm
+notes
