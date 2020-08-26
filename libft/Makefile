@@ -6,7 +6,7 @@
 #    By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/16 18:05:28 by sadawi            #+#    #+#              #
-#    Updated: 2020/08/12 19:35:29 by sadawi           ###   ########.fr        #
+#    Updated: 2020/08/26 17:15:22 by sadawi           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,7 +42,7 @@ CGET_NEXT_LINE = get_next_line/get_next_line.c
 SRCS= $(addprefix srcs/, $(CLIBFT)) $(addprefix srcs/, $(CFT_PRINTF)) \
 $(addprefix srcs/, $(CGET_NEXT_LINE))
 OBJS=$(addprefix objs/, $(notdir $(SRCS:.c=.o)))
-FLAGS=-Wall -Wextra -Werror
+FLAGS=-Wall -Wextra -Werror -g
 
 all: $(NAME)
 
