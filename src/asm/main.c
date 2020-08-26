@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/08/26 16:13:56 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/26 18:21:54 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -385,22 +385,8 @@ int		get_instruction_index(char *instruction)
 
 int		get_first_arg_index(char *line, char *instruction)
 {
-	//char	*ptr;
 	int		i;
 
-	// ptr = ft_strstr(&line[1], instruction);
-	// ptr += ft_strlen(instruction);
-	// i = ptr - line;
-	// while (line[i] && ft_isspace(line[i]))
-	// 	i++;
-	// return (i);
-	// i = ft_strlen(line) - 1;
-	// while (i > 0 && !ft_strstr(&line[i], instruction))
-	// 	i--;
-	// i += ft_strlen(instruction);
-	// while (line[i] && ft_isspace(line[i]))
-	// 	i++;
-	// return (i);
 	i = 0;
 	while (ft_strchr(LABEL_CHARS, line[i]))
 		i++;
