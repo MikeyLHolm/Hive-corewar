@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/08/26 13:51:55 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/26 16:07:04 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	print_file(t_file *head)
 char	*get_output_filename(char *input_filename)
 {
 	*ft_strrchr(input_filename, '.') = '\0';
-	return (ft_strjoin(input_filename, ".cor"));
+	return (ft_strjoin(input_filename, ".cor.sadawi"));
 }
 
 void	write_header(int fd)
