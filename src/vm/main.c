@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/27 17:55:07 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/27 18:11:31 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,17 +221,28 @@ void	print_player_code(t_player *player)
 	ft_printf("\n");
 }
 
-void	test_player(t_vm *vm)
+void	print_player(t_player *player)
 {
-	t_player *player;
-
-	player = save_player(vm, "42.cor", NULL);
 	ft_printf("PLAYER ID: %d\n", player->id);
 	ft_printf("PLAYER NAME: %s\n", player->name);
 	ft_printf("PLAYER COMMENT: %s\n", player->comment);
 	ft_printf("PLAYER SIZE: %d\n", player->size);
 	// ft_printf("PLAYER CODE: \n", player->code);
-	// print_player_code(player);
+	print_player_code(player);
+}
+
+void	manually_create_players(t_vm *vm)
+{
+	t_player *player;
+
+	player = save_player(vm, "42.cor", NULL);
+	player->next = save_player(vm, "test.cor", NULL);
+	vm->player = player;
+}
+
+void	init_arena(t_vm *vm)
+{
+	(void)vm;
 }
 
 int			main(int argc, char **argv)
@@ -242,11 +253,11 @@ int			main(int argc, char **argv)
 		handle_error("./vm [filename.cor] ([filename.cor] [filename.cor])");
 	vm = init_vm();
 	(void)argv;
-	test_player(vm);
 	// parse_input(vm, argc, argv);
 	//read_input();
 	//validate();
-	//init_arena();
+	manually_create_players(vm); //used to create players before argument parsing is functional
+	init_arena(vm);
 	//introduce_contestants();
 	//fight();
 	// if (vm->flags & LEAKS)
