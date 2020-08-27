@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/27 14:18:23 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/27 16:44:19 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,18 +50,97 @@ void		sort_players(t_player *players)
 	}
 }
 
-t_player	*save_player(t_vm *vm, char **argv, char *n)
+*/
+
+void	check_magic_header(int fd)
+{
+	unsigned char			buf[4];
+	int				magic_num;
+
+	if (read(fd, buf, 4) != 4)
+		handle_error("File ended too soon");
+	magic_num = COREWAR_EXEC_MAGIC;
+	if (buf[0] != ((unsigned char*)&magic_num)[3] ||
+	buf[1] != ((unsigned char*)&magic_num)[2] ||
+	buf[2] != ((unsigned char*)&magic_num)[1] ||
+	buf[3] != ((unsigned char*)&magic_num)[0])
+		handle_error("Magic header is incorrect");
+}
+
+char	*get_player_name(int fd)
+{
+	char buf[PROG_NAME_LENGTH + 4];
+
+	if (read(fd, buf, PROG_NAME_LENGTH + 4) != PROG_NAME_LENGTH + 4)
+		handle_error("File ended too soon");
+	return (ft_strdup(buf));
+}
+
+int		get_player_size(int fd)
+{
+	unsigned char	buf[4];
+	int		size;
+
+	if (read(fd, buf, 4) != 4)
+		handle_error("File ended too soon");
+	size = buf[3];
+	size += buf[2] * 16 * 16;
+	size += buf[1] * 16 * 16 * 16 * 16;
+	size += buf[0] * 16 * 16 * 16 * 16 * 16 * 16;
+	return (size);
+}
+
+char	*get_player_comment(int fd)
+{
+	char buf[COMMENT_LENGTH + 4];
+
+	if (read(fd, buf, COMMENT_LENGTH + 4) != COMMENT_LENGTH + 4)
+		handle_error("File ended too soon");
+	return (ft_strdup(buf));
+}
+
+char	*get_player_code(t_player *player, int fd)
+{
+	char	buf[BUF_SIZE];
+	char	*player_code;
+	int		amount_read;
+
+	amount_read = 0;
+	player_code = malloc(0);
+	while ((amount_read += read(fd, buf, player->size + 1)) == BUFF_SIZE)
+		player_code = ft_strjoinfree(player_code, ft_strdup(buf));
+	if (amount_read != player->size)
+		handle_error("Player size does not match code size");
+	return (player_code);
+}
+
+void	get_player_info(t_player *player)
+{
+	int fd;
+
+	if (((fd = open(player->filename, O_RDONLY)) == -1))
+		handle_error("PLayer file could not be opened");
+	check_magic_header(fd);
+	player->name = get_player_name(fd);
+	player->size = get_player_size(fd);
+	player->comment = get_player_comment(fd);
+	player->code = get_player_code(player, fd);
+}
+
+t_player	*save_player(t_vm *vm, char *filename, char *n)
 {
 	t_player	*player;
 
+	(void)vm;
 	if (!(player = (t_player*)ft_memalloc(sizeof(t_player))))
 		handle_error("Malloc failed at save_player.");
-	player->id = 0;
-	player->n = !n ? ft_atoi(n) : 0;
-	//read_file(player);
+	player->filename = filename;
+	player->n = n ? ft_atoi(n) : 0;
+	get_player_info(player);
 	return (player);
 }
 
+/*
 void		parse_input(t_vm *vm, int argc, char **argv)
 {
 	int			i;
@@ -95,6 +174,18 @@ void		parse_input(t_vm *vm, int argc, char **argv)
 	sort_players(players);
 }
 */
+
+void	test_player(t_vm *vm)
+{
+	t_player *player;
+
+	player = save_player(vm, "42.cor", NULL);
+	ft_printf("PLAYER NAME: %s\n", player->name);
+	ft_printf("PLAYER COMMENT: %s\n", player->comment);
+	ft_printf("PLAYER SIZE: %d\n", player->size);
+	ft_printf("PLAYER CODE: %s\n", player->code);
+}
+
 int			main(int argc, char **argv)
 {
 	t_vm	*vm;
@@ -103,6 +194,7 @@ int			main(int argc, char **argv)
 		handle_error("./vm [filename.cor] ([filename.cor] [filename.cor])");
 	vm = init_vm();
 	(void)argv;
+	test_player(vm);
 	// parse_input(vm, argc, argv);
 	//read_input();
 	//validate();
