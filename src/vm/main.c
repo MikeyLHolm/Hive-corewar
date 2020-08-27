@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/27 12:53:04 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/08/27 14:18:23 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,6 @@ t_vm		*init_vm(void)
 
 	if (!(vm = (t_vm*)ft_memalloc(sizeof(t_vm))))
 		handle_error("Malloc failed at VM init");
-	vm->flags = 0;
-	vm->player_n = 0;
-	vm->players = 0;
 	return (vm);
 }
 
