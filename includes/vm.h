@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/27 16:33:14 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/27 17:50:52 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,12 @@
 # define N				8
 # define VISUALIZER		16
 
-# define BUF_SIZE		4096
+# define BUFFER_SIZE	4096
 
 typedef struct 			s_player
 {
 	char				*filename;
-	char				*code;
+	unsigned char		*code;
 	char				*comment;
 	char				*name;
 	int					id;

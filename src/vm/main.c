@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/27 16:44:19 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/27 17:50:12 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,17 +99,45 @@ char	*get_player_comment(int fd)
 	return (ft_strdup(buf));
 }
 
-char	*get_player_code(t_player *player, int fd)
+unsigned char	*resize_memory(unsigned char *player_code, int size, int size_to_add)
 {
-	char	buf[BUF_SIZE];
-	char	*player_code;
+	unsigned char *tmp;
+
+	if (!(tmp = malloc(size + size_to_add)))
+		handle_error("Malloc failed");
+	ft_memcpy(tmp, player_code, size);
+	free(player_code);
+	return (tmp);
+}
+
+unsigned char	*get_player_code(t_player *player, int fd)
+{
+	char	buf[BUFFER_SIZE];
+	unsigned char	*player_code;
 	int		amount_read;
+	int		total_read;
 
 	amount_read = 0;
-	player_code = malloc(0);
-	while ((amount_read += read(fd, buf, player->size + 1)) == BUFF_SIZE)
-		player_code = ft_strjoinfree(player_code, ft_strdup(buf));
-	if (amount_read != player->size)
+	total_read = 0;
+	player_code = NULL;
+	while ((amount_read = read(fd, buf, BUFFER_SIZE)) > 0)
+	{
+		if (!player_code)
+		{
+			if (!(player_code = malloc(amount_read)))
+				handle_error("Malloc failed");
+			ft_memcpy(player_code, buf, amount_read);
+		}
+		else
+		{
+			player_code = resize_memory(player_code, total_read, amount_read);
+			ft_memcpy(&player_code[total_read], buf, amount_read);
+		}
+		total_read += amount_read;
+		if (amount_read != BUFFER_SIZE)
+			break ;
+	}
+	if (total_read != player->size)
 		handle_error("Player size does not match code size");
 	return (player_code);
 }
@@ -178,12 +206,23 @@ void		parse_input(t_vm *vm, int argc, char **argv)
 void	test_player(t_vm *vm)
 {
 	t_player *player;
+	int		i;
 
 	player = save_player(vm, "42.cor", NULL);
 	ft_printf("PLAYER NAME: %s\n", player->name);
 	ft_printf("PLAYER COMMENT: %s\n", player->comment);
 	ft_printf("PLAYER SIZE: %d\n", player->size);
-	ft_printf("PLAYER CODE: %s\n", player->code);
+	ft_printf("PLAYER CODE: \n", player->code);
+	i = 0;
+	while (i < player->size)
+	{
+		ft_printf("%02x", (unsigned char)player->code[i++]);
+		if (!(i % 2))
+			ft_printf(" ");
+		if (!(i % 8))
+			ft_printf("\n");
+	}
+	ft_printf("\n");
 }
 
 int			main(int argc, char **argv)
