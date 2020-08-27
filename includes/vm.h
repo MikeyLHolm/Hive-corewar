@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/27 17:50:52 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/27 18:19:10 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,10 @@ typedef struct 			s_vm
 {
 	int					flags;
 	int					player_n;
-	int					players;
-	t_player			*player;
+	int					player_amount;
+	t_player			*players;
 	t_input				*file;
+	unsigned char		arena[MEM_SIZE];
 }						t_vm;
 
 #endif

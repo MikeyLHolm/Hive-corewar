@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/27 18:13:59 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/27 18:20:43 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -238,14 +238,30 @@ void	manually_create_players(t_vm *vm)
 	t_player *player;
 
 	vm->player_amount = 2;
-	player = save_player(vm, "42.cor", NULL);
+	player = save_player(vm, "test.cor", NULL);
 	player->next = save_player(vm, "test.cor", NULL);
-	vm->player = player;
+	vm->players = player;
+}
+
+void	load_players(t_vm *vm)
+{
+	t_player *cur_player;
+	int offset;
+	int i;
+
+	i = 0;
+	cur_player = vm->players;
+	offset = MEM_SIZE / vm->player_amount;
+	while (i < vm->player_amount)
+	{
+		ft_memcpy(&vm->arena[i++ * offset], cur_player->code, cur_player->size);
+		cur_player = cur_player->next;
+	}
 }
 
 void	init_arena(t_vm *vm)
 {
-	(void)vm;
+	load_players(vm);
 }
 
 int			main(int argc, char **argv)
