@@ -6,11 +6,17 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/26 17:23:54 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/08/27 12:53:04 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
+
+void	handle_error(char *message)
+{
+	ft_printf("%s.\n", message);
+	exit(1);
+}
 
 t_vm		*init_vm(void)
 {
@@ -37,7 +43,7 @@ t_vm		*init_vm(void)
 // 	else if (flag == 'v')
 // 		vm->flags = vm->flags | VISUALIZER;
 // }
-
+/*
 void		sort_players(t_player *players)
 {
 	while (players)
@@ -91,7 +97,7 @@ void		parse_input(t_vm *vm, int argc, char **argv)
 	players = NULL;
 	sort_players(players);
 }
-
+*/
 int			main(int argc, char **argv)
 {
 	t_vm	*vm;
@@ -99,13 +105,14 @@ int			main(int argc, char **argv)
 	if (argc < 2)
 		handle_error("./vm [filename.cor] ([filename.cor] [filename.cor])");
 	vm = init_vm();
-	parse_input(vm, argc, argv);
+	(void)argv;
+	// parse_input(vm, argc, argv);
 	//read_input();
 	//validate();
 	//init_arena();
 	//introduce_contestants();
 	//fight();
-	if (vm->flags & LEAKS)
-		system("leaks corewar");
+	// if (vm->flags & LEAKS)
+	// 	system("leaks corewar");
 	return (0);
 }

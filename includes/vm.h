@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/26 17:00:31 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/08/27 12:51:15 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,4 @@ typedef struct 			s_vm
 	t_input				*file;
 }						t_vm;
 
-#endif VM_H
+#endif
