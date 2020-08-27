@@ -205,16 +205,10 @@ void		parse_input(t_vm *vm, int argc, char **argv)
 }
 */
 
-void	test_player(t_vm *vm)
+void	print_player_code(t_player *player)
 {
-	t_player *player;
-	int		i;
+	int i;
 
-	player = save_player(vm, "42.cor", NULL);
-	ft_printf("PLAYER NAME: %s\n", player->name);
-	ft_printf("PLAYER COMMENT: %s\n", player->comment);
-	ft_printf("PLAYER SIZE: %d\n", player->size);
-	ft_printf("PLAYER CODE: \n", player->code);
 	i = 0;
 	while (i < player->size)
 	{
@@ -225,6 +219,19 @@ void	test_player(t_vm *vm)
 			ft_printf("\n");
 	}
 	ft_printf("\n");
+}
+
+void	test_player(t_vm *vm)
+{
+	t_player *player;
+
+	player = save_player(vm, "42.cor", NULL);
+	ft_printf("PLAYER ID: %d\n", player->id);
+	ft_printf("PLAYER NAME: %s\n", player->name);
+	ft_printf("PLAYER COMMENT: %s\n", player->comment);
+	ft_printf("PLAYER SIZE: %d\n", player->size);
+	// ft_printf("PLAYER CODE: \n", player->code);
+	// print_player_code(player);
 }
 
 int			main(int argc, char **argv)
