@@ -6,7 +6,7 @@
 #    By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/16 18:05:28 by sadawi            #+#    #+#              #
-#    Updated: 2020/08/26 17:15:22 by sadawi           ###   ########.fr        #
+#    Updated: 2020/08/27 15:27:16 by sadawi           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,7 @@ libft/ft_putlong.c libft/ft_ulonglen.c libft/ft_putulong.c \
 libft/ft_itoa_base.c libft/ft_itoa_base_low.c libft/ft_itoa_base_ul.c \
 libft/ft_itoa_base_ul_low.c libft/ft_putdouble.c libft/ft_itoa_double.c \
 libft/ft_chartostr.c libft/ft_atoilong.c libft/ft_strjoinfree.c \
-libft/ft_isdigit_neg.c libft/ft_strcatfree.c
+libft/ft_isdigit_neg.c libft/ft_strcatfree.c libft/ft_atoi_base.c
 CFT_PRINTF = ft_printf/ft_printf.c ft_printf/handle_digit_datatypes.c \
 ft_printf/handle_string_datatypes.c ft_printf/handle_flags.c \
 ft_printf/handle_format_flags.c ft_printf/handle_width.c \
