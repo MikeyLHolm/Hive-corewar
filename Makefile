@@ -6,7 +6,7 @@
 #    By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/04/10 19:26:38 by sadawi            #+#    #+#              #
-#    Updated: 2020/08/27 08:53:33 by mlindhol         ###   ########.fr        #
+#    Updated: 2020/08/27 08:58:36 by mlindhol         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,13 +16,18 @@ NAME_CW = corewar
 CFILES_ASM = main.c
 SRCS_ASM = $(addprefix src/asm/, $(CFILES_ASM))
 OBJS_ASM = $(addprefix objs/, $(notdir $(SRCS_ASM:.c=.o)))
+
+CFILES_CW = main.c
+SRCS_CW = $(addprefix src/asm/, $(CFILES_CW))
+OBJS_CW = $(addprefix objs/, $(notdir $(SRCS_CW:.c=.o)))
+
 INCLUDES = -I libft/includes -I includes
 FLAGS = -Wall -Wextra -Werror -g
 RUN_LIB = make --no-print-directory -C libft/
 
 all:
 	@$(RUN_LIB)
-	@make --no-print-director $(NAME_ASM)
+	@make --no-print-director $(NAME_ASM) $(NAME_CW)
 
 $(NAME_ASM): $(SRCS_ASM) libft/
 	@rm -rf objs
@@ -32,6 +37,15 @@ $(NAME_ASM): $(SRCS_ASM) libft/
 	@mv $(notdir $(SRCS_ASM:.c=.o)) objs
 	@gcc $(FLAGS) $(INCLUDES) -o $(NAME_ASM) $(OBJS_ASM) $(LIBS) libft/libft.a
 	@echo $(NAME_ASM) compiled succesfully!
+
+$(NAME_CW): $(SRCS_CW) libft/
+	@rm -rf objs
+	@echo Compiling $(NAME_CW)...
+	@gcc $(FLAGS) $(INCLUDES) -c $(SRCS_CW)
+	@mkdir objs
+	@mv $(notdir $(SRCS_CW:.c=.o)) objs
+	@gcc $(FLAGS) $(INCLUDES) -o $(NAME_CW) $(OBJS_CW) $(LIBS) libft/libft.a
+	@echo $(NAME_CW) compiled succesfully!
 
 lib:
 	@$(RUN_LIB)
@@ -46,13 +60,13 @@ noflags:
 	@echo $(NAME_ASM) compiled without flags succesfully!
 
 clean:
-	@/bin/rm -f $(OBJS_ASM)
+	@/bin/rm -f $(OBJS_ASM) $(OBJS_CW)
 	@rm -rf objs
 	@make -C libft/ clean
 	@echo Clean successful!
 
 fclean: clean
-	@/bin/rm -f $(NAME_ASM)
+	@/bin/rm -f $(NAME_ASM) $(NAME_CW)
 	@make -C libft/ fclean
 	@echo FClean successful!
 
