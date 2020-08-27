@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/27 18:19:10 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/27 19:41:31 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,15 @@ typedef struct 			s_input
 	struct s_input		*next;
 }						t_input;
 
+typedef struct			s_carriage
+{
+	int					id;
+	int					carry;
+	int					reg[REG_NUMBER];
+	int					statement;
+	int					cycles_left;
+}						t_carriage;
+
 typedef struct 			s_vm
 {
 	int					flags;
@@ -55,6 +64,9 @@ typedef struct 			s_vm
 	t_player			*players;
 	t_input				*file;
 	unsigned char		arena[MEM_SIZE];
+	int					player_last_alive;
+	int					cycles_to_die;
+	int					cycles;
 }						t_vm;
 
 #endif

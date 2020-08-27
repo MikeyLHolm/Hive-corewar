@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/27 18:20:43 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/27 19:41:54 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -262,6 +262,7 @@ void	load_players(t_vm *vm)
 void	init_arena(t_vm *vm)
 {
 	load_players(vm);
+	//init_carriages(vm);
 }
 
 int			main(int argc, char **argv)
@@ -280,6 +281,6 @@ int			main(int argc, char **argv)
 	//introduce_contestants();
 	//fight();
 	// if (vm->flags & LEAKS)
-	// 	system("leaks corewar");
+	//system("leaks corewar");
 	return (0);
 }
