@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/28 13:01:17 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/28 15:23:07 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ t_vm		*init_vm(void)
 
 	if (!(vm = (t_vm*)ft_memalloc(sizeof(t_vm))))
 		handle_error("Malloc failed at VM init");
+	vm->cycles_to_die = CYCLE_TO_DIE;
 	return (vm);
 }
 
@@ -267,6 +268,7 @@ t_carriage	*new_carriage(int id, t_carriage *next)
 		handle_error("Malloc failed");
 	if (REG_NUMBER)
 		carriage->reg[0] = id;
+	carriage->alive = 1;
 	carriage->next = next;
 	return (carriage);
 }
@@ -307,6 +309,84 @@ void	introduce_contestants(t_vm *vm)
 	}
 }
 
+void	disable_dead_carriages(t_vm *vm)
+{
+	t_carriage *cur_carriage;
+
+
+	cur_carriage = vm->carriages;
+	while (cur_carriage)
+	{
+		if (cur_carriage->last_live_cycle <= vm->cycles - vm->cycles_to_die)
+			cur_carriage->alive = 0;
+		cur_carriage = cur_carriage->next;
+	}
+}
+
+void	perform_check(t_vm *vm)
+{
+	static int cycle;
+
+	if (cycle++ >= vm->cycles_to_die)
+	{
+		disable_dead_carriages(vm);
+		if (vm->period_live_statements >= NBR_LIVE)
+			vm->cycles_to_die -= CYCLE_DELTA;
+		else
+		{
+			vm->checks_without_change++;
+			if (vm->checks_without_change >= MAX_CHECKS)
+			{
+				vm->cycles_to_die -= CYCLE_DELTA;
+				vm->checks_without_change = 0;
+			}
+		}
+		cycle = 0;
+	}
+}
+
+int		check_carriages_alive(t_vm *vm)
+{
+	t_carriage *cur_carriage;
+
+	cur_carriage = vm->carriages;
+	while (cur_carriage)
+	{
+		if (cur_carriage->alive)
+			return (1);
+		cur_carriage = cur_carriage->next;
+	}
+	return (0);
+}
+
+void	battle_loop(t_vm *vm)
+{
+	while (1)
+	{
+		perform_check(vm);
+		if (check_carriages_alive(vm))
+			break;
+		//set_statement_codes(vm);
+		//reduce_cycles(vm);
+		//perform_statements(vm);
+	}
+	//get_winner(vm);
+}
+
+void	print_arena(t_vm *vm)
+{
+	int i;
+
+	i = 0;
+	while (i < MEM_SIZE)
+	{
+		ft_printf("%02x ", (unsigned char)vm->arena[i++]);
+		if (!(i % 64))
+			ft_printf("\n");
+	}
+	ft_printf("\n");
+}
+
 int			main(int argc, char **argv)
 {
 	t_vm	*vm;
@@ -321,7 +401,8 @@ int			main(int argc, char **argv)
 	manually_create_players(vm); //used to create players before argument parsing is functional
 	init_arena(vm);
 	introduce_contestants(vm);
-	//fight();
+	//print_arena(vm);
+	battle_loop(vm);
 	// if (vm->flags & LEAKS)
 	//system("leaks corewar");
 	return (0);
