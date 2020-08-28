@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/28 13:39:15 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/08/28 16:00:32 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ t_vm		*init_vm(void)
 
 	if (!(vm = (t_vm*)ft_memalloc(sizeof(t_vm))))
 		handle_error("Malloc failed at VM init");
+	vm->players = NULL;
 	return (vm);
 }
 
@@ -44,15 +45,13 @@ void		save_flag(t_vm *vm, char flag)
 void		sort_players(t_vm *vm)
 {
 	ft_putendl("1");
-	while (vm->player)
+	while (vm->players)
 	{
 		ft_putendl("2");
-		ft_printf("id = %d || n = %d\n", vm->player->id, vm->player->n);
-		vm->player = vm->player->next;
+		ft_printf("id = %d || n = %d\n", vm->players->id, vm->players->n);
+		vm->players = vm->players->next;
 	}
 }
-
-*/
 
 void	check_magic_header(int fd)
 {
@@ -170,15 +169,35 @@ t_player	*save_player(t_vm *vm, char *filename, char *n)
 	player->id = id++;
 	player->filename = filename;
 	player->n = n ? ft_atoi(n) : 0;
-	get_player_info(player);
+	ft_putendl("7");
+	//get_player_info(player);
 	return (player);
 }
 
-/*
+void		parse_player(t_vm *vm, char *filename, char *n)
+{
+	t_player	*cur;
+
+	cur = NULL;
+	ft_putendl("2");
+	if (!vm->players)
+	{
+		ft_putendl("4");
+		cur = save_player(vm, filename, n);
+		vm->players = cur;
+	}
+	else
+	{
+		ft_putendl("5");
+		cur->next = save_player(vm, filename, n);
+		ft_putendl("6");
+		cur = cur->next;
+	}
+}
+
 void		parse_input(t_vm *vm, int argc, char **argv)
 {
 	int			i;
-	t_player	*tmp;
 
 	i = 0;
 	while (++i < argc)
@@ -195,25 +214,22 @@ void		parse_input(t_vm *vm, int argc, char **argv)
 		{
 			vm->flags = vm->flags | N;
 			if (argv[i + 1] && argv[i + 2])
-			{
-				tmp = save_player(vm, argv[i + 2], argv[i + 1]);
-				vm->player = !vm->player ? tmp : vm->player;
-			}
+				parse_player(vm, argv[i + 2], argv[i + 1]);
 			else
 				handle_error("-n flag in wrong place");
 			i += 2;
 		}
 		else
 		{
-			tmp = save_player(vm, argv[i], NULL);
-			vm->player = !vm->player ? tmp : vm->player;
+			ft_putendl("1");
+			parse_player(vm, argv[i + 2], argv[i + 1]);
 		}
-		tmp = tmp->next;
+		ft_printf("end args loop, i = %d\n", i);
 	}
-	tmp = NULL;
+	ft_putendl("zeze");
 	sort_players(vm);
 }
-*/
+
 
 void	print_player_code(t_player *player)
 {
@@ -326,9 +342,9 @@ int			main(int argc, char **argv)
 	parse_input(vm, argc, argv);
 	//read_input();
 	//validate();
-	manually_create_players(vm); //used to create players before argument parsing is functional
-	init_arena(vm);
-	introduce_contestants(vm);
+	// manually_create_players(vm); //used to create players before argument parsing is functional
+	// init_arena(vm);
+	// introduce_contestants(vm);
 	//fight();
 	// if (vm->flags & LEAKS)
 	//system("leaks corewar");
