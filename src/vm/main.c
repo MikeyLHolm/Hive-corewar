@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/28 12:57:43 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/28 13:01:17 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -292,6 +292,21 @@ void	init_arena(t_vm *vm)
 	init_carriages(vm);
 }
 
+void	introduce_contestants(t_vm *vm)
+{
+	t_player *cur_player;
+
+	cur_player = vm->players;
+	ft_printf("Introducing contestants ...\n");
+	while (cur_player)
+	{
+		ft_printf("* Player %d, weighing %d bytes, \"%s\" (\"%s\")!\n",
+		cur_player->id, cur_player->size,
+		cur_player->name, cur_player->comment);
+		cur_player = cur_player->next;
+	}
+}
+
 int			main(int argc, char **argv)
 {
 	t_vm	*vm;
@@ -305,7 +320,7 @@ int			main(int argc, char **argv)
 	//validate();
 	manually_create_players(vm); //used to create players before argument parsing is functional
 	init_arena(vm);
-	//introduce_contestants();
+	introduce_contestants(vm);
 	//fight();
 	// if (vm->flags & LEAKS)
 	//system("leaks corewar");
