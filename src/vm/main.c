@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/28 13:01:17 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/28 13:39:15 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,26 +27,28 @@ t_vm		*init_vm(void)
 	return (vm);
 }
 
-// void		save_flag(t_vm *vm, char flag)
-// {
-// 	if (flag == 'd')
-// 		vm->flags = vm->flags | DUMP;
-// 	else if (flag == 'e')
-// 		vm->flags = vm->flags | ERROR;
-// 	else if (flag == 'l')
-// 		vm->flags = vm->flags | LEAKS;
-// 	else if (flag == 'n')
-// 		vm->flags = vm->flags | N;
-// 	else if (flag == 'v')
-// 		vm->flags = vm->flags | VISUALIZER;
-// }
-/*
-void		sort_players(t_player *players)
+void		save_flag(t_vm *vm, char flag)
 {
-	while (players)
+	if (flag == 'd')
+		vm->flags = vm->flags | DUMP;
+	else if (flag == 'e')
+		vm->flags = vm->flags | ERROR;
+	else if (flag == 'l')
+		vm->flags = vm->flags | LEAKS;
+	else if (flag == 'n')
+		vm->flags = vm->flags | N;
+	else if (flag == 'v')
+		vm->flags = vm->flags | VISUALIZER;
+}
+
+void		sort_players(t_vm *vm)
+{
+	ft_putendl("1");
+	while (vm->player)
 	{
-		ft_printf("id = %d || n = %d\n", players->id, players->n);
-		players = players->next;
+		ft_putendl("2");
+		ft_printf("id = %d || n = %d\n", vm->player->id, vm->player->n);
+		vm->player = vm->player->next;
 	}
 }
 
@@ -176,7 +178,7 @@ t_player	*save_player(t_vm *vm, char *filename, char *n)
 void		parse_input(t_vm *vm, int argc, char **argv)
 {
 	int			i;
-	t_player	*players;
+	t_player	*tmp;
 
 	i = 0;
 	while (++i < argc)
@@ -187,23 +189,29 @@ void		parse_input(t_vm *vm, int argc, char **argv)
 			vm->flags = vm->flags | ERROR;
 		else if (ft_strequ(argv[i], "-x"))
 			vm->flags = vm->flags | LEAKS;
+		else if (ft_strequ(argv[i], "-v"))
+			vm->flags = vm->flags | VISUALIZER;
 		else if (ft_strequ(argv[i], "-n"))
 		{
 			vm->flags = vm->flags | N;
 			if (argv[i + 1] && argv[i + 2])
-				players = save_player(vm, argv[i + 2], argv[i + 1]);
+			{
+				tmp = save_player(vm, argv[i + 2], argv[i + 1]);
+				vm->player = !vm->player ? tmp : vm->player;
+			}
 			else
 				handle_error("-n flag in wrong place");
 			i += 2;
 		}
-		else if (ft_strequ(argv[i], "-v"))
-			vm->flags = vm->flags | VISUALIZER;
 		else
-			players = save_player(vm, argv[i], NULL);
-		players = players->next;
+		{
+			tmp = save_player(vm, argv[i], NULL);
+			vm->player = !vm->player ? tmp : vm->player;
+		}
+		tmp = tmp->next;
 	}
-	players = NULL;
-	sort_players(players);
+	tmp = NULL;
+	sort_players(vm);
 }
 */
 
@@ -315,7 +323,7 @@ int			main(int argc, char **argv)
 		handle_error("./vm [filename.cor] ([filename.cor] [filename.cor])");
 	vm = init_vm();
 	(void)argv;
-	// parse_input(vm, argc, argv);
+	parse_input(vm, argc, argv);
 	//read_input();
 	//validate();
 	manually_create_players(vm); //used to create players before argument parsing is functional
