@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/27 19:41:31 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/28 12:56:12 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ typedef struct			s_carriage
 	int					reg[REG_NUMBER];
 	int					statement;
 	int					cycles_left;
+	struct s_carriage	*next;
 }						t_carriage;
 
 typedef struct 			s_vm
@@ -67,6 +68,7 @@ typedef struct 			s_vm
 	int					player_last_alive;
 	int					cycles_to_die;
 	int					cycles;
+	t_carriage			*carriages;
 }						t_vm;
 
 #endif

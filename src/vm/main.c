@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/27 19:41:54 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/28 12:57:43 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -259,10 +259,37 @@ void	load_players(t_vm *vm)
 	}
 }
 
+t_carriage	*new_carriage(int id, t_carriage *next)
+{
+	t_carriage *carriage;
+
+	if (!(carriage = (t_carriage*)ft_memalloc(sizeof(t_carriage))))
+		handle_error("Malloc failed");
+	if (REG_NUMBER)
+		carriage->reg[0] = id;
+	carriage->next = next;
+	return (carriage);
+}
+
+void	init_carriages(t_vm *vm)
+{
+	t_carriage *head;
+	t_player *cur_player;
+
+	head = NULL;
+	cur_player = vm->players;
+	while (cur_player)
+	{
+		head = new_carriage(cur_player->id, head);
+		cur_player = cur_player->next;
+	}
+	vm->carriages = head;
+}
+
 void	init_arena(t_vm *vm)
 {
 	load_players(vm);
-	//init_carriages(vm);
+	init_carriages(vm);
 }
 
 int			main(int argc, char **argv)
