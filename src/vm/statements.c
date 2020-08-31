@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/31 16:04:19 by sadawi            #+#    #+#             */
-/*   Updated: 2020/08/31 18:46:21 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/31 18:54:35 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -291,4 +291,41 @@ void	op_st(t_vm *vm, t_carriage *cur)
 		arg2 = get_indirect_address_trunc(vm, cur, 3, 0);
 		write_bytes(vm, cur->position + arg2, 4, cur->reg[arg1]);
 	}
+}
+
+void	op_sti(t_vm *vm, t_carriage *cur)
+{
+	unsigned char	act;
+	int				arg1;
+	int				arg2;
+	int				reg_num;
+	int				offset;
+
+	act = (cur->position + 1) % MEM_SIZE;
+	reg_num = get_register(vm, cur, 2);
+	offset = 3;
+	if (((act >> 5) & 0x01) && ((act >> 4) & 0x00))
+	{
+		arg1 = get_direct(vm, cur, offset);
+		offset += 2;
+	}
+	else if (((act >> 5) & 0x01) && ((act >> 4) & 0x01))
+	{
+		arg1 = get_indirect_address_trunc(vm, cur, offset, 0);
+		offset += 2;
+	}
+	else
+	{
+		arg1 = get_register(vm, cur, offset);
+		arg1 = cur->reg[arg1];
+		offset += 1;
+	}
+	if (((act >> 3) & 0x00))
+	{
+		arg2 = get_register(vm, cur, offset);
+		arg2 = cur->reg[arg2];
+	}
+	else
+		arg2 = get_direct(vm, cur, offset);
+	write_bytes(vm, cur->position + (arg1 + arg2) % IDX_MOD, 4, cur->reg[reg_num]);
 }
