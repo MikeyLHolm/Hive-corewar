@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/25 14:29:20 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/26 13:21:37 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/31 14:33:23 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ typedef struct		s_op
 	int				op_code;
 	char			*op_name;
 	int				size_t_dir;
+	int				cycles;
 }					t_op;
 
 /*
@@ -40,7 +41,8 @@ static const		t_op	g_op_tab[OP_CODE_AMOUNT] =
 		.args_n = 1,
 		.args_type = {T_DIR, 0, 0},
 		.args_type_code = 0,
-		.size_t_dir = 0
+		.size_t_dir = 0,
+		.cycles = 10
 	},
 	{
 		.op_code = 0x02,
@@ -48,7 +50,8 @@ static const		t_op	g_op_tab[OP_CODE_AMOUNT] =
 		.args_n = 2,
 		.args_type = {T_DIR | T_IND, T_REG, 0},
 		.args_type_code = 1,
-		.size_t_dir = 0
+		.size_t_dir = 0,
+		.cycles = 5
 	},
 	{
 		.op_code = 0x03,
@@ -56,7 +59,8 @@ static const		t_op	g_op_tab[OP_CODE_AMOUNT] =
 		.args_n = 2,
 		.args_type = {T_REG, T_IND | T_REG, 0},
 		.args_type_code = 1,
-		.size_t_dir = 0
+		.size_t_dir = 0,
+		.cycles = 5
 	},
 	{
 		.op_code = 0x04,
@@ -64,7 +68,8 @@ static const		t_op	g_op_tab[OP_CODE_AMOUNT] =
 		.args_n = 3,
 		.args_type = {T_REG, T_REG, T_REG},
 		.args_type_code = 1,
-		.size_t_dir = 0
+		.size_t_dir = 0,
+		.cycles = 10
 	},
 	{
 		.op_code = 0x05,
@@ -72,7 +77,8 @@ static const		t_op	g_op_tab[OP_CODE_AMOUNT] =
 		.args_n = 3,
 		.args_type = {T_REG, T_REG, T_REG},
 		.args_type_code = 1,
-		.size_t_dir = 0
+		.size_t_dir = 0,
+		.cycles = 10
 	},
 	{
 		.op_code = 0x06,
@@ -80,7 +86,8 @@ static const		t_op	g_op_tab[OP_CODE_AMOUNT] =
 		.args_n = 3,
 		.args_type = {T_REG | T_DIR | T_IND, T_REG | T_IND | T_DIR, T_REG},
 		.args_type_code = 1,
-		.size_t_dir = 0
+		.size_t_dir = 0,
+		.cycles = 6
 	},
 	{
 		.op_code = 0x07,
@@ -88,7 +95,8 @@ static const		t_op	g_op_tab[OP_CODE_AMOUNT] =
 		.args_n = 3,
 		.args_type = {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG},
 		.args_type_code = 1,
-		.size_t_dir = 0
+		.size_t_dir = 0,
+		.cycles = 6
 	},
 	{
 		.op_code = 0x08,
@@ -96,7 +104,8 @@ static const		t_op	g_op_tab[OP_CODE_AMOUNT] =
 		.args_n = 3,
 		.args_type = {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG},
 		.args_type_code = 1,
-		.size_t_dir = 0
+		.size_t_dir = 0,
+		.cycles = 6
 	},
 	{
 		.op_code = 0x09,
@@ -104,7 +113,8 @@ static const		t_op	g_op_tab[OP_CODE_AMOUNT] =
 		.args_n = 1,
 		.args_type = {T_DIR, 0, 0},
 		.args_type_code = 0,
-		.size_t_dir = 1
+		.size_t_dir = 1,
+		.cycles = 20
 	},
 	{
 		.op_code = 0x0a,
@@ -112,7 +122,8 @@ static const		t_op	g_op_tab[OP_CODE_AMOUNT] =
 		.args_n = 3,
 		.args_type = {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG},
 		.args_type_code = 1,
-		.size_t_dir = 1
+		.size_t_dir = 1,
+		.cycles = 25
 	},
 	{
 		.op_code = 0x0b,
@@ -120,7 +131,8 @@ static const		t_op	g_op_tab[OP_CODE_AMOUNT] =
 		.args_n = 3,
 		.args_type = {T_REG, T_REG | T_DIR | T_IND, T_DIR | T_REG},
 		.args_type_code = 1,
-		.size_t_dir = 1
+		.size_t_dir = 1,
+		.cycles = 25
 	},
 	{
 		.op_code = 0x0c,
@@ -128,7 +140,8 @@ static const		t_op	g_op_tab[OP_CODE_AMOUNT] =
 		.args_n = 1,
 		.args_type = {T_DIR, 0, 0},
 		.args_type_code = 0,
-		.size_t_dir = 1
+		.size_t_dir = 1,
+		.cycles = 800
 	},
 	{
 		.op_code = 0x0d,
@@ -136,7 +149,8 @@ static const		t_op	g_op_tab[OP_CODE_AMOUNT] =
 		.args_n = 2,
 		.args_type = {T_DIR | T_IND, T_REG, 0},
 		.args_type_code = 1,
-		.size_t_dir = 0
+		.size_t_dir = 0,
+		.cycles = 10
 	},
 	{
 		.op_code = 0x0e,
@@ -144,7 +158,8 @@ static const		t_op	g_op_tab[OP_CODE_AMOUNT] =
 		.args_n = 3,
 		.args_type = {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG},
 		.args_type_code = 1,
-		.size_t_dir = 1
+		.size_t_dir = 1,
+		.cycles = 50
 	},
 	{
 		.op_code = 0x0f,
@@ -152,7 +167,8 @@ static const		t_op	g_op_tab[OP_CODE_AMOUNT] =
 		.args_n = 1,
 		.args_type = {T_DIR, 0, 0},
 		.args_type_code = 0,
-		.size_t_dir = 1
+		.size_t_dir = 1,
+		.cycles = 1000
 	},
 	{
 		.op_code = 0x10,
@@ -160,7 +176,8 @@ static const		t_op	g_op_tab[OP_CODE_AMOUNT] =
 		.args_n = 1,
 		.args_type = {T_REG, 0, 0},
 		.args_type_code = 1,
-		.size_t_dir = 0
+		.size_t_dir = 0,
+		.cycles = 2
 	}
 };
 
