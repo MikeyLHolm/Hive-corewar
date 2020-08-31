@@ -134,7 +134,7 @@ void	op_ld(t_vm *vm, t_carriage *cur)
 	int				num;
 	int				reg_num;
 
-	act = (cur->position + 1) % MEM_SIZE;
+	act = (vm->arena[(cur->position + 1) % MEM_SIZE]);
 	if (((act >> 6) & 0x00))
 		num = get_direct(vm, cur, 2);
 	else
@@ -150,7 +150,7 @@ void	op_lld(t_vm *vm, t_carriage *cur)
 	int				num;
 	int				reg_num;
 
-	act = (cur->position + 1) % MEM_SIZE;
+	act = (vm->arena[(cur->position + 1) % MEM_SIZE]);
 	if (((act >> 6) & 0x00))
 		num = get_direct(vm, cur, 2);
 	else
@@ -198,7 +198,7 @@ void	op_ldi(t_vm *vm, t_carriage *cur)
 	int				reg_num;
 	int				offset;
 
-	act = (cur->position + 1) % MEM_SIZE;
+	act = (vm->arena[(cur->position + 1) % MEM_SIZE]);
 	offset = 2;
 	if (((act >> 7) & 0x01) && ((act >> 6) & 0x00))
 	{
@@ -240,7 +240,7 @@ void	op_lldi(t_vm *vm, t_carriage *cur)
 	int				reg_num;
 	int				offset;
 
-	act = (cur->position + 1) % MEM_SIZE;
+	act = (vm->arena[(cur->position + 1) % MEM_SIZE]);
 	offset = 2;
 	if (((act >> 7) & 0x01) && ((act >> 6) & 0x00))
 	{
@@ -279,7 +279,7 @@ void	op_st(t_vm *vm, t_carriage *cur)
 	int				arg1;
 	int				arg2;
 
-	act = (cur->position + 1) % MEM_SIZE;
+	act = (vm->arena[(cur->position + 1) % MEM_SIZE]);
 	arg1 = get_register(vm, cur, 2);
 	if (((act >> 5) & 0x00))
 	{
@@ -301,7 +301,7 @@ void	op_sti(t_vm *vm, t_carriage *cur)
 	int				reg_num;
 	int				offset;
 
-	act = (cur->position + 1) % MEM_SIZE;
+	act = (vm->arena[(cur->position + 1) % MEM_SIZE]);
 	reg_num = get_register(vm, cur, 2);
 	offset = 3;
 	if (((act >> 5) & 0x01) && ((act >> 4) & 0x00))
@@ -338,7 +338,7 @@ void	op_and(t_vm *vm, t_carriage *cur)
 	int				reg_num;
 	int				offset;
 
-	act = (cur->position + 1) % MEM_SIZE;
+	act = (vm->arena[(cur->position + 1) % MEM_SIZE]);
 	offset = 2;
 	if (((act >> 7) & 0x01) && ((act >> 6) & 0x00))
 	{
