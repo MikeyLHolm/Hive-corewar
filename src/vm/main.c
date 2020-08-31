@@ -572,6 +572,7 @@ void	battle_loop(t_vm *vm)
 		set_statement_codes(vm);
 		reduce_cycles(vm);
 		perform_statements(vm);
+		vm->cycles++;
 	}
 	//get_winner(vm);
 }
