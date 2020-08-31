@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/31 16:04:19 by sadawi            #+#    #+#             */
-/*   Updated: 2020/08/31 18:22:11 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/31 18:25:13 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int		get_direct(t_vm *vm, t_carriage *cur, int offset)
 	return (arg);
 }
 
-int		get_indirect_value(t_vm *vm, t_carriage *cur, int offset, int addition)
+int		get_indirect_value_trunc(t_vm *vm, t_carriage *cur, int offset, int addition)
 {
 	int relative_address;
 	int	arg;
@@ -42,6 +42,23 @@ int		get_indirect_value(t_vm *vm, t_carriage *cur, int offset, int addition)
 	relative_address += vm->arena[(cur->position + offset + 1) % MEM_SIZE];
 	relative_address += addition;
 	relative_address %= IDX_MOD;
+	arg = 0;
+	arg += vm->arena[(cur->position + relative_address) % MEM_SIZE] * 256 * 256 * 256;
+	arg += vm->arena[(cur->position + relative_address + 1) % MEM_SIZE] * 256 * 256;
+	arg += vm->arena[(cur->position + relative_address + 2) % MEM_SIZE] * 256;
+	arg += vm->arena[(cur->position + relative_address + 3) % MEM_SIZE];
+	return (arg);
+}
+
+int		get_indirect_value(t_vm *vm, t_carriage *cur, int offset, int addition)
+{
+	int relative_address;
+	int	arg;
+
+	relative_address = 0;
+	relative_address += vm->arena[(cur->position + offset) % MEM_SIZE] * 256;
+	relative_address += vm->arena[(cur->position + offset + 1) % MEM_SIZE];
+	relative_address += addition;
 	arg = 0;
 	arg += vm->arena[(cur->position + relative_address) % MEM_SIZE] * 256 * 256 * 256;
 	arg += vm->arena[(cur->position + relative_address + 1) % MEM_SIZE] * 256 * 256;
@@ -89,6 +106,22 @@ void	op_live(t_vm *vm, t_carriage *cur)
 }
 
 void	op_ld(t_vm *vm, t_carriage *cur)
+{
+	unsigned char	act;
+	int				num;
+	int				reg_num;
+
+	act = (cur->position + 1) % MEM_SIZE;
+	if (((act >> 6) & 0x00))
+		num = get_direct(vm, cur, 2);
+	else
+		num = get_indirect_value_trunc(vm, cur, 2, 0);
+	reg_num = get_register(vm, cur, 6);
+	cur->reg[reg_num] = num;
+	cur->carry = !(num);
+}
+
+void	op_lld(t_vm *vm, t_carriage *cur)
 {
 	unsigned char	act;
 	int				num;
