@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/31 16:04:19 by sadawi            #+#    #+#             */
-/*   Updated: 2020/08/31 18:42:12 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/31 18:44:45 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,29 @@ int		get_indirect_value(t_vm *vm, t_carriage *cur, int offset, int addition)
 	arg += vm->arena[(cur->position + relative_address + 2) % MEM_SIZE] * 256;
 	arg += vm->arena[(cur->position + relative_address + 3) % MEM_SIZE];
 	return (arg);
+}
+
+int		get_indirect_address_trunc(t_vm *vm, t_carriage *cur, int offset, int addition)
+{
+	int relative_address;
+
+	relative_address = 0;
+	relative_address += vm->arena[(cur->position + offset) % MEM_SIZE] * 256;
+	relative_address += vm->arena[(cur->position + offset + 1) % MEM_SIZE];
+	relative_address += addition;
+	relative_address %= IDX_MOD;
+	return (relative_address);
+}
+
+int		get_indirect_address(t_vm *vm, t_carriage *cur, int offset, int addition)
+{
+	int relative_address;
+
+	relative_address = 0;
+	relative_address += vm->arena[(cur->position + offset) % MEM_SIZE] * 256;
+	relative_address += vm->arena[(cur->position + offset + 1) % MEM_SIZE];
+	relative_address += addition;
+	return (relative_address);
 }
 
 int		get_register(t_vm *vm, t_carriage *cur, int offset)
@@ -265,7 +288,7 @@ void	op_st(t_vm *vm, t_carriage *cur)
 	}
 	else
 	{
-		arg2 = get_indirect_value_trunc(vm, cur, 3, 0);
+		arg2 = get_indirect_address_trunc(vm, cur, 3, 0);
 		write_bytes(vm, cur->position + arg2, 4, cur->reg[arg1]);
 	}
 }
