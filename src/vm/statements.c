@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/31 16:04:19 by sadawi            #+#    #+#             */
-/*   Updated: 2020/08/31 18:28:11 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/31 18:42:12 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,6 +153,19 @@ int		read_bytes(t_vm *vm, int pos, int amount)
 	return (arg);
 }
 
+void	write_bytes(t_vm *vm, int pos, int amount, int byte)
+{
+
+	if (amount > 0)
+		vm->arena[pos % MEM_SIZE] = byte % 256;
+	if (amount > 1)
+		vm->arena[(pos + 1) % MEM_SIZE] = byte / 256 % 256;
+	if (amount > 2)
+		vm->arena[(pos + 2) % MEM_SIZE] = byte / 256 / 256 % 256;
+	if (amount > 3)
+		vm->arena[(pos + 3) % MEM_SIZE] = byte / 256 / 256 / 256 % 256;
+}
+
 void	op_ldi(t_vm *vm, t_carriage *cur)
 {
 	unsigned char	act;
@@ -235,4 +248,24 @@ void	op_lldi(t_vm *vm, t_carriage *cur)
 	reg_num = get_register(vm, cur, offset);
 	cur->reg[reg_num] = num;
 	cur->carry = !(num);
+}
+
+void	op_st(t_vm *vm, t_carriage *cur)
+{
+	unsigned char	act;
+	int				arg1;
+	int				arg2;
+
+	act = (cur->position + 1) % MEM_SIZE;
+	arg1 = get_register(vm, cur, 2);
+	if (((act >> 7) & 0x00))
+	{
+		arg2 = get_register(vm, cur, 3);
+		cur->reg[arg2] = cur->reg[arg1];
+	}
+	else
+	{
+		arg2 = get_indirect_value_trunc(vm, cur, 3, 0);
+		write_bytes(vm, cur->position + arg2, 4, cur->reg[arg1]);
+	}
 }
