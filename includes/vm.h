@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/28 15:43:53 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/08/31 13:16:17 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ typedef struct 			s_vm
 	int					flags;
 	int					player_n;
 	int					player_amount;
+	t_player			*tail;
 	t_player			*players;
 	t_input				*file;
 	unsigned char		arena[MEM_SIZE];

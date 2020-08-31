@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/28 16:00:32 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/08/31 13:25:55 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ t_vm		*init_vm(void)
 
 	if (!(vm = (t_vm*)ft_memalloc(sizeof(t_vm))))
 		handle_error("Malloc failed at VM init");
-	vm->players = NULL;
 	return (vm);
 }
 
@@ -166,7 +165,7 @@ t_player	*save_player(t_vm *vm, char *filename, char *n)
 	(void)vm;
 	if (!(player = (t_player*)ft_memalloc(sizeof(t_player))))
 		handle_error("Malloc failed at save_player.");
-	player->id = id++;
+	player->id = ++id;
 	player->filename = filename;
 	player->n = n ? ft_atoi(n) : 0;
 	ft_putendl("7");
@@ -176,22 +175,19 @@ t_player	*save_player(t_vm *vm, char *filename, char *n)
 
 void		parse_player(t_vm *vm, char *filename, char *n)
 {
-	t_player	*cur;
-
-	cur = NULL;
 	ft_putendl("2");
 	if (!vm->players)
 	{
 		ft_putendl("4");
-		cur = save_player(vm, filename, n);
-		vm->players = cur;
+		vm->tail = save_player(vm, filename, n);
+		vm->players = vm->tail;
 	}
 	else
 	{
 		ft_putendl("5");
-		cur->next = save_player(vm, filename, n);
+		vm->tail->next = save_player(vm, filename, n);
 		ft_putendl("6");
-		cur = cur->next;
+		vm->tail = vm->tail->next;
 	}
 }
 
@@ -222,7 +218,7 @@ void		parse_input(t_vm *vm, int argc, char **argv)
 		else
 		{
 			ft_putendl("1");
-			parse_player(vm, argv[i + 2], argv[i + 1]);
+			parse_player(vm, argv[i], 0);
 		}
 		ft_printf("end args loop, i = %d\n", i);
 	}
