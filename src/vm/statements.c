@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/31 16:04:19 by sadawi            #+#    #+#             */
-/*   Updated: 2020/08/31 18:44:45 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/31 18:46:21 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -281,7 +281,7 @@ void	op_st(t_vm *vm, t_carriage *cur)
 
 	act = (cur->position + 1) % MEM_SIZE;
 	arg1 = get_register(vm, cur, 2);
-	if (((act >> 7) & 0x00))
+	if (((act >> 5) & 0x00))
 	{
 		arg2 = get_register(vm, cur, 3);
 		cur->reg[arg2] = cur->reg[arg1];
