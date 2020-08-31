@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/28 15:23:07 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/31 14:11:22 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -275,8 +275,8 @@ t_carriage	*new_carriage(int id, t_carriage *next)
 
 void	init_carriages(t_vm *vm)
 {
-	t_carriage *head;
-	t_player *cur_player;
+	t_carriage	*head;
+	t_player	*cur_player;
 
 	head = NULL;
 	cur_player = vm->players;
@@ -288,10 +288,27 @@ void	init_carriages(t_vm *vm)
 	vm->carriages = head;
 }
 
+void	set_carriage_positions(t_vm *vm)
+{
+	t_carriage	*cur_carriage;
+	int			offset;
+	int			i;
+
+	i = 0;
+	offset = MEM_SIZE / vm->player_amount;
+	cur_carriage = vm->carriages;
+	while (cur_carriage)
+	{
+		cur_carriage->position = i++ * offset;
+		cur_carriage = cur_carriage->next;
+	}
+}
+
 void	init_arena(t_vm *vm)
 {
 	load_players(vm);
 	init_carriages(vm);
+	set_carriage_positions(vm);
 }
 
 void	introduce_contestants(t_vm *vm)
@@ -312,7 +329,6 @@ void	introduce_contestants(t_vm *vm)
 void	disable_dead_carriages(t_vm *vm)
 {
 	t_carriage *cur_carriage;
-
 
 	cur_carriage = vm->carriages;
 	while (cur_carriage)
