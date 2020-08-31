@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/31 16:04:19 by sadawi            #+#    #+#             */
-/*   Updated: 2020/08/31 19:08:01 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/31 19:36:15 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -375,4 +375,14 @@ void	op_and(t_vm *vm, t_carriage *cur)
 	reg_num = get_register(vm, cur, offset);
 	cur->reg[reg_num] = arg1 & arg2;
 	cur->carry = !(arg1 & arg2);
+}
+
+void	op_zjmp(t_vm *vm, t_carriage *cur)
+{
+	int arg1;
+
+	if (!cur->carry)
+		return ;
+	arg1 = get_direct(vm, cur, 1);
+	cur->position = arg1 % IDX_MOD;
 }
