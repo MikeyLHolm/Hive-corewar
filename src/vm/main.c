@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/31 13:44:15 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/08/31 13:55:35 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,6 +184,15 @@ void		parse_player(t_vm *vm, char *filename, char *n)
 	}
 }
 
+void		validate_n_flag(char **argv, int i)
+{
+	
+	if (!(argv[i + 1] && argv[i + 2]))
+		handle_error("EOS, check flag syntax!");
+	if (ft_atoi(argv[i + 1]) < 1)
+		handle_error("-n value < 1. Insert 1 <= x <= players_amount");
+}
+
 void		parse_input(t_vm *vm, int argc, char **argv)
 {
 	int			i;
@@ -202,10 +211,8 @@ void		parse_input(t_vm *vm, int argc, char **argv)
 		else if (ft_strequ(argv[i], "-n"))
 		{
 			vm->flags = vm->flags | N;
-			if (argv[i + 1] && argv[i + 2])
-				parse_player(vm, argv[i + 2], argv[i + 1]);
-			else
-				handle_error("-n flag in wrong place");
+			validate_n_flag(argv, i);
+			parse_player(vm, argv[i + 2], argv[i + 1]);
 			i += 2;
 		}
 		else
