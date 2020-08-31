@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/31 16:04:19 by sadawi            #+#    #+#             */
-/*   Updated: 2020/08/31 18:27:23 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/31 18:28:11 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,6 +190,48 @@ void	op_ldi(t_vm *vm, t_carriage *cur)
 		offset += 1;
 	}
 	num = read_bytes(vm, cur->position + (arg1 + arg2) % IDX_MOD, 4);
+	reg_num = get_register(vm, cur, offset);
+	cur->reg[reg_num] = num;
+	cur->carry = !(num);
+}
+
+void	op_lldi(t_vm *vm, t_carriage *cur)
+{
+	unsigned char	act;
+	int				num;
+	int				arg1;
+	int				arg2;
+	int				reg_num;
+	int				offset;
+
+	act = (cur->position + 1) % MEM_SIZE;
+	offset = 2;
+	if (((act >> 7) & 0x01) && ((act >> 6) & 0x00))
+	{
+		arg1 = get_direct(vm, cur, offset);
+		offset += 2;
+	}
+	else if (((act >> 7) & 0x01) && ((act >> 6) & 0x01))
+	{
+		arg1 = get_indirect_value(vm, cur, offset, 0);
+		offset += 2;
+	}
+	else
+	{
+		arg1 = get_register(vm, cur, offset);
+		offset += 1;
+	}
+	if (((act >> 5) & 0x01) && ((act >> 4) & 0x00))
+	{
+		arg2 = get_direct(vm, cur, offset);
+		offset += 2;
+	}
+	else
+	{
+		arg2 = get_register(vm, cur, offset);
+		offset += 1;
+	}
+	num = read_bytes(vm, cur->position + arg1 + arg2, 4);
 	reg_num = get_register(vm, cur, offset);
 	cur->reg[reg_num] = num;
 	cur->carry = !(num);
