@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/31 15:57:45 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/31 17:40:50 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -357,6 +357,7 @@ void	perform_check(t_vm *vm)
 				vm->checks_without_change = 0;
 			}
 		}
+		vm->period_live_statements = 0;
 		cycle = 0;
 	}
 }
@@ -418,8 +419,8 @@ int		check_argument_indirect(t_carriage *cur, int *offset, int n)
 
 int		check_argument_registry(t_vm *vm, t_carriage *cur, int *offset, int n)
 {
-	if (vm->arena[(cur->position + *offset) % (MEM_SIZE - 1)] <= 0
-	|| vm->arena[(cur->position + *offset) % (MEM_SIZE - 1)] > REG_NUMBER)
+	if (vm->arena[(cur->position + *offset) % MEM_SIZE] <= 0
+	|| vm->arena[(cur->position + *offset) % MEM_SIZE] > REG_NUMBER)
 		return (0);
 	if (!(g_op_tab[cur->statement - 1].args_type[n] & T_REG))
 		return (0);
@@ -445,7 +446,7 @@ int		check_argument_type_code(t_vm *vm, t_carriage *cur)
 	int				n;
 	int				bit;
 
-	act = (cur->position + 1) % (MEM_SIZE - 1);
+	act = (cur->position + 1) % MEM_SIZE;
 	offset = 2;
 	n = 0;
 	bit = 7;
@@ -482,7 +483,7 @@ void	count_bytes_to_skip(t_carriage *cur)
 	int				n;
 	int				bit;
 
-	act = (cur->position + 1) % (MEM_SIZE - 1);
+	act = (cur->position + 1) % MEM_SIZE;
 	n = 0;
 	bit = 7;
 	cur->bytes_to_jump = 1;
@@ -506,7 +507,7 @@ void	count_bytes_to_skip(t_carriage *cur)
 
 void	move_carriage_next_statement(t_carriage *cur)
 {
-	cur->position = (cur->position + cur->bytes_to_jump) % (MEM_SIZE - 1);
+	cur->position = (cur->position + cur->bytes_to_jump) % MEM_SIZE;
 	cur->bytes_to_jump = 0;
 }
 
@@ -527,7 +528,7 @@ void	handle_statement(t_vm *vm, t_carriage *cur)
 		move_carriage_next_statement(cur);
 	}
 	else
-		cur->position = (cur->position + 1) % (MEM_SIZE - 1);
+		cur->position = (cur->position + 1) % MEM_SIZE;
 }
 
 void	perform_statements(t_vm *vm)
@@ -537,8 +538,11 @@ void	perform_statements(t_vm *vm)
 	cur_carriage = vm->carriages;
 	while (cur_carriage)
 	{
-		if (!cur_carriage->cycles_left)
-			handle_statement(vm, cur_carriage);
+		if (cur_carriage->alive)
+		{
+			if (!cur_carriage->cycles_left)
+				handle_statement(vm, cur_carriage);
+		}
 		cur_carriage = cur_carriage->next;
 	}
 }
