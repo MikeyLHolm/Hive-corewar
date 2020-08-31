@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/31 13:55:35 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/08/31 16:49:35 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,77 @@ void		save_flag(t_vm *vm, char flag)
 		vm->flags = vm->flags | VISUALIZER;
 }
 
+void	*swap_nodes(t_player *cur, t_player *head)
+{
+	t_player	*tmp;
+
+	tmp = cur->next;
+	if (cur == head)
+	{
+		cur = cur->next;
+
+	}
+	free(tmp);
+}
+
+void		bubble_sort(t_player *cur, t_vm *vm)
+{
+	int			i;
+	int			swapped;
+
+	i = -1;
+	while (++i < (vm->player_amount - 1))
+	{
+		swapped = 0;
+		while (cur->next)
+		{
+			if (cur->n > vm->player_amount || cur->next->n > vm->player_amount)
+				handle_error("-n value > players_amount");
+			if (cur->id >= cur->next->id)
+			{
+				if (cur->id == cur->next->id && (cur->n != cur->next->id))
+				swap_nodes(cur, vm->players);
+				swapped = 1;
+			}
+			cur = cur->next;
+		}
+		if (swapped == 0)
+			break;
+	}
+}
+
 void		sort_players(t_vm *vm)
 {
-	while (vm->players)
+	t_player		*cur;
+
+	cur = vm->players;
+	while (cur)
 	{
-		ft_printf("id = %d || n = %d\n", vm->players->id, vm->players->n);
-		vm->players = vm->players->next;
+		ft_printf("\nSTATS START:: id = %d || n = %d\n", cur->id, cur->n);
+		if (cur->n != 0)
+			cur->id = cur->n;
+		ft_printf("STATS END:: id = %d || n = %d\n", cur->id, cur->n);
+		cur = cur->next;
+		vm->player_amount++;
 	}
+	ft_printf("\nNR of players: %d\n", vm->player_amount);
+	cur = vm->players;
+	if (cur && cur->next)
+	{
+		bubble_sort(cur, vm);
+		if (cur->n > vm->player_amount || cur->next->n > vm->player_amount)
+			handle_error("-n value > players_amount");
+		if (cur->id > cur->next->id)
+			swap_nodes(cur, vm->players);
+		// else if (cur->id == cur->next->id)
+		// {
+		// 	if (cur->n != cur->next->n)
+			
+		// }
+		else
+			cur = cur->next;
+	}
+
 }
 
 void	check_magic_header(int fd)
@@ -186,7 +250,6 @@ void		parse_player(t_vm *vm, char *filename, char *n)
 
 void		validate_n_flag(char **argv, int i)
 {
-	
 	if (!(argv[i + 1] && argv[i + 2]))
 		handle_error("EOS, check flag syntax!");
 	if (ft_atoi(argv[i + 1]) < 1)
