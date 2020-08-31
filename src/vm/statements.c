@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/31 16:04:19 by sadawi            #+#    #+#             */
-/*   Updated: 2020/08/31 18:54:35 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/31 19:07:06 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -328,4 +328,50 @@ void	op_sti(t_vm *vm, t_carriage *cur)
 	else
 		arg2 = get_direct(vm, cur, offset);
 	write_bytes(vm, cur->position + (arg1 + arg2) % IDX_MOD, 4, cur->reg[reg_num]);
+}
+
+void	op_and(t_vm *vm, t_carriage *cur)
+{
+	unsigned char	act;
+	int				arg1;
+	int				arg2;
+	int				reg_num;
+	int				offset;
+
+	act = (cur->position + 1) % MEM_SIZE;
+	offset = 2;
+	if (((act >> 7) & 0x01) && ((act >> 6) & 0x00))
+	{
+		arg1 = get_direct(vm, cur, offset);
+		offset += 4;
+	}
+	else if (((act >> 7) & 0x01) && ((act >> 6) & 0x01))
+	{
+		arg1 = get_indirect_value(vm, cur, offset, 0);
+		offset += 2;
+	}
+	else
+	{
+		arg1 = get_register(vm, cur, offset);
+		arg1 = cur->reg[arg1];
+		offset += 1;
+	}
+	if (((act >> 5) & 0x01) && ((act >> 4) & 0x00))
+	{
+		arg2 = get_direct(vm, cur, offset);
+		offset += 4;
+	}
+	else if (((act >> 5) & 0x01) && ((act >> 4) & 0x01))
+	{
+		arg2 = get_indirect_value(vm, cur, offset, 0);
+		offset += 2;
+	}
+	else
+	{
+		arg2 = get_register(vm, cur, offset);
+		arg2 = cur->reg[arg1];
+		offset += 1;
+	}
+	reg_num = get_register(vm, cur, offset);
+	cur->reg[reg_num] = arg1 & arg2;
 }
