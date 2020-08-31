@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/31 14:26:42 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/31 15:43:55 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ typedef struct			s_carriage
 	int					last_live_cycle;
 	int					position;
 	int					alive;
+	int					bytes_to_jump;
 	struct s_carriage	*next;
 }						t_carriage;
 
