@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/31 17:40:50 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/31 19:45:37 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,7 +166,7 @@ t_player	*save_player(t_vm *vm, char *filename, char *n)
 	(void)vm;
 	if (!(player = (t_player*)ft_memalloc(sizeof(t_player))))
 		handle_error("Malloc failed at save_player.");
-	player->id = id++;
+	player->id = ++id;
 	player->filename = filename;
 	player->n = n ? ft_atoi(n) : 0;
 	get_player_info(player);
