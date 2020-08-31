@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/31 16:49:35 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/08/31 17:35:31 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,18 +41,18 @@ void		save_flag(t_vm *vm, char flag)
 		vm->flags = vm->flags | VISUALIZER;
 }
 
-void	*swap_nodes(t_player *cur, t_player *head)
-{
-	t_player	*tmp;
+// void	*swap_nodes(t_player *cur, t_player *head)
+// {
+// 	t_player	*tmp;
 
-	tmp = cur->next;
-	if (cur == head)
-	{
-		cur = cur->next;
+// 	tmp = cur->next;
+// 	if (cur == head)
+// 	{
+// 		cur = cur->next;
 
-	}
-	free(tmp);
-}
+// 	}
+// 	free(tmp);
+// }
 
 void		bubble_sort(t_player *cur, t_vm *vm)
 {
@@ -65,18 +65,34 @@ void		bubble_sort(t_player *cur, t_vm *vm)
 		swapped = 0;
 		while (cur->next)
 		{
-			if (cur->n > vm->player_amount || cur->next->n > vm->player_amount)
-				handle_error("-n value > players_amount");
-			if (cur->id >= cur->next->id)
+			if (cur->id > cur->next->id)
 			{
-				if (cur->id == cur->next->id && (cur->n != cur->next->id))
-				swap_nodes(cur, vm->players);
+				//swap_nodes(cur, vm->players);
 				swapped = 1;
 			}
 			cur = cur->next;
 		}
 		if (swapped == 0)
 			break;
+	}
+}
+
+void		check_duplicate_n(t_player *head, t_vm *vm)
+{
+	t_player	*tmp;
+
+	while (head)
+	{
+		tmp = head->next;
+		while (tmp)
+		{
+			if (head->n == tmp->n)
+				handle_error("duplicate -n value");
+			if (head->n > vm->player_amount || tmp->n > vm->player_amount)
+				handle_error("-n value > players_amount");
+			tmp = tmp->next;
+		}
+		head = head->next;
 	}
 }
 
@@ -96,22 +112,13 @@ void		sort_players(t_vm *vm)
 	}
 	ft_printf("\nNR of players: %d\n", vm->player_amount);
 	cur = vm->players;
+	check_duplicate_n(cur, vm);
+	// update id values. ++id if 2 same and n = different
+	cur = vm->players;
 	if (cur && cur->next)
 	{
 		bubble_sort(cur, vm);
-		if (cur->n > vm->player_amount || cur->next->n > vm->player_amount)
-			handle_error("-n value > players_amount");
-		if (cur->id > cur->next->id)
-			swap_nodes(cur, vm->players);
-		// else if (cur->id == cur->next->id)
-		// {
-		// 	if (cur->n != cur->next->n)
-			
-		// }
-		else
-			cur = cur->next;
 	}
-
 }
 
 void	check_magic_header(int fd)
