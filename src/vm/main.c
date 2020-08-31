@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/31 13:25:55 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/08/31 13:44:15 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,8 @@ void		save_flag(t_vm *vm, char flag)
 
 void		sort_players(t_vm *vm)
 {
-	ft_putendl("1");
 	while (vm->players)
 	{
-		ft_putendl("2");
 		ft_printf("id = %d || n = %d\n", vm->players->id, vm->players->n);
 		vm->players = vm->players->next;
 	}
@@ -168,25 +166,20 @@ t_player	*save_player(t_vm *vm, char *filename, char *n)
 	player->id = ++id;
 	player->filename = filename;
 	player->n = n ? ft_atoi(n) : 0;
-	ft_putendl("7");
 	//get_player_info(player);
 	return (player);
 }
 
 void		parse_player(t_vm *vm, char *filename, char *n)
 {
-	ft_putendl("2");
 	if (!vm->players)
 	{
-		ft_putendl("4");
 		vm->tail = save_player(vm, filename, n);
 		vm->players = vm->tail;
 	}
 	else
 	{
-		ft_putendl("5");
 		vm->tail->next = save_player(vm, filename, n);
-		ft_putendl("6");
 		vm->tail = vm->tail->next;
 	}
 }
@@ -217,12 +210,9 @@ void		parse_input(t_vm *vm, int argc, char **argv)
 		}
 		else
 		{
-			ft_putendl("1");
 			parse_player(vm, argv[i], 0);
 		}
-		ft_printf("end args loop, i = %d\n", i);
 	}
-	ft_putendl("zeze");
 	sort_players(vm);
 }
 
