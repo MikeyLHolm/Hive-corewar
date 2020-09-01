@@ -140,7 +140,7 @@ void	op_ld(t_vm *vm, t_carriage *cur)
 	else
 		num = get_indirect_value_trunc(vm, cur, 2, 0);
 	reg_num = get_register(vm, cur, 6);
-	cur->reg[reg_num] = num;
+	cur->reg[reg_num - 1] = num;
 	cur->carry = !(num);
 }
 
@@ -156,7 +156,7 @@ void	op_lld(t_vm *vm, t_carriage *cur)
 	else
 		num = get_indirect_value(vm, cur, 2, 0);
 	reg_num = get_register(vm, cur, 6);
-	cur->reg[reg_num] = num;
+	cur->reg[reg_num - 1] = num;
 	cur->carry = !(num);
 }
 
@@ -227,7 +227,7 @@ void	op_ldi(t_vm *vm, t_carriage *cur)
 	}
 	num = read_bytes(vm, cur->position + (arg1 + arg2) % IDX_MOD, 4);
 	reg_num = get_register(vm, cur, offset);
-	cur->reg[reg_num] = num;
+	cur->reg[reg_num - 1] = num;
 	cur->carry = !(num);
 }
 
@@ -269,7 +269,7 @@ void	op_lldi(t_vm *vm, t_carriage *cur)
 	}
 	num = read_bytes(vm, cur->position + arg1 + arg2, 4);
 	reg_num = get_register(vm, cur, offset);
-	cur->reg[reg_num] = num;
+	cur->reg[reg_num - 1] = num;
 	cur->carry = !(num);
 }
 
@@ -284,7 +284,7 @@ void	op_st(t_vm *vm, t_carriage *cur)
 	if (!((act >> 5) & 0x01))
 	{
 		arg2 = get_register(vm, cur, 3);
-		cur->reg[arg2] = cur->reg[arg1];
+		cur->reg[arg2 - 1] = cur->reg[arg1 - 1];
 	}
 	else
 	{
@@ -322,13 +322,13 @@ void	op_sti(t_vm *vm, t_carriage *cur)
 	else
 	{
 		arg1 = get_register(vm, cur, offset);
-		arg1 = cur->reg[arg1];
+		arg1 = cur->reg[arg1 - 1];
 		offset += 1;
 	}
 	if (!((act >> 3) & 0x01))
 	{
 		arg2 = get_register(vm, cur, offset);
-		arg2 = cur->reg[arg2];
+		arg2 = cur->reg[arg2 - 1];
 	}
 	else
 		arg2 = get_direct(vm, cur, offset);
@@ -375,11 +375,11 @@ void	op_and(t_vm *vm, t_carriage *cur)
 	else
 	{
 		arg2 = get_register(vm, cur, offset);
-		arg2 = cur->reg[arg1];
+		arg2 = cur->reg[arg1 - 1];
 		offset += 1;
 	}
 	reg_num = get_register(vm, cur, offset);
-	cur->reg[reg_num] = arg1 & arg2;
+	cur->reg[reg_num - 1] = arg1 & arg2;
 	cur->carry = !(arg1 & arg2);
 }
 
