@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/01 15:09:51 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/01 18:44:15 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -343,7 +343,8 @@ void	perform_check(t_vm *vm)
 {
 	static int cycle;
 
-	if (cycle++ >= vm->cycles_to_die)
+	cycle++;
+	if (cycle >= vm->cycles_to_die)
 	{
 		disable_dead_carriages(vm);
 		if (vm->period_live_statements >= NBR_LIVE)
@@ -565,6 +566,7 @@ void	battle_loop(t_vm *vm)
 {
 	while (1)
 	{
+		vm->cycles++;
 		perform_check(vm);
 		if (!check_carriages_alive(vm))
 			break;
@@ -572,7 +574,6 @@ void	battle_loop(t_vm *vm)
 		set_statement_codes(vm);
 		reduce_cycles(vm);
 		perform_statements(vm);
-		vm->cycles++;
 	}
 	//get_winner(vm);
 }
