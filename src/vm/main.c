@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/31 17:35:31 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/01 12:11:49 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,50 +27,61 @@ t_vm		*init_vm(void)
 	return (vm);
 }
 
-void		save_flag(t_vm *vm, char flag)
-{
-	if (flag == 'd')
-		vm->flags = vm->flags | DUMP;
-	else if (flag == 'e')
-		vm->flags = vm->flags | ERROR;
-	else if (flag == 'l')
-		vm->flags = vm->flags | LEAKS;
-	else if (flag == 'n')
-		vm->flags = vm->flags | N;
-	else if (flag == 'v')
-		vm->flags = vm->flags | VISUALIZER;
-}
-
-// void	*swap_nodes(t_player *cur, t_player *head)
+// void		save_flag(t_vm *vm, char flag)
 // {
-// 	t_player	*tmp;
-
-// 	tmp = cur->next;
-// 	if (cur == head)
-// 	{
-// 		cur = cur->next;
-
-// 	}
-// 	free(tmp);
+// 	if (flag == 'd')
+// 		vm->flags = vm->flags | DUMP;
+// 	else if (flag == 'e')
+// 		vm->flags = vm->flags | ERROR;
+// 	else if (flag == 'l')
+// 		vm->flags = vm->flags | LEAKS;
+// 	else if (flag == 'n')
+// 		vm->flags = vm->flags | N;
+// 	else if (flag == 'v')
+// 		vm->flags = vm->flags | VISUALIZER;
 // }
 
-void		bubble_sort(t_player *cur, t_vm *vm)
+void	display_list(t_player *head)
 {
-	int			i;
-	int			swapped;
-
-	i = -1;
-	while (++i < (vm->player_amount - 1))
+	if (head != NULL)
 	{
+		ft_printf("\nSTATS START:: id = %d || n = %d\n", head->id, head->n);
+		display_list(head->next);
+	}
+}
+
+t_player	*swap_nodes(t_player *cur, t_player *nxt)
+{
+	t_player	*tmp;
+
+	tmp = nxt->next;
+	nxt->next = cur;
+	cur->next = tmp;
+	return (nxt);
+}
+
+void		bubble_sort(t_player **head, int count, int swapped, int i)
+{
+	int			j;
+	t_player	**h;
+	t_player	*p1;
+	t_player	*p2;
+
+	while (++i < (count - 1))
+	{
+		h = head;
 		swapped = 0;
-		while (cur->next)
+		j = -1;
+		while (++j < (count - i - 1))
 		{
-			if (cur->id > cur->next->id)
+			p1 = *h;
+			p2 = p1->next;
+			if (p2 && p1->id > p2->id)
 			{
-				//swap_nodes(cur, vm->players);
+				*h = swap_nodes(p1, p2);
 				swapped = 1;
 			}
-			cur = cur->next;
+			h = &(*h)->next;
 		}
 		if (swapped == 0)
 			break;
@@ -86,7 +97,7 @@ void		check_duplicate_n(t_player *head, t_vm *vm)
 		tmp = head->next;
 		while (tmp)
 		{
-			if (head->n == tmp->n)
+			if (head->n == tmp->n && head->n != 0)
 				handle_error("duplicate -n value");
 			if (head->n > vm->player_amount || tmp->n > vm->player_amount)
 				handle_error("-n value > players_amount");
@@ -98,14 +109,20 @@ void		check_duplicate_n(t_player *head, t_vm *vm)
 
 void		sort_players(t_vm *vm)
 {
+	int				is_n;
+
 	t_player		*cur;
 
 	cur = vm->players;
+	is_n = 0;
 	while (cur)
 	{
 		ft_printf("\nSTATS START:: id = %d || n = %d\n", cur->id, cur->n);
 		if (cur->n != 0)
+		{
 			cur->id = cur->n;
+			is_n = 1;
+		}
 		ft_printf("STATS END:: id = %d || n = %d\n", cur->id, cur->n);
 		cur = cur->next;
 		vm->player_amount++;
@@ -114,11 +131,12 @@ void		sort_players(t_vm *vm)
 	cur = vm->players;
 	check_duplicate_n(cur, vm);
 	// update id values. ++id if 2 same and n = different
-	cur = vm->players;
-	if (cur && cur->next)
+	if ((vm->players && vm->players->next) && is_n != 0)
 	{
-		bubble_sort(cur, vm);
+		// change id values();
+		bubble_sort(&vm->players, vm->player_amount, 0, -1);
 	}
+	display_list(vm->players);
 }
 
 void	check_magic_header(int fd)
@@ -253,6 +271,7 @@ void		parse_player(t_vm *vm, char *filename, char *n)
 		vm->tail->next = save_player(vm, filename, n);
 		vm->tail = vm->tail->next;
 	}
+	// vm->tail->next = NULL;
 }
 
 void		validate_n_flag(char **argv, int i)
