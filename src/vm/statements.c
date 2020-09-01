@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/31 16:04:19 by sadawi            #+#    #+#             */
-/*   Updated: 2020/08/31 19:36:15 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/01 15:29:35 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ void	op_live(t_vm *vm, t_carriage *cur)
 	t_carriage	*carriage_to_update;
 
 	arg = get_direct(vm, cur, 1);
-	arg *= -1;
+	cur->last_live_cycle = vm->cycles;
 	if (arg > 0 && arg < vm->player_amount)
 	{
 		vm->player_last_alive = arg;
