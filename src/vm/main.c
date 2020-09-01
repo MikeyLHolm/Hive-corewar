@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/31 19:45:37 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/01 15:09:51 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -267,7 +267,7 @@ t_carriage	*new_carriage(int id, t_carriage *next)
 	if (!(carriage = (t_carriage*)ft_memalloc(sizeof(t_carriage))))
 		handle_error("Malloc failed");
 	if (REG_NUMBER)
-		carriage->reg[0] = id;
+		carriage->reg[0] = id * -1;
 	carriage->alive = 1;
 	carriage->next = next;
 	return (carriage);
