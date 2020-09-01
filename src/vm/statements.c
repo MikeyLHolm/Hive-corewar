@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/31 16:04:19 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/01 15:29:35 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/01 18:21:17 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ int		get_direct(t_vm *vm, t_carriage *cur, int offset)
 	{
 		arg += vm->arena[(cur->position + offset) % MEM_SIZE] * 256;
 		arg += vm->arena[(cur->position + offset + 1) % MEM_SIZE];
+		return ((short)arg);
 	}
 	else
 	{
