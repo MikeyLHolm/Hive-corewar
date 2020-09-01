@@ -446,7 +446,7 @@ int		check_argument_type_code(t_vm *vm, t_carriage *cur)
 	int				n;
 	int				bit;
 
-	act = (cur->position + 1) % MEM_SIZE;
+	act = (vm->arena[(cur->position + 1) % MEM_SIZE]);
 	offset = 2;
 	n = 0;
 	bit = 7;
@@ -455,10 +455,10 @@ int		check_argument_type_code(t_vm *vm, t_carriage *cur)
 		if (((act >> bit) & 0x01) && ((act >> (bit - 1)) & 0x01))
 			if (!check_argument_indirect(cur, &offset, n))
 				return (0);
-		if (((act >> bit) & 0x00) && ((act >> (bit - 1)) & 0x01))
+		if (!((act >> bit) & 0x01) && ((act >> (bit - 1)) & 0x01))
 			if (!check_argument_registry(vm, cur, &offset, n))
 				return (0);
-		if (((act >> bit) & 0x01) && ((act >> (bit - 1)) & 0x00))
+		if (((act >> bit) & 0x01) && !((act >> (bit - 1)) & 0x01))
 			if (!check_argument_direct(cur, &offset, n))
 				return (0);
 		bit -= 2;
@@ -477,13 +477,13 @@ int		check_arguments_valid(t_vm *vm, t_carriage *cur)
 	return (1);
 }
 
-void	count_bytes_to_skip(t_carriage *cur)
+void	count_bytes_to_skip(t_vm *vm, t_carriage *cur)
 {
 	unsigned char	act;
 	int				n;
 	int				bit;
 
-	act = (cur->position + 1) % MEM_SIZE;
+	act = (vm->arena[(cur->position + 1) % MEM_SIZE]);
 	n = 0;
 	bit = 7;
 	cur->bytes_to_jump = 1;
@@ -496,9 +496,9 @@ void	count_bytes_to_skip(t_carriage *cur)
 			else
 				cur->bytes_to_jump += 4;
 		}
-		else if (((act >> bit) & 0x00) && ((act >> (bit - 1)) & 0x01))
+		else if (!((act >> bit) & 0x01) && ((act >> (bit - 1)) & 0x01))
 			cur->bytes_to_jump += 1;
-		else if (((act >> bit) & 0x01) && ((act >> (bit - 1)) & 0x00))
+		else if (((act >> bit) & 0x01) && !((act >> (bit - 1)) & 0x01))
 			cur->bytes_to_jump += 2;
 		bit -= 2;
 		n++;
@@ -538,7 +538,7 @@ void	handle_statement(t_vm *vm, t_carriage *cur)
 		if (check_arguments_valid(vm, cur))
 			execute_statement(vm, cur);
 		else
-			count_bytes_to_skip(cur);
+			count_bytes_to_skip(vm, cur);
 		move_carriage_next_statement(cur);
 	}
 	else
