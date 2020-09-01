@@ -116,15 +116,15 @@ t_carriage	*get_carriage_by_id(t_vm *vm, int id)
 void	op_live(t_vm *vm, t_carriage *cur)
 {
 	int			arg;
-	t_carriage	*carriage_to_update;
+//t_carriage	*carriage_to_update;
 
 	arg = get_direct(vm, cur, 1);
 	cur->last_live_cycle = vm->cycles;
 	if (arg > 0 && arg < vm->player_amount)
 	{
 		vm->player_last_alive = arg;
-		carriage_to_update = get_carriage_by_id(vm, arg);
-		carriage_to_update->last_live_cycle = vm->cycles;
+		// carriage_to_update = get_carriage_by_id(vm, arg);
+		// carriage_to_update->last_live_cycle = vm->cycles;
 	}
 	vm->period_live_statements++;
 }
