@@ -391,5 +391,5 @@ void	op_zjmp(t_vm *vm, t_carriage *cur)
 	if (!cur->carry)
 		return ;
 	arg1 = get_direct(vm, cur, 1);
-	cur->position = arg1 % IDX_MOD;
+	cur->position += arg1 % IDX_MOD;
 }
