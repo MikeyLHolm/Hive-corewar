@@ -465,7 +465,6 @@ int		check_argument_type_code(t_vm *vm, t_carriage *cur)
 		bit -= 2;
 		n++;
 	}
-	cur->bytes_to_jump = offset - 1;
 	return (1);
 }
 
@@ -474,7 +473,6 @@ int		check_arguments_valid(t_vm *vm, t_carriage *cur)
 	if (g_op_tab[cur->statement - 1].args_type_code)
 		if (!check_argument_type_code(vm, cur))
 			return (0);
-	cur->bytes_to_jump += 1;
 	return (1);
 }
 
@@ -487,10 +485,16 @@ void	count_bytes_to_skip(t_vm *vm, t_carriage *cur)
 	act = (vm->arena[(cur->position + 1) % MEM_SIZE]);
 	n = 0;
 	bit = 7;
-	cur->bytes_to_jump = 1;
+	if (g_op_tab[cur->statement - 1].args_type_code)
+		cur->bytes_to_jump = 2;
+	else
+	{
+		cur->bytes_to_jump = g_op_tab[cur->statement - 1].size_t_dir ? 3 : 5;
+		return ;
+	}
 	while (n < g_op_tab[cur->statement - 1].args_n)
 	{
-		if (((act >> bit) & 0x01) && ((act >> (bit - 1)) & 0x01))
+		if (((act >> bit) & 0x01) && !((act >> (bit - 1)) & 0x01))
 		{
 			if (g_op_tab[cur->statement - 1].size_t_dir)
 				cur->bytes_to_jump += 2;
@@ -499,7 +503,7 @@ void	count_bytes_to_skip(t_vm *vm, t_carriage *cur)
 		}
 		else if (!((act >> bit) & 0x01) && ((act >> (bit - 1)) & 0x01))
 			cur->bytes_to_jump += 1;
-		else if (((act >> bit) & 0x01) && !((act >> (bit - 1)) & 0x01))
+		else if (((act >> bit) & 0x01) && ((act >> (bit - 1)) & 0x01))
 			cur->bytes_to_jump += 2;
 		bit -= 2;
 		n++;
@@ -538,8 +542,7 @@ void	handle_statement(t_vm *vm, t_carriage *cur)
 	{
 		if (check_arguments_valid(vm, cur))
 			execute_statement(vm, cur);
-		else
-			count_bytes_to_skip(vm, cur);
+		count_bytes_to_skip(vm, cur);
 		move_carriage_next_statement(cur);
 	}
 	else
