@@ -512,7 +512,8 @@ void	count_bytes_to_skip(t_vm *vm, t_carriage *cur)
 
 void	move_carriage_next_statement(t_carriage *cur)
 {
-	cur->position = (cur->position + cur->bytes_to_jump) % MEM_SIZE;
+	if (cur->statement != 9)
+		cur->position = (cur->position + cur->bytes_to_jump) % MEM_SIZE;
 	cur->bytes_to_jump = 0;
 }
 
