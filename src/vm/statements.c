@@ -176,7 +176,7 @@ int		read_bytes(t_vm *vm, int pos, int amount)
 	return (arg);
 }
 
-void	write_bytes(t_vm *vm, int pos, int amount, int byte)
+void	write_bytes(t_vm *vm, int pos, int amount, unsigned int byte)
 {
 
 	if (amount > 0)
@@ -289,7 +289,7 @@ void	op_st(t_vm *vm, t_carriage *cur)
 	else
 	{
 		arg2 = get_indirect_address_trunc(vm, cur, 3, 0);
-		write_bytes(vm, cur->position + arg2, 4, cur->reg[arg1]);
+		write_bytes(vm, cur->position + arg2, 4, cur->reg[arg1 - 1]);
 	}
 }
 
@@ -332,7 +332,7 @@ void	op_sti(t_vm *vm, t_carriage *cur)
 	}
 	else
 		arg2 = get_direct(vm, cur, offset);
-	write_bytes(vm, cur->position + (arg1 + arg2) % IDX_MOD, 4, cur->reg[reg_num]);
+	write_bytes(vm, cur->position + (arg1 + arg2) % IDX_MOD, 4, cur->reg[reg_num - 1]);
 }
 
 void	op_and(t_vm *vm, t_carriage *cur)
