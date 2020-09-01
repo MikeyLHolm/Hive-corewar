@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/31 19:16:17 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/01 14:51:23 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ void					op_lld(t_vm *vm, t_carriage *cur);
 
 int						read_bytes(t_vm *vm, int pos, int amount);
 
-void					write_bytes(t_vm *vm, int pos, int amount, int byte);
+void					write_bytes(t_vm *vm, int pos, int amount, unsigned int byte);
 
 void					op_ldi(t_vm *vm, t_carriage *cur);
 
