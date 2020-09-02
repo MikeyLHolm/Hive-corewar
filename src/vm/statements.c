@@ -91,7 +91,7 @@ int		get_indirect_address(t_vm *vm, t_carriage *cur, int offset, int addition)
 	return (relative_address);
 }
 
-int		get_register_index(t_vm *vm, t_carriage *cur, int offset)
+int		get_register(t_vm *vm, t_carriage *cur, int offset)
 {
 	int arg;
 
