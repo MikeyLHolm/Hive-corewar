@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/31 16:04:19 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/02 15:42:20 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/02 15:48:14 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -523,4 +523,19 @@ void	op_xor(t_vm *vm, t_carriage *cur)
 	reg_num = get_register_index(vm, cur, offset);
 	cur->reg[reg_num] = arg1 ^ arg2;
 	cur->carry = !(arg1 ^ arg2);
+}
+
+// void	op_fork(t_vm *vm, t_carriage *cur)
+// {
+// 	int arg;
+
+// 	arg = get_direct(vm, cur, 1);
+// }
+
+void	op_aff(t_vm *vm, t_carriage *cur)
+{
+	int arg;
+
+	arg = get_register_index(vm, cur, 2);
+	ft_putchar(arg);
 }

@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/02 15:42:28 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/02 15:48:26 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -534,7 +534,7 @@ void	execute_statement(t_vm *vm, t_carriage *cur)
 	cur->statement == 13 ? op_lld(vm, cur) : 0;
 	cur->statement == 14 ? op_lldi(vm, cur) : 0;
 	//cur->statement == 15 ? op_lfork(vm, cur) : 0;
-	//cur->statement == 16 ? op_aff(vm, cur) : 0;
+	cur->statement == 16 ? op_aff(vm, cur) : 0;
 }
 
 void	handle_statement(t_vm *vm, t_carriage *cur)
