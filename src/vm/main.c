@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/02 17:58:25 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/02 19:48:44 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -552,6 +552,45 @@ void	get_winner(t_vm *vm)
 	ft_printf("Contestant %d, \"%s\", has won !\n", cur_player->id, cur_player->name);
 }
 
+int		*get_cursor_mem(t_vm *vm)
+{
+	t_carriage	*cur;
+	int			*cursor_mem;
+
+	cursor_mem = (int*)ft_memalloc(sizeof(int) * MEM_SIZE);
+	cur = vm->carriages;
+	while (cur)
+	{
+		cursor_mem[cur->position % MEM_SIZE] = 1;
+		cur = cur->next;
+	}
+	return (cursor_mem);
+}
+
+void	visualize(t_vm *vm)
+{
+	int	*cursor_mem;
+
+	erase();
+	int i;
+
+	i = 0;
+	cursor_mem = get_cursor_mem(vm);
+	while (i < MEM_SIZE)
+	{
+		if (cursor_mem[i])
+			attron(COLOR_PAIR(1));
+		printw("%02x ", (unsigned char)vm->arena[i++]);
+		if (!(i % 64))
+			printw("\n");
+			attroff(COLOR_PAIR(1));
+	}
+	printw("\n");
+	printw("CYCLE: %d\n", vm->cycles);
+	getch();
+	refresh();
+}
+
 void	battle_loop(t_vm *vm)
 {
 	while (1)
@@ -564,6 +603,7 @@ void	battle_loop(t_vm *vm)
 		set_statement_codes(vm);
 		reduce_cycles(vm);
 		perform_statements(vm);
+		visualize(vm);
 	}
 	get_winner(vm);
 }
@@ -582,6 +622,15 @@ void	print_arena(t_vm *vm)
 	ft_printf("\n");
 }
 
+void	init_visualizer(t_vm *vm)
+{
+	(void)vm;
+	initscr();
+	noecho();
+	start_color();
+	init_pair(1, COLOR_WHITE, COLOR_BLUE);
+}
+
 int			main(int argc, char **argv)
 {
 	t_vm	*vm;
@@ -597,7 +646,9 @@ int			main(int argc, char **argv)
 	init_arena(vm);
 	introduce_contestants(vm);
 	//print_arena(vm);
+	init_visualizer(vm);
 	battle_loop(vm);
+	endwin();
 	// if (vm->flags & LEAKS)
 	//system("leaks corewar");
 	return (0);
