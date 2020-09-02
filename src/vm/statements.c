@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/31 16:04:19 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/02 15:38:56 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/02 15:42:20 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -352,7 +352,6 @@ void	op_and(t_vm *vm, t_carriage *cur)
 	int				reg_num;
 	int				offset;
 
-	ft_printf("aaa\n");
 	act = (vm->arena[(cur->position + 1) % MEM_SIZE]);
 	offset = 2;
 	if (((act >> 7) & 0x01) && !((act >> 6) & 0x01))
@@ -430,4 +429,98 @@ void	op_sub(t_vm *vm, t_carriage *cur)
 	reg_num = get_register_index(vm, cur, 4);
 	cur->reg[reg_num] = arg1 - arg2;
 	cur->carry = !(arg1 - arg2);
+}
+
+void	op_or(t_vm *vm, t_carriage *cur)
+{
+	unsigned char	act;
+	int				arg1;
+	int				arg2;
+	int				reg_num;
+	int				offset;
+
+	act = (vm->arena[(cur->position + 1) % MEM_SIZE]);
+	offset = 2;
+	if (((act >> 7) & 0x01) && !((act >> 6) & 0x01))
+	{
+		arg1 = get_direct(vm, cur, offset);
+		offset += 4;
+	}
+	else if (((act >> 7) & 0x01) && ((act >> 6) & 0x01))
+	{
+		arg1 = get_indirect_value(vm, cur, offset, 0);
+		offset += 2;
+	}
+	else
+	{
+		arg1 = get_register_index(vm, cur, offset);
+		arg1 = cur->reg[arg1 - 1];
+		offset += 1;
+	}
+	if (((act >> 5) & 0x01) && !((act >> 4) & 0x01))
+	{
+		arg2 = get_direct(vm, cur, offset);
+		offset += 4;
+	}
+	else if (((act >> 5) & 0x01) && ((act >> 4) & 0x01))
+	{
+		arg2 = get_indirect_value(vm, cur, offset, 0);
+		offset += 2;
+	}
+	else
+	{
+		arg2 = get_register_index(vm, cur, offset);
+		arg2 = cur->reg[arg1 - 1];
+		offset += 1;
+	}
+	reg_num = get_register_index(vm, cur, offset);
+	cur->reg[reg_num] = arg1 | arg2;
+	cur->carry = !(arg1 | arg2);
+}
+
+void	op_xor(t_vm *vm, t_carriage *cur)
+{
+	unsigned char	act;
+	int				arg1;
+	int				arg2;
+	int				reg_num;
+	int				offset;
+
+	act = (vm->arena[(cur->position + 1) % MEM_SIZE]);
+	offset = 2;
+	if (((act >> 7) & 0x01) && !((act >> 6) & 0x01))
+	{
+		arg1 = get_direct(vm, cur, offset);
+		offset += 4;
+	}
+	else if (((act >> 7) & 0x01) && ((act >> 6) & 0x01))
+	{
+		arg1 = get_indirect_value(vm, cur, offset, 0);
+		offset += 2;
+	}
+	else
+	{
+		arg1 = get_register_index(vm, cur, offset);
+		arg1 = cur->reg[arg1 - 1];
+		offset += 1;
+	}
+	if (((act >> 5) & 0x01) && !((act >> 4) & 0x01))
+	{
+		arg2 = get_direct(vm, cur, offset);
+		offset += 4;
+	}
+	else if (((act >> 5) & 0x01) && ((act >> 4) & 0x01))
+	{
+		arg2 = get_indirect_value(vm, cur, offset, 0);
+		offset += 2;
+	}
+	else
+	{
+		arg2 = get_register_index(vm, cur, offset);
+		arg2 = cur->reg[arg1 - 1];
+		offset += 1;
+	}
+	reg_num = get_register_index(vm, cur, offset);
+	cur->reg[reg_num] = arg1 ^ arg2;
+	cur->carry = !(arg1 ^ arg2);
 }

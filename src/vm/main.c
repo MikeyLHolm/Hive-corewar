@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/02 15:39:06 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/02 15:42:28 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -525,8 +525,8 @@ void	execute_statement(t_vm *vm, t_carriage *cur)
 	cur->statement == 4 ? op_add(vm, cur) : 0;
 	cur->statement == 5 ? op_sub(vm, cur) : 0;
 	cur->statement == 6 ? op_and(vm, cur) : 0;
-	//cur->statement == 7 ? op_or(vm, cur) : 0;
-	//cur->statement == 8 ? op_xor(vm, cur) : 0;
+	cur->statement == 7 ? op_or(vm, cur) : 0;
+	cur->statement == 8 ? op_xor(vm, cur) : 0;
 	cur->statement == 9 ? op_zjmp(vm, cur) : 0;
 	cur->statement == 10 ? op_ldi(vm, cur) : 0;
 	cur->statement == 11 ? op_sti(vm, cur) : 0;
