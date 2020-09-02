@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/31 13:44:15 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/02 17:47:29 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ t_vm		*init_vm(void)
 
 	if (!(vm = (t_vm*)ft_memalloc(sizeof(t_vm))))
 		handle_error("Malloc failed at VM init");
+	vm->cycles_to_die = CYCLE_TO_DIE;
 	return (vm);
 }
 
@@ -251,6 +252,7 @@ void	manually_create_players(t_vm *vm)
 	player = save_player(vm, "test.cor", NULL);
 	player->next = save_player(vm, "test.cor", NULL);
 	vm->players = player;
+	vm->player_last_alive = vm->player_amount;
 }
 
 void	load_players(t_vm *vm)
@@ -276,15 +278,16 @@ t_carriage	*new_carriage(int id, t_carriage *next)
 	if (!(carriage = (t_carriage*)ft_memalloc(sizeof(t_carriage))))
 		handle_error("Malloc failed");
 	if (REG_NUMBER)
-		carriage->reg[0] = id;
+		carriage->reg[0] = id * -1;
+	carriage->alive = 1;
 	carriage->next = next;
 	return (carriage);
 }
 
 void	init_carriages(t_vm *vm)
 {
-	t_carriage *head;
-	t_player *cur_player;
+	t_carriage	*head;
+	t_player	*cur_player;
 
 	head = NULL;
 	cur_player = vm->players;
@@ -296,10 +299,27 @@ void	init_carriages(t_vm *vm)
 	vm->carriages = head;
 }
 
+void	set_carriage_positions(t_vm *vm)
+{
+	t_carriage	*cur_carriage;
+	int			offset;
+	int			i;
+
+	i = 0;
+	offset = MEM_SIZE / vm->player_amount;
+	cur_carriage = vm->carriages;
+	while (cur_carriage)
+	{
+		cur_carriage->position = i++ * offset;
+		cur_carriage = cur_carriage->next;
+	}
+}
+
 void	init_arena(t_vm *vm)
 {
 	load_players(vm);
 	init_carriages(vm);
+	set_carriage_positions(vm);
 }
 
 void	introduce_contestants(t_vm *vm)
@@ -317,6 +337,298 @@ void	introduce_contestants(t_vm *vm)
 	}
 }
 
+void	disable_dead_carriages(t_vm *vm)
+{
+	t_carriage *cur_carriage;
+
+	cur_carriage = vm->carriages;
+	while (cur_carriage)
+	{
+		if (cur_carriage->last_live_cycle <= vm->cycles - vm->cycles_to_die)
+			cur_carriage->alive = 0;
+		cur_carriage = cur_carriage->next;
+	}
+}
+
+void	perform_check(t_vm *vm)
+{
+	static int cycle;
+
+	cycle++;
+	if (cycle >= vm->cycles_to_die)
+	{
+		disable_dead_carriages(vm);
+		if (vm->period_live_statements >= NBR_LIVE)
+			vm->cycles_to_die -= CYCLE_DELTA;
+		else
+		{
+			vm->checks_without_change++;
+			if (vm->checks_without_change >= MAX_CHECKS)
+			{
+				vm->cycles_to_die -= CYCLE_DELTA;
+				vm->checks_without_change = 0;
+			}
+		}
+		vm->period_live_statements = 0;
+		cycle = 0;
+	}
+}
+
+int		check_carriages_alive(t_vm *vm)
+{
+	t_carriage *cur_carriage;
+
+	cur_carriage = vm->carriages;
+	while (cur_carriage)
+	{
+		if (cur_carriage->alive)
+			return (1);
+		cur_carriage = cur_carriage->next;
+	}
+	return (0);
+}
+
+void	get_statement(t_vm *vm, t_carriage *cur)
+{
+	cur->statement = vm->arena[cur->position];
+	if (cur->statement > 0 && cur->statement < OP_CODE_AMOUNT)
+		cur->cycles_left = g_op_tab[cur->statement - 1].cycles;
+}
+
+void	set_statement_codes(t_vm *vm)
+{
+	t_carriage *cur_carriage;
+
+	cur_carriage = vm->carriages;
+	while (cur_carriage)
+	{
+		if (!cur_carriage->cycles_left)
+			get_statement(vm, cur_carriage);
+		cur_carriage = cur_carriage->next;
+	}
+}
+
+void	reduce_cycles(t_vm *vm)
+{
+	t_carriage *cur_carriage;
+
+	cur_carriage = vm->carriages;
+	while (cur_carriage)
+	{
+		if (cur_carriage->cycles_left)
+			cur_carriage->cycles_left--;
+		cur_carriage = cur_carriage->next;
+	}
+}
+
+int		check_argument_indirect(t_carriage *cur, int *offset, int n)
+{
+	if (!(g_op_tab[cur->statement - 1].args_type[n] & T_IND))
+		return (0);
+	*offset += 2;
+	return (1);
+}
+
+int		check_argument_registry(t_vm *vm, t_carriage *cur, int *offset, int n)
+{
+	if (vm->arena[(cur->position + *offset) % MEM_SIZE] <= 0
+	|| vm->arena[(cur->position + *offset) % MEM_SIZE] > REG_NUMBER)
+		return (0);
+	if (!(g_op_tab[cur->statement - 1].args_type[n] & T_REG))
+		return (0);
+	*offset += 1;
+	return (1);
+}
+
+int		check_argument_direct(t_carriage *cur, int *offset, int n)
+{
+	if (!(g_op_tab[cur->statement - 1].args_type[n] & T_DIR))
+		return (0);
+	if (g_op_tab[cur->statement - 1].size_t_dir)
+		*offset += 2;
+	else
+		*offset += 4;
+	return (1);
+}
+
+int		check_argument_type_code(t_vm *vm, t_carriage *cur)
+{
+	unsigned char	act;
+	int				offset;
+	int				n;
+	int				bit;
+
+	act = (vm->arena[(cur->position + 1) % MEM_SIZE]);
+	offset = 2;
+	n = 0;
+	bit = 7;
+	while (n < g_op_tab[cur->statement - 1].args_n)
+	{
+		if (((act >> bit) & 0x01) && ((act >> (bit - 1)) & 0x01))
+		{
+			if (!check_argument_indirect(cur, &offset, n))
+				return (0);
+		}
+		else if (!((act >> bit) & 0x01) && ((act >> (bit - 1)) & 0x01))
+		{
+			if (!check_argument_registry(vm, cur, &offset, n))
+				return (0);
+		}
+		else if (((act >> bit) & 0x01) && !((act >> (bit - 1)) & 0x01))
+		{
+			if (!check_argument_direct(cur, &offset, n))
+				return (0);
+		}
+		else
+			return (0);
+		bit -= 2;
+		n++;
+	}
+	return (1);
+}
+
+int		check_arguments_valid(t_vm *vm, t_carriage *cur)
+{
+	if (g_op_tab[cur->statement - 1].args_type_code)
+		if (!check_argument_type_code(vm, cur))
+			return (0);
+	return (1);
+}
+
+void	count_bytes_to_skip(t_vm *vm, t_carriage *cur)
+{
+	unsigned char	act;
+	int				n;
+	int				bit;
+
+	act = (vm->arena[(cur->position + 1) % MEM_SIZE]);
+	n = 0;
+	bit = 7;
+	if (g_op_tab[cur->statement - 1].args_type_code)
+		cur->bytes_to_jump = 2;
+	else
+	{
+		cur->bytes_to_jump = g_op_tab[cur->statement - 1].size_t_dir ? 3 : 5;
+		return ;
+	}
+	while (n < g_op_tab[cur->statement - 1].args_n)
+	{
+		if (((act >> bit) & 0x01) && !((act >> (bit - 1)) & 0x01))
+		{
+			if (g_op_tab[cur->statement - 1].size_t_dir)
+				cur->bytes_to_jump += 2;
+			else
+				cur->bytes_to_jump += 4;
+		}
+		else if (!((act >> bit) & 0x01) && ((act >> (bit - 1)) & 0x01))
+			cur->bytes_to_jump += 1;
+		else if (((act >> bit) & 0x01) && ((act >> (bit - 1)) & 0x01))
+			cur->bytes_to_jump += 2;
+		bit -= 2;
+		n++;
+	}
+}
+
+void	move_carriage_next_statement(t_carriage *cur)
+{
+	if (cur->statement != 9)
+		cur->position = (cur->position + cur->bytes_to_jump) % MEM_SIZE;
+	cur->bytes_to_jump = 0;
+}
+
+void	execute_statement(t_vm *vm, t_carriage *cur)
+{
+	cur->statement == 1 ? op_live(vm, cur) : 0;
+	cur->statement == 2 ? op_ld(vm, cur) : 0;
+	cur->statement == 3 ? op_st(vm, cur) : 0;
+	cur->statement == 4 ? op_add(vm, cur) : 0;
+	cur->statement == 5 ? op_sub(vm, cur) : 0;
+	cur->statement == 6 ? op_and(vm, cur) : 0;
+	cur->statement == 7 ? op_or(vm, cur) : 0;
+	cur->statement == 8 ? op_xor(vm, cur) : 0;
+	cur->statement == 9 ? op_zjmp(vm, cur) : 0;
+	cur->statement == 10 ? op_ldi(vm, cur) : 0;
+	cur->statement == 11 ? op_sti(vm, cur) : 0;
+	cur->statement == 12 ? op_fork(vm, cur) : 0;
+	cur->statement == 13 ? op_lld(vm, cur) : 0;
+	cur->statement == 14 ? op_lldi(vm, cur) : 0;
+	cur->statement == 15 ? op_lfork(vm, cur) : 0;
+	cur->statement == 16 ? op_aff(vm, cur) : 0;
+}
+
+void	handle_statement(t_vm *vm, t_carriage *cur)
+{
+	if (cur->statement > 0 && cur->statement < OP_CODE_AMOUNT)
+	{
+		if (check_arguments_valid(vm, cur))
+			execute_statement(vm, cur);
+		count_bytes_to_skip(vm, cur);
+		move_carriage_next_statement(cur);
+	}
+	else
+		cur->position = (cur->position + 1) % MEM_SIZE;
+}
+
+void	perform_statements(t_vm *vm)
+{
+	t_carriage *cur_carriage;
+
+	cur_carriage = vm->carriages;
+	while (cur_carriage)
+	{
+		if (cur_carriage->alive)
+		{
+			if (!cur_carriage->cycles_left)
+				handle_statement(vm, cur_carriage);
+		}
+		cur_carriage = cur_carriage->next;
+	}
+}
+
+void	get_winner(t_vm *vm)
+{
+	t_player *cur_player;
+
+	cur_player = vm->players;
+	while (cur_player)
+	{
+		if (cur_player->id == vm->player_last_alive)
+			break;
+		cur_player = cur_player->next;
+	}
+	ft_printf("Contestant %d, \"%s\", has won !\n", cur_player->id, cur_player->name);
+}
+
+void	battle_loop(t_vm *vm)
+{
+	while (1)
+	{
+		vm->cycles++;
+		perform_check(vm);
+		if (!check_carriages_alive(vm))
+			break;
+		//ft_printf("CYCLE: %d\n", vm->cycles);
+		set_statement_codes(vm);
+		reduce_cycles(vm);
+		perform_statements(vm);
+	}
+	get_winner(vm);
+}
+
+void	print_arena(t_vm *vm)
+{
+	int i;
+
+	i = 0;
+	while (i < MEM_SIZE)
+	{
+		ft_printf("%02x ", (unsigned char)vm->arena[i++]);
+		if (!(i % 64))
+			ft_printf("\n");
+	}
+	ft_printf("\n");
+}
+
 int			main(int argc, char **argv)
 {
 	t_vm	*vm;
@@ -328,10 +640,11 @@ int			main(int argc, char **argv)
 	parse_input(vm, argc, argv);
 	//read_input();
 	//validate();
-	// manually_create_players(vm); //used to create players before argument parsing is functional
-	// init_arena(vm);
-	// introduce_contestants(vm);
-	//fight();
+	manually_create_players(vm); //used to create players before argument parsing is functional
+	init_arena(vm);
+	introduce_contestants(vm);
+	//print_arena(vm);
+	battle_loop(vm);
 	// if (vm->flags & LEAKS)
 	//system("leaks corewar");
 	return (0);
