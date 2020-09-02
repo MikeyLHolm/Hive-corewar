@@ -6,11 +6,15 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 12:13:13 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/01 13:30:17 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/02 15:34:41 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
+
+/*
+**	Check if -n is at least 3 args away from EOS. Also removes < 1 -n values.
+*/
 
 void		validate_n_flag(char **argv, int i)
 {
@@ -19,6 +23,11 @@ void		validate_n_flag(char **argv, int i)
 	if (ft_atoi(argv[i + 1]) < 1)
 		handle_error("-n value < 1. Insert 1 <= x <= players_amount");
 }
+
+/*
+**	Validates -n flag values.
+**	Duplicate and > amount of players amounts not supported.
+*/
 
 void		check_duplicate_n(t_player *head, t_vm *vm)
 {
@@ -39,6 +48,10 @@ void		check_duplicate_n(t_player *head, t_vm *vm)
 	}
 }
 
+/*
+**	Auxilliary function to display LL recursively.
+*/
+
 void		display_list(t_player *head)
 {
 	if (head != NULL)
@@ -47,6 +60,10 @@ void		display_list(t_player *head)
 		display_list(head->next);
 	}
 }
+
+/*
+**	Swap two nodes with each other during bubble sort.
+*/
 
 t_player	*swap_nodes(t_player *cur, t_player *nxt)
 {
@@ -57,6 +74,10 @@ t_player	*swap_nodes(t_player *cur, t_player *nxt)
 	cur->next = tmp;
 	return (nxt);
 }
+
+/*
+**	Sort LL players based on new IDs using bubble sort.
+*/
 
 void		bubble_sort(t_player **head, int count, int swapped, int i)
 {
@@ -86,6 +107,10 @@ void		bubble_sort(t_player **head, int count, int swapped, int i)
 	}
 }
 
+/*
+** Save player to linked list and parse player data.
+*/
+
 void		parse_player(t_vm *vm, char *filename, char *n)
 {
 	if (!vm->players)
@@ -100,76 +125,101 @@ void		parse_player(t_vm *vm, char *filename, char *n)
 	}
 }
 
-void		update_ids(t_vm *vm)
+/*
+**	Reorder ids based on int tab.
+*/
+
+void		reorder_ids(int *tab, t_vm *vm)
 {
-	int			cur_n;
-	int			cur_id;
 	int			i;
+	int			count;
 	t_player	*head;
 
-	cur_id = 0;
-	cur_n = 0;
-	i = -1;
-	while (++i < vm->player_amount)
+	count = vm->player_amount;
+	head = vm->players;
+	while (head)
 	{
-		head = vm->players;
-		while (head)
-		{
-			if (head->n > 0)
-			{
-				cur_id = head->id;
-				cur_n = head->n;
-				head->id = cur_n;
-				// recursion??
-				// update_ids(vm);
-				i = -1;
-				break
-				// update(vm, cur_id, cur_n);
-			}
-			else
-			{
-				if (head->id == cur_n)
-					while(head->id < cur_id)
-						head->id++;
-			}
-			head = head->next;
-		}
-
-
+		i = 0;
+		while (tab[i] != head->id)
+			i++;
+		head->id = i + 1;
+		head = head->next;
 	}
 }
 
+/*
+**	Add first players with n value to the indexes in tab-array.
+**	Follow with players without n value and insert them to
+**	empty array slots in id order.
+*/
+
+void		add_to_tab(t_vm *vm, int count)
+{
+	int			i;
+	int			tab[count];
+	t_player	*head;
+
+	i = -1;
+	while (++i < count)
+		tab[i] = 0;
+	head = vm->players;
+	while (head)
+	{
+		if (head->n != 0)
+		{
+			//ft_printf("Head id [%d] || Head n-1 [%d]\n", head->id, (head->n - 1));
+			tab[(head->n - 1)] = head->id;
+		}
+		head = head->next;
+	}
+	i = 0;
+	head = vm->players;
+	while (head)
+	{
+		while (tab[i] != 0)
+			i++;
+		if (head->n == 0)
+			tab[i] = head->id;
+		head = head->next;
+	}
+	// i = -1;
+	// while (++i < count)
+	// {
+	// 	ft_printf("Le i [%d] = [%d]\n", i, tab[i]);
+	// }
+	reorder_ids(tab, vm);
+}
+
+/*
+**	Main dispatcher to sort player LL based on IDs.
+*/
+
 void		sort_players(t_vm *vm)
 {
-	int				is_n;
-
 	t_player		*cur;
 
 	cur = vm->players;
-	is_n = 0;
 	while (cur)
 	{
 		ft_printf("\nSTATS START:: id = %d || n = %d\n", cur->id, cur->n);
-		// if (cur->n != 0)
-		// {
-		// 	cur->id = cur->n;
-		// 	is_n = 1;
-		// }
-		// ft_printf("STATS END:: id = %d || n = %d\n", cur->id, cur->n);
 		cur = cur->next;
 		vm->player_amount++;
 	}
 	ft_printf("\nNR of players: %d\n", vm->player_amount);
 	cur = vm->players;
 	check_duplicate_n(cur, vm);
-	if ((vm->players && vm->players->next)/*  && is_n != 0 */)
+	if (vm->players && vm->players->next && vm ->flags & N)
 	{
-		// update id values. ++id if 2 same and n = different
-		update_ids(vm);
+		add_to_tab(vm, vm->player_amount);
 		bubble_sort(&vm->players, vm->player_amount, 0, -1);
 	}
 	display_list(vm->players);
 }
+
+/*
+**	Parses arguments and saves flags to a int.
+**	Dispatches to player parsing.
+*/
 
 void		parse_input(t_vm *vm, int argc, char **argv)
 {
