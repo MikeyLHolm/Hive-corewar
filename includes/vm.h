@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/01 14:51:23 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/02 15:49:50 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,5 +113,17 @@ void					op_sti(t_vm *vm, t_carriage *cur);
 void					op_and(t_vm *vm, t_carriage *cur);
 
 void					op_zjmp(t_vm *vm, t_carriage *cur);
+
+int						get_register_index(t_vm *vm, t_carriage *cur, int offset);
+
+void					op_add(t_vm *vm, t_carriage *cur);
+
+void					op_sub(t_vm *vm, t_carriage *cur);
+
+void					op_or(t_vm *vm, t_carriage *cur);
+
+void					op_xor(t_vm *vm, t_carriage *cur);
+
+void					op_aff(t_vm *vm, t_carriage *cur);
 
 #endif
