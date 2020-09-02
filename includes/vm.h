@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/02 17:52:46 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/02 19:03:48 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include "fcntl.h"
 # include "op.h"
 # include "asm_op.h"
+# include <ncurses.h>
 
 /*
 **	Define flags

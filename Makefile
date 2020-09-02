@@ -6,7 +6,7 @@
 #    By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/04/10 19:26:38 by sadawi            #+#    #+#              #
-#    Updated: 2020/09/02 17:52:27 by sadawi           ###   ########.fr        #
+#    Updated: 2020/09/02 19:05:44 by sadawi           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,7 +44,7 @@ $(NAME_CW): $(SRCS_CW) libft/
 	@gcc $(FLAGS) $(INCLUDES) -c $(SRCS_CW)
 	@mkdir objs
 	@mv $(notdir $(SRCS_CW:.c=.o)) objs
-	@gcc $(FLAGS) $(INCLUDES) -o $(NAME_CW) $(OBJS_CW) $(LIBS) libft/libft.a
+	@gcc $(FLAGS) $(INCLUDES) -o $(NAME_CW) $(OBJS_CW) $(LIBS) libft/libft.a -lncurses
 	@echo $(NAME_CW) compiled succesfully!
 
 lib:
