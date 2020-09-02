@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/31 16:04:19 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/02 15:48:14 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/02 16:26:49 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -525,12 +525,38 @@ void	op_xor(t_vm *vm, t_carriage *cur)
 	cur->carry = !(arg1 ^ arg2);
 }
 
-// void	op_fork(t_vm *vm, t_carriage *cur)
-// {
-// 	int arg;
+void	copy_carriage(t_vm *vm, t_carriage *cur, int pos)
+{
+	int reg_num;
 
-// 	arg = get_direct(vm, cur, 1);
-// }
+	vm->carriages = new_carriage(cur->id, vm->carriages);
+	vm->carriages->carry = cur->carry;
+	vm->carriages->last_live_cycle = cur->last_live_cycle;
+	reg_num = 0;
+	while (reg_num < REG_NUMBER)
+	{
+		vm->carriages->reg[reg_num] = cur->reg[reg_num];
+		reg_num++;
+	}
+	vm->carriages->position = pos;
+}
+
+void	op_fork(t_vm *vm, t_carriage *cur)
+{
+	int arg;
+
+	arg = get_direct(vm, cur, 1);
+	copy_carriage(vm, cur, arg % IDX_MOD);
+}
+
+void	op_lfork(t_vm *vm, t_carriage *cur)
+{
+	int arg;
+
+	arg = get_direct(vm, cur, 1);
+	copy_carriage(vm, cur, cur->position + arg);
+}
+
 
 void	op_aff(t_vm *vm, t_carriage *cur)
 {

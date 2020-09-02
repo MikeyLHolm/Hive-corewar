@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/02 15:49:50 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/02 16:27:07 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,5 +125,13 @@ void					op_or(t_vm *vm, t_carriage *cur);
 void					op_xor(t_vm *vm, t_carriage *cur);
 
 void					op_aff(t_vm *vm, t_carriage *cur);
+
+t_carriage				*new_carriage(int id, t_carriage *next);
+
+void					copy_carriage(t_vm *vm, t_carriage *cur, int pos);
+
+void					op_fork(t_vm *vm, t_carriage *cur);
+
+void					op_lfork(t_vm *vm, t_carriage *cur);
 
 #endif

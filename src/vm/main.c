@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/02 16:01:53 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/02 16:27:16 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -531,10 +531,10 @@ void	execute_statement(t_vm *vm, t_carriage *cur)
 	cur->statement == 9 ? op_zjmp(vm, cur) : 0;
 	cur->statement == 10 ? op_ldi(vm, cur) : 0;
 	cur->statement == 11 ? op_sti(vm, cur) : 0;
-	//cur->statement == 12 ? op_fork(vm, cur) : 0;
+	cur->statement == 12 ? op_fork(vm, cur) : 0;
 	cur->statement == 13 ? op_lld(vm, cur) : 0;
 	cur->statement == 14 ? op_lldi(vm, cur) : 0;
-	//cur->statement == 15 ? op_lfork(vm, cur) : 0;
+	cur->statement == 15 ? op_lfork(vm, cur) : 0;
 	cur->statement == 16 ? op_aff(vm, cur) : 0;
 }
 
