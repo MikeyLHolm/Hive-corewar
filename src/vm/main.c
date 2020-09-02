@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/02 17:54:13 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/02 17:58:25 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,7 +162,7 @@ t_player	*save_player(t_vm *vm, char *filename, char *n)
 	if (!(player = (t_player*)ft_memalloc(sizeof(t_player))))
 		handle_error("Malloc failed at save_player.");
 	player->id = ++id;
-	ft_printf("Name is: [%s]\n", filename);
+	//ft_printf("Name is: [%s]\n", filename);
 	validate_filename(filename, ".cor");
 	player->filename = filename;
 	player->n = n ? ft_atoi(n) : 0;

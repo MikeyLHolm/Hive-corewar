@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 12:13:13 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/02 17:55:50 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/02 17:58:06 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void		display_list(t_player *head)
 {
 	if (head != NULL)
 	{
-		ft_printf("\nSTATS START:: id = %d || n = %d\n", head->id, head->n);
+		//ft_printf("\nSTATS START:: id = %d || n = %d\n", head->id, head->n);
 		display_list(head->next);
 	}
 }
@@ -201,11 +201,11 @@ void		sort_players(t_vm *vm)
 	cur = vm->players;
 	while (cur)
 	{
-		ft_printf("\nSTATS START:: id = %d || n = %d\n", cur->id, cur->n);
+		//ft_printf("\nSTATS START:: id = %d || n = %d\n", cur->id, cur->n);
 		cur = cur->next;
 		vm->player_amount++;
 	}
-	ft_printf("\nNR of players: %d\n", vm->player_amount);
+	//ft_printf("\nNR of players: %d\n", vm->player_amount);
 	cur = vm->players;
 	check_duplicate_n(cur, vm);
 	if (vm->players && vm->players->next && vm ->flags & N)
