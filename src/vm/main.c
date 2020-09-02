@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/02 15:48:26 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/02 16:01:53 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -242,6 +242,7 @@ void	manually_create_players(t_vm *vm)
 	player = save_player(vm, "test.cor", NULL);
 	player->next = save_player(vm, "test.cor", NULL);
 	vm->players = player;
+	vm->player_last_alive = vm->player_amount;
 }
 
 void	load_players(t_vm *vm)
@@ -566,6 +567,20 @@ void	perform_statements(t_vm *vm)
 	}
 }
 
+void	get_winner(t_vm *vm)
+{
+	t_player *cur_player;
+
+	cur_player = vm->players;
+	while (cur_player)
+	{
+		if (cur_player->id == vm->player_last_alive)
+			break;
+		cur_player = cur_player->next;
+	}
+	ft_printf("Contestant %d, \"%s\", has won !\n", cur_player->id, cur_player->name);
+}
+
 void	battle_loop(t_vm *vm)
 {
 	while (1)
@@ -579,7 +594,7 @@ void	battle_loop(t_vm *vm)
 		reduce_cycles(vm);
 		perform_statements(vm);
 	}
-	//get_winner(vm);
+	get_winner(vm);
 }
 
 void	print_arena(t_vm *vm)
