@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/01 12:19:15 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/02 16:18:10 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,12 @@ void	get_player_info(t_player *player)
 	player->code = get_player_code(player, fd);
 }
 
+void		validate_filename(char *filename, char *extension)
+{
+	if (!(ft_strequ(ft_strrchr(filename, '.'), extension)))
+		handle_error("File extension not .cor");
+}
+
 t_player	*save_player(t_vm *vm, char *filename, char *n)
 {
 	t_player	*player;
@@ -155,6 +161,8 @@ t_player	*save_player(t_vm *vm, char *filename, char *n)
 	if (!(player = (t_player*)ft_memalloc(sizeof(t_player))))
 		handle_error("Malloc failed at save_player.");
 	player->id = ++id;
+	ft_printf("Name is: [%s]\n", filename);
+	validate_filename(filename, ".cor");
 	player->filename = filename;
 	player->n = n ? ft_atoi(n) : 0;
 	//get_player_info(player);
