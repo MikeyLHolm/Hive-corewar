@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/02 16:27:16 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/02 17:36:59 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -455,14 +455,22 @@ int		check_argument_type_code(t_vm *vm, t_carriage *cur)
 	while (n < g_op_tab[cur->statement - 1].args_n)
 	{
 		if (((act >> bit) & 0x01) && ((act >> (bit - 1)) & 0x01))
+		{
 			if (!check_argument_indirect(cur, &offset, n))
 				return (0);
-		if (!((act >> bit) & 0x01) && ((act >> (bit - 1)) & 0x01))
+		}
+		else if (!((act >> bit) & 0x01) && ((act >> (bit - 1)) & 0x01))
+		{
 			if (!check_argument_registry(vm, cur, &offset, n))
 				return (0);
-		if (((act >> bit) & 0x01) && !((act >> (bit - 1)) & 0x01))
+		}
+		else if (((act >> bit) & 0x01) && !((act >> (bit - 1)) & 0x01))
+		{
 			if (!check_argument_direct(cur, &offset, n))
 				return (0);
+		}
+		else
+			return (0);
 		bit -= 2;
 		n++;
 	}
