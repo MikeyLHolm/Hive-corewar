@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/31 16:04:19 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/02 16:26:49 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/02 16:43:05 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -538,7 +538,7 @@ void	copy_carriage(t_vm *vm, t_carriage *cur, int pos)
 		vm->carriages->reg[reg_num] = cur->reg[reg_num];
 		reg_num++;
 	}
-	vm->carriages->position = pos;
+	vm->carriages->position = pos % MEM_SIZE;
 }
 
 void	op_fork(t_vm *vm, t_carriage *cur)
@@ -546,7 +546,7 @@ void	op_fork(t_vm *vm, t_carriage *cur)
 	int arg;
 
 	arg = get_direct(vm, cur, 1);
-	copy_carriage(vm, cur, arg % IDX_MOD);
+	copy_carriage(vm, cur, cur->position + (arg % IDX_MOD));
 }
 
 void	op_lfork(t_vm *vm, t_carriage *cur)
