@@ -91,12 +91,20 @@ int		get_indirect_address(t_vm *vm, t_carriage *cur, int offset, int addition)
 	return (relative_address);
 }
 
-int		get_register(t_vm *vm, t_carriage *cur, int offset)
+int		get_register_index(t_vm *vm, t_carriage *cur, int offset)
 {
 	int arg;
 
 	arg = vm->arena[cur->position + offset];
 	return (arg);
+}
+
+int		get_register_index(t_vm *vm, t_carriage *cur, int offset)
+{
+	int arg;
+
+	arg = vm->arena[cur->position + offset];
+	return (arg - 1);
 }
 
 t_carriage	*get_carriage_by_id(t_vm *vm, int id)
@@ -140,8 +148,8 @@ void	op_ld(t_vm *vm, t_carriage *cur)
 		num = get_direct(vm, cur, 2);
 	else
 		num = get_indirect_value_trunc(vm, cur, 2, 0);
-	reg_num = get_register(vm, cur, 6);
-	cur->reg[reg_num - 1] = num;
+	reg_num = get_register_index(vm, cur, 6);
+	cur->reg[reg_num] = num;
 	cur->carry = !(num);
 }
 
@@ -156,8 +164,8 @@ void	op_lld(t_vm *vm, t_carriage *cur)
 		num = get_direct(vm, cur, 2);
 	else
 		num = get_indirect_value(vm, cur, 2, 0);
-	reg_num = get_register(vm, cur, 6);
-	cur->reg[reg_num - 1] = num;
+	reg_num = get_register_index(vm, cur, 6);
+	cur->reg[reg_num] = num;
 	cur->carry = !(num);
 }
 
@@ -213,7 +221,7 @@ void	op_ldi(t_vm *vm, t_carriage *cur)
 	}
 	else
 	{
-		arg1 = get_register(vm, cur, offset);
+		arg1 = get_register_index(vm, cur, offset);
 		offset += 1;
 	}
 	if (((act >> 5) & 0x01) && !((act >> 4) & 0x01))
@@ -223,12 +231,12 @@ void	op_ldi(t_vm *vm, t_carriage *cur)
 	}
 	else
 	{
-		arg2 = get_register(vm, cur, offset);
+		arg2 = get_register_index(vm, cur, offset);
 		offset += 1;
 	}
 	num = read_bytes(vm, cur->position + (arg1 + arg2) % IDX_MOD, 4);
-	reg_num = get_register(vm, cur, offset);
-	cur->reg[reg_num - 1] = num;
+	reg_num = get_register_index(vm, cur, offset);
+	cur->reg[reg_num] = num;
 	cur->carry = !(num);
 }
 
@@ -255,7 +263,7 @@ void	op_lldi(t_vm *vm, t_carriage *cur)
 	}
 	else
 	{
-		arg1 = get_register(vm, cur, offset);
+		arg1 = get_register_index(vm, cur, offset);
 		offset += 1;
 	}
 	if (((act >> 5) & 0x01) && !((act >> 4) & 0x01))
@@ -265,12 +273,12 @@ void	op_lldi(t_vm *vm, t_carriage *cur)
 	}
 	else
 	{
-		arg2 = get_register(vm, cur, offset);
+		arg2 = get_register_index(vm, cur, offset);
 		offset += 1;
 	}
 	num = read_bytes(vm, cur->position + arg1 + arg2, 4);
-	reg_num = get_register(vm, cur, offset);
-	cur->reg[reg_num - 1] = num;
+	reg_num = get_register_index(vm, cur, offset);
+	cur->reg[reg_num] = num;
 	cur->carry = !(num);
 }
 
@@ -281,10 +289,10 @@ void	op_st(t_vm *vm, t_carriage *cur)
 	int				arg2;
 
 	act = (vm->arena[(cur->position + 1) % MEM_SIZE]);
-	arg1 = get_register(vm, cur, 2);
+	arg1 = get_register_index(vm, cur, 2);
 	if (!((act >> 5) & 0x01))
 	{
-		arg2 = get_register(vm, cur, 3);
+		arg2 = get_register_index(vm, cur, 3);
 		cur->reg[arg2 - 1] = cur->reg[arg1 - 1];
 	}
 	else
@@ -303,7 +311,7 @@ void	op_sti(t_vm *vm, t_carriage *cur)
 	int				offset;
 
 	act = (vm->arena[(cur->position + 1) % MEM_SIZE]);
-	reg_num = get_register(vm, cur, 2);
+	reg_num = get_register_index(vm, cur, 2);
 	offset = 3;
 	// ft_printf("%d%d%d%d%d%d%d%d\n", ((act >> 7) & 0x01),
 	// ((act >> 6) & 0x01),
@@ -322,18 +330,18 @@ void	op_sti(t_vm *vm, t_carriage *cur)
 	}
 	else
 	{
-		arg1 = get_register(vm, cur, offset);
+		arg1 = get_register_index(vm, cur, offset);
 		arg1 = cur->reg[arg1 - 1];
 		offset += 1;
 	}
 	if (!((act >> 3) & 0x01))
 	{
-		arg2 = get_register(vm, cur, offset);
+		arg2 = get_register_index(vm, cur, offset);
 		arg2 = cur->reg[arg2 - 1];
 	}
 	else
 		arg2 = get_direct(vm, cur, offset);
-	write_bytes(vm, cur->position + (arg1 + arg2) % IDX_MOD, 4, cur->reg[reg_num - 1]);
+	write_bytes(vm, cur->position + (arg1 + arg2) % IDX_MOD, 4, cur->reg[reg_num]);
 }
 
 void	op_and(t_vm *vm, t_carriage *cur)
@@ -359,7 +367,7 @@ void	op_and(t_vm *vm, t_carriage *cur)
 	}
 	else
 	{
-		arg1 = get_register(vm, cur, offset);
+		arg1 = get_register_index(vm, cur, offset);
 		arg1 = cur->reg[arg1 - 1];
 		offset += 1;
 	}
@@ -375,12 +383,12 @@ void	op_and(t_vm *vm, t_carriage *cur)
 	}
 	else
 	{
-		arg2 = get_register(vm, cur, offset);
+		arg2 = get_register_index(vm, cur, offset);
 		arg2 = cur->reg[arg1 - 1];
 		offset += 1;
 	}
-	reg_num = get_register(vm, cur, offset);
-	cur->reg[reg_num - 1] = arg1 & arg2;
+	reg_num = get_register_index(vm, cur, offset);
+	cur->reg[reg_num] = arg1 & arg2;
 	cur->carry = !(arg1 & arg2);
 }
 
