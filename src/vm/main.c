@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/02 17:52:53 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/02 17:54:13 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,7 +166,7 @@ t_player	*save_player(t_vm *vm, char *filename, char *n)
 	validate_filename(filename, ".cor");
 	player->filename = filename;
 	player->n = n ? ft_atoi(n) : 0;
-	//get_player_info(player);
+	get_player_info(player);
 	return (player);
 }
 
@@ -593,7 +593,7 @@ int			main(int argc, char **argv)
 	parse_input(vm, argc, argv);
 	//read_input();
 	//validate();
-	manually_create_players(vm); //used to create players before argument parsing is functional
+	//manually_create_players(vm); //used to create players before argument parsing is functional
 	init_arena(vm);
 	introduce_contestants(vm);
 	//print_arena(vm);
