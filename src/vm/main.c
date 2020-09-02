@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/02 17:47:29 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/02 17:52:53 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,28 +28,19 @@ t_vm		*init_vm(void)
 	return (vm);
 }
 
-void		save_flag(t_vm *vm, char flag)
-{
-	if (flag == 'd')
-		vm->flags = vm->flags | DUMP;
-	else if (flag == 'e')
-		vm->flags = vm->flags | ERROR;
-	else if (flag == 'l')
-		vm->flags = vm->flags | LEAKS;
-	else if (flag == 'n')
-		vm->flags = vm->flags | N;
-	else if (flag == 'v')
-		vm->flags = vm->flags | VISUALIZER;
-}
-
-void		sort_players(t_vm *vm)
-{
-	while (vm->players)
-	{
-		ft_printf("id = %d || n = %d\n", vm->players->id, vm->players->n);
-		vm->players = vm->players->next;
-	}
-}
+// void		save_flag(t_vm *vm, char flag)
+// {
+// 	if (flag == 'd')
+// 		vm->flags = vm->flags | DUMP;
+// 	else if (flag == 'e')
+// 		vm->flags = vm->flags | ERROR;
+// 	else if (flag == 'l')
+// 		vm->flags = vm->flags | LEAKS;
+// 	else if (flag == 'n')
+// 		vm->flags = vm->flags | N;
+// 	else if (flag == 'v')
+// 		vm->flags = vm->flags | VISUALIZER;
+// }
 
 void	check_magic_header(int fd)
 {
@@ -156,6 +147,12 @@ void	get_player_info(t_player *player)
 	player->code = get_player_code(player, fd);
 }
 
+void		validate_filename(char *filename, char *extension)
+{
+	if (!(ft_strequ(ft_strrchr(filename, '.'), extension)))
+		handle_error("File extension not .cor");
+}
+
 t_player	*save_player(t_vm *vm, char *filename, char *n)
 {
 	t_player	*player;
@@ -165,56 +162,12 @@ t_player	*save_player(t_vm *vm, char *filename, char *n)
 	if (!(player = (t_player*)ft_memalloc(sizeof(t_player))))
 		handle_error("Malloc failed at save_player.");
 	player->id = ++id;
+	ft_printf("Name is: [%s]\n", filename);
+	validate_filename(filename, ".cor");
 	player->filename = filename;
 	player->n = n ? ft_atoi(n) : 0;
 	//get_player_info(player);
 	return (player);
-}
-
-void		parse_player(t_vm *vm, char *filename, char *n)
-{
-	if (!vm->players)
-	{
-		vm->tail = save_player(vm, filename, n);
-		vm->players = vm->tail;
-	}
-	else
-	{
-		vm->tail->next = save_player(vm, filename, n);
-		vm->tail = vm->tail->next;
-	}
-}
-
-void		parse_input(t_vm *vm, int argc, char **argv)
-{
-	int			i;
-
-	i = 0;
-	while (++i < argc)
-	{
-		if (ft_strequ(argv[i], "-dump"))
-			vm->flags = vm->flags | DUMP;
-		else if (ft_strequ(argv[i], "-e"))
-			vm->flags = vm->flags | ERROR;
-		else if (ft_strequ(argv[i], "-x"))
-			vm->flags = vm->flags | LEAKS;
-		else if (ft_strequ(argv[i], "-v"))
-			vm->flags = vm->flags | VISUALIZER;
-		else if (ft_strequ(argv[i], "-n"))
-		{
-			vm->flags = vm->flags | N;
-			if (argv[i + 1] && argv[i + 2])
-				parse_player(vm, argv[i + 2], argv[i + 1]);
-			else
-				handle_error("-n flag in wrong place");
-			i += 2;
-		}
-		else
-		{
-			parse_player(vm, argv[i], 0);
-		}
-	}
-	sort_players(vm);
 }
 
 

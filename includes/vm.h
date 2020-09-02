@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/02 17:46:39 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/02 17:52:46 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 
 # define BUFFER_SIZE	4096
 
-typedef struct 			s_player
+typedef struct			s_player
 {
 	char				*filename;
 	unsigned char		*code;
@@ -42,7 +42,7 @@ typedef struct 			s_player
 	struct s_player		*next;
 }						t_player;
 
-typedef struct 			s_input
+typedef struct			s_input
 {
 	char				*line;
 	struct s_input		*next;
@@ -62,10 +62,9 @@ typedef struct			s_carriage
 	struct s_carriage	*next;
 }						t_carriage;
 
-typedef struct 			s_vm
+typedef struct			s_vm
 {
 	int					flags;
-	int					player_n;
 	int					player_amount;
 	t_player			*tail;
 	t_player			*players;
@@ -134,5 +133,18 @@ void					copy_carriage(t_vm *vm, t_carriage *cur, int pos);
 void					op_fork(t_vm *vm, t_carriage *cur);
 
 void					op_lfork(t_vm *vm, t_carriage *cur);
+
+/*
+**	Error management functions.
+*/
+
+void					handle_error(char *message);
+
+/*
+**	Input parsing functions.
+*/
+
+void					parse_input(t_vm *vm, int argc, char **argv);
+t_player				*save_player(t_vm *vm, char *filename, char *n);
 
 #endif
