@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/31 16:04:19 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/01 18:21:17 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/02 15:38:56 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -392,4 +392,34 @@ void	op_zjmp(t_vm *vm, t_carriage *cur)
 		return ;
 	arg1 = get_direct(vm, cur, 1);
 	cur->position += arg1 % IDX_MOD;
+}
+
+void	op_add(t_vm *vm, t_carriage *cur)
+{
+	int	arg1;
+	int	arg2;
+	int reg_num;
+
+	arg1 = get_register_index(vm, cur, 2);
+	arg1 = cur->reg[arg1 - 1];
+	arg2 = get_register_index(vm, cur, 3);
+	arg2 = cur->reg[arg2 - 1];
+	reg_num = get_register_index(vm, cur, 4);
+	cur->reg[reg_num] = arg1 + arg2;
+	cur->carry = !(arg1 + arg2);
+}
+
+void	op_sub(t_vm *vm, t_carriage *cur)
+{
+	int	arg1;
+	int	arg2;
+	int reg_num;
+
+	arg1 = get_register_index(vm, cur, 2);
+	arg1 = cur->reg[arg1 - 1];
+	arg2 = get_register_index(vm, cur, 3);
+	arg2 = cur->reg[arg2 - 1];
+	reg_num = get_register_index(vm, cur, 4);
+	cur->reg[reg_num] = arg1 - arg2;
+	cur->carry = !(arg1 - arg2);
 }
