@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/08/26 18:25:36 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/08/27 14:28:50 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -244,6 +244,7 @@ void	handle_writing(t_asm *assm, char *input_filename)
 	char	*output_filename;
 
 	output_filename = get_output_filename(input_filename);
+	//check if open failed here
 	fd = open(output_filename, O_WRONLY|O_CREAT|O_TRUNC, 0666);
 	free(output_filename);
 	write_header(fd);
