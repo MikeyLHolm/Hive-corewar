@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/31 16:04:19 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/02 16:43:05 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/03 18:35:41 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ int		get_register(t_vm *vm, t_carriage *cur, int offset)
 {
 	int arg;
 
-	arg = vm->arena[cur->position + offset];
+	arg = vm->arena[(cur->position + offset) % MEM_SIZE];
 	return (arg);
 }
 
@@ -103,7 +103,7 @@ int		get_register_index(t_vm *vm, t_carriage *cur, int offset)
 {
 	int arg;
 
-	arg = vm->arena[cur->position + offset];
+	arg = vm->arena[(cur->position + offset) % MEM_SIZE];
 	return (arg - 1);
 }
 
