@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/02 19:48:44 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/03 12:15:40 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,6 +232,7 @@ t_carriage	*new_carriage(int id, t_carriage *next)
 		handle_error("Malloc failed");
 	if (REG_NUMBER)
 		carriage->reg[0] = id * -1;
+	carriage->id = id;
 	carriage->alive = 1;
 	carriage->next = next;
 	return (carriage);
@@ -561,7 +562,7 @@ int		*get_cursor_mem(t_vm *vm)
 	cur = vm->carriages;
 	while (cur)
 	{
-		cursor_mem[cur->position % MEM_SIZE] = 1;
+		cursor_mem[cur->position % MEM_SIZE] = cur->id;
 		cur = cur->next;
 	}
 	return (cursor_mem);
@@ -579,16 +580,94 @@ void	visualize(t_vm *vm)
 	while (i < MEM_SIZE)
 	{
 		if (cursor_mem[i])
-			attron(COLOR_PAIR(1));
-		printw("%02x ", (unsigned char)vm->arena[i++]);
+			attron(COLOR_PAIR(cursor_mem[i]));
+		printw("%02x", (unsigned char)vm->arena[i++]);
+		attroff(COLOR_PAIR(cursor_mem[i - 1]));
+		printw(" ");
 		if (!(i % 64))
 			printw("\n");
-			attroff(COLOR_PAIR(1));
 	}
 	printw("\n");
 	printw("CYCLE: %d\n", vm->cycles);
+	printw("CYCLES_TO_DIE: %d\n", vm->cycles_to_die);
 	getch();
 	refresh();
+}
+
+void	visualize_states(t_vm *vm)
+{
+	t_state	*cur_state;
+	int		i;
+	int		key;
+
+	cur_state = vm->arena_history_head;
+	while (1)
+	{
+		erase();
+		i = 0;
+		while (i < MEM_SIZE)
+		{
+			if (cur_state->cursor_mem[i])
+				attron(COLOR_PAIR(cur_state->cursor_mem[i]));
+			printw("%02x", (unsigned char)cur_state->arena[i++]);
+			attroff(COLOR_PAIR(cur_state->cursor_mem[i - 1]));
+			printw(" ");
+			if (!(i % 64))
+				printw("\n");
+		}
+		printw("\n");
+		printw("CYCLE: %d\n", cur_state->cycle);
+		printw("CYCLES_TO_DIE: %d\n", vm->cycles_to_die);
+		printw("AUTOPLAY: %s", vm->controls.autoplay ? "ON" : "OFF");
+		key = getch();
+		if (vm->controls.autoplay && key == ERR)
+			key = KEY_RIGHT;
+		if (key == KEY_LEFT)
+			cur_state = cur_state->prev ? cur_state->prev : cur_state;
+		if (key == KEY_RIGHT)
+			cur_state = cur_state->next ? cur_state->next : cur_state;
+		if (key == 'q')
+			break ;
+		if (key == 'a')
+		{
+			vm->controls.autoplay = !vm->controls.autoplay;
+			timeout(vm->controls.autoplay ? 1 : -1);
+		}
+		refresh();
+	}
+}
+
+t_state	*new_state(t_vm *vm, t_state *prev)
+{
+	t_state	*state;
+	int		i;
+
+	if (!(state = (t_state*)ft_memalloc(sizeof(t_state))))
+		handle_error("Malloc failed");
+	i = 0;
+	while (i < MEM_SIZE)
+	{
+		state->arena[i] = vm->arena[i];
+		i++;
+	}
+	state->cursor_mem = get_cursor_mem(vm);
+	state->cycle = vm->cycles;
+	state->prev = prev;
+	return (state);
+}
+
+void	save_state(t_vm *vm)
+{
+	if (!vm->arena_history_head)
+	{
+		vm->arena_history_head = new_state(vm, NULL);
+		vm->cur_state = vm->arena_history_head;
+	}
+	else
+	{
+		vm->cur_state->next = new_state(vm, vm->cur_state);
+		vm->cur_state = vm->cur_state->next;
+	}
 }
 
 void	battle_loop(t_vm *vm)
@@ -603,7 +682,8 @@ void	battle_loop(t_vm *vm)
 		set_statement_codes(vm);
 		reduce_cycles(vm);
 		perform_statements(vm);
-		visualize(vm);
+		//visualize(vm);
+		save_state(vm);
 	}
 	get_winner(vm);
 }
@@ -627,8 +707,12 @@ void	init_visualizer(t_vm *vm)
 	(void)vm;
 	initscr();
 	noecho();
+	keypad(stdscr, true);
 	start_color();
 	init_pair(1, COLOR_WHITE, COLOR_BLUE);
+	init_pair(2, COLOR_WHITE, COLOR_GREEN);
+	init_pair(3, COLOR_WHITE, COLOR_RED);
+	init_pair(4, COLOR_WHITE, COLOR_YELLOW);
 }
 
 int			main(int argc, char **argv)
@@ -648,6 +732,7 @@ int			main(int argc, char **argv)
 	//print_arena(vm);
 	init_visualizer(vm);
 	battle_loop(vm);
+	visualize_states(vm);
 	endwin();
 	// if (vm->flags & LEAKS)
 	//system("leaks corewar");

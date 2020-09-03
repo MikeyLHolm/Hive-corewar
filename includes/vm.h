@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/02 19:03:48 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/03 12:07:39 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,20 @@ typedef struct			s_carriage
 	struct s_carriage	*next;
 }						t_carriage;
 
+typedef	struct			s_state
+{
+	unsigned char		arena[MEM_SIZE];
+	int					*cursor_mem;
+	int					cycle;
+	struct s_state		*prev;
+	struct s_state		*next;
+}						t_state;
+
+typedef struct			s_controls
+{
+	int					autoplay;
+}						t_controls;
+
 typedef struct			s_vm
 {
 	int					flags;
@@ -77,6 +91,9 @@ typedef struct			s_vm
 	int					period_live_statements;
 	int					checks_without_change;
 	t_carriage			*carriages;
+	t_state				*arena_history_head;
+	t_state				*cur_state;
+	t_controls			controls;
 }						t_vm;
 
 int						get_direct(t_vm *vm, t_carriage *cur, int offset);
