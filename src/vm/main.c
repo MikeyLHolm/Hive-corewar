@@ -470,7 +470,8 @@ void	count_bytes_to_skip(t_vm *vm, t_carriage *cur)
 	int				n;
 	int				bit;
 
-	act = (vm->arena[(cur->position + 1) % MEM_SIZE]);
+	(void)vm;
+	act = cur->act;
 	n = 0;
 	bit = 7;
 	if (g_op_tab[cur->statement - 1].args_type_code)
@@ -529,6 +530,7 @@ void	handle_statement(t_vm *vm, t_carriage *cur)
 {
 	if (cur->statement > 0 && cur->statement < OP_CODE_AMOUNT)
 	{
+		cur->act = (vm->arena[(cur->position + 1) % MEM_SIZE]); //quick fix for act getting overwritten before bytes to skip is calculated
 		if (check_arguments_valid(vm, cur))
 			execute_statement(vm, cur);
 		count_bytes_to_skip(vm, cur);
