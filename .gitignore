@@ -4,6 +4,6 @@
 *.cor*
 *.s
 *.a
-asm
-corewar
+/asm
+/corewar
 notes
