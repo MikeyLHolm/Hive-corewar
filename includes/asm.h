@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/17 12:41:59 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/04 12:55:36 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/04 15:23:49 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,15 @@
 # include "op.h"
 # include "asm_op.h"
 
+# define HEADER_NAME		1
+# define HEADER_COMMENT		2
+
 typedef struct		s_validator
 {
 	int				col;
+	int				data;
 	int				row;
 }					t_validator;
-
 
 typedef struct		s_token
 {
