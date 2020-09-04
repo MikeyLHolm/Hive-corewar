@@ -748,7 +748,7 @@ void	visualize_states(t_vm *vm)
 		}
 		printw("\n");
 		printw("CYCLE: %d\n", cur_state->cycle);
-		printw("CYCLES_TO_DIE: %d\n", vm->cycles_to_die);
+		printw("CYCLES_TO_DIE: %d\n", cur_state->cycles_to_die);
 		printw("CARRIAGES AMOUNT: %d\n", cur_state->carriage_amount);
 		printw("AUTOPLAY: %s\n", vm->controls.autoplay ? "ON" : "OFF");
 		refresh();
@@ -801,6 +801,7 @@ t_state	*new_state(t_vm *vm, t_state *prev)
 	}
 	state->carriage_amount = j;
 	state->cycle = vm->cycles;
+	state->cycles_to_die = vm->cycles_to_die;
 	state->prev = prev;
 	return (state);
 }

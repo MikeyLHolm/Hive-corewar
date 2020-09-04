@@ -74,6 +74,7 @@ typedef	struct			s_state
 	int					*changed_mem;
 	int					cycle;
 	int					carriage_amount;
+	int					cycles_to_die;
 	struct s_state		*prev;
 	struct s_state		*next;
 }						t_state;
