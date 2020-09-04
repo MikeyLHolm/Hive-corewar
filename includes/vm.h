@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/03 12:07:39 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/04 18:18:28 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@
 # define LEAKS			4
 # define N				8
 # define VISUALIZER		16
+# define ADV_VISUALIZER	32
+# define START			64
 
 # define BUFFER_SIZE	4096
 
@@ -55,11 +57,13 @@ typedef struct			s_carriage
 	int					carry;
 	int					reg[REG_NUMBER];
 	int					statement;
+	int					statement_owner;
 	int					cycles_left;
 	int					last_live_cycle;
 	int					position;
 	int					alive;
 	int					bytes_to_jump;
+	int					act;
 	struct s_carriage	*next;
 }						t_carriage;
 
@@ -67,7 +71,9 @@ typedef	struct			s_state
 {
 	unsigned char		arena[MEM_SIZE];
 	int					*cursor_mem;
+	int					*changed_mem;
 	int					cycle;
+	int					carriage_amount;
 	struct s_state		*prev;
 	struct s_state		*next;
 }						t_state;
@@ -94,6 +100,9 @@ typedef struct			s_vm
 	t_state				*arena_history_head;
 	t_state				*cur_state;
 	t_controls			controls;
+	int					*cursor_mem;
+	int					*changed_mem;
+	int					start;
 }						t_vm;
 
 int						get_direct(t_vm *vm, t_carriage *cur, int offset);
