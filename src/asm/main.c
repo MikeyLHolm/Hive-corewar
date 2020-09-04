@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/08/27 14:28:50 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/04 11:14:55 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	print_file(t_file *head)
 char	*get_output_filename(char *input_filename)
 {
 	*ft_strrchr(input_filename, '.') = '\0';
-	return (ft_strjoin(input_filename, ".cor.sadawi"));
+	return (ft_strjoin(input_filename, ".cor"));
 }
 
 void	write_header(int fd)
@@ -281,6 +281,8 @@ char	*get_champion_name(t_file *cur)
 		cur = cur->next;
 	}
 	*ft_strrchr(name, '"') = '\0';
+	if (ft_strlen(name) > PROG_NAME_LENGTH)
+		handle_error("Champion name too long");
 	return (name);
 }
 
@@ -302,6 +304,8 @@ char	*get_champion_comment(t_file *cur)
 		cur = cur->next;
 	}
 	*ft_strrchr(name, '"') = '\0';
+	if (ft_strlen(name) > COMMENT_LENGTH)
+		handle_error("Champion comment too long");
 	return (name);
 }
 
@@ -648,12 +652,12 @@ int		main(int argc, char **argv)
 	//check_file(assm->file);
 	tokenize_file(assm);
 	convert_labels(assm);
-	print_tokens(assm->token);
+	//print_tokens(assm->token);
 	print_file(assm->file);
-	int byte;
-	byte = -19;
-	ft_printf("BYTE: %hx\n", byte);
-	ft_printf("%02hx\n", 15);
+	//int byte;
+	//byte = -19;
+	//ft_printf("BYTE: %hx\n", byte);
+	//ft_printf("%02hx\n", 15);
 	handle_writing(assm, argv[1]);
 	//system("leaks asm");
 	exit(0);
