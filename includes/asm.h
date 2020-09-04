@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/17 12:41:59 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/04 15:23:49 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/04 17:01:25 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,12 @@
 
 # define HEADER_NAME		1
 # define HEADER_COMMENT		2
+
+typedef struct		s_label
+{
+	char			*label_name;
+	struct s_label	*next;
+}					t_label;
 
 typedef struct		s_validator
 {
@@ -45,6 +51,7 @@ typedef struct		s_file
 {
 	char			*line;
 	struct s_file	*next;
+	t_label			*label;
 }					t_file;
 
 typedef struct		s_asm
