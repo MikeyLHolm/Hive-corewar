@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/03 12:15:40 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/04 18:19:30 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -281,10 +281,10 @@ void	introduce_contestants(t_vm *vm)
 	t_player *cur_player;
 
 	cur_player = vm->players;
-	ft_printf("Introducing contestants ...\n");
+	ft_printf("Introducing contestants...\n");
 	while (cur_player)
 	{
-		ft_printf("* Player %d, weighing %d bytes, \"%s\" (\"%s\")!\n",
+		ft_printf("* Player %d, weighing %d bytes, \"%s\" (\"%s\") !\n",
 		cur_player->id, cur_player->size,
 		cur_player->name, cur_player->comment);
 		cur_player = cur_player->next;
@@ -699,7 +699,6 @@ void	print_arena(t_vm *vm)
 		if (!(i % 64))
 			ft_printf("\n");
 	}
-	ft_printf("\n");
 }
 
 void	init_visualizer(t_vm *vm)
