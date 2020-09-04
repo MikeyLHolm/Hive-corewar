@@ -197,17 +197,56 @@ int		read_bytes(t_vm *vm, int pos, int amount)
 	return (arg);
 }
 
-void	write_bytes(t_vm *vm, int pos, int amount, unsigned int byte)
+void	write_bytes(t_vm *vm, t_carriage *cur, int pos, unsigned int byte)
 {
-
-	if (amount > 0)
-		vm->arena[pos % MEM_SIZE] = byte % 256;
-	if (amount > 1)
-		vm->arena[(pos + 1) % MEM_SIZE] = byte / 256 % 256;
-	if (amount > 2)
-		vm->arena[(pos + 2) % MEM_SIZE] = byte / 256 / 256 % 256;
-	if (amount > 3)
-		vm->arena[(pos + 3) % MEM_SIZE] = byte / 256 / 256 / 256 % 256;
+	vm->arena[pos % MEM_SIZE] = byte / 256 / 256 / 256 % 256;
+	if (vm->flags & ADV_VISUALIZER)
+	{
+		vm->cur_state->cursor_mem[pos % MEM_SIZE] = vm->player_amount - cur->id + 5;
+		if (vm->cur_state)
+			vm->cur_state->changed_mem[pos % MEM_SIZE] = 50;
+	}
+	else if (vm->flags & VISUALIZER)
+	{
+		vm->cursor_mem[pos % MEM_SIZE] = vm->player_amount - cur->id + 5;
+			vm->changed_mem[pos % MEM_SIZE] = 50;
+	}
+	vm->arena[(pos + 1) % MEM_SIZE] = byte / 256 / 256 % 256;
+	if (vm->flags & ADV_VISUALIZER)
+	{
+		vm->cur_state->cursor_mem[(pos + 1) % MEM_SIZE] = vm->player_amount - cur->id + 5;
+		if (vm->cur_state)
+			vm->cur_state->changed_mem[(pos + 1) % MEM_SIZE] = 50;
+	}
+	else if (vm->flags & VISUALIZER)
+	{
+		vm->cursor_mem[(pos + 1) % MEM_SIZE] = vm->player_amount - cur->id + 5;
+			vm->changed_mem[(pos + 1) % MEM_SIZE] = 50;
+	}
+	vm->arena[(pos + 2) % MEM_SIZE] = byte / 256 % 256;
+	if (vm->flags & ADV_VISUALIZER)
+	{
+		vm->cur_state->cursor_mem[(pos + 2) % MEM_SIZE] = vm->player_amount - cur->id + 5;
+		if (vm->cur_state)
+			vm->cur_state->changed_mem[(pos + 2) % MEM_SIZE] = 50;
+	}
+	else if (vm->flags & VISUALIZER)
+	{
+		vm->cursor_mem[(pos + 2) % MEM_SIZE] = vm->player_amount - cur->id + 5;
+			vm->changed_mem[(pos + 2) % MEM_SIZE] = 50;
+	}
+	vm->arena[(pos + 3) % MEM_SIZE] = byte % 256;
+	if (vm->flags & ADV_VISUALIZER)
+	{
+		vm->cur_state->cursor_mem[(pos + 3) % MEM_SIZE] = vm->player_amount - cur->id + 5;
+		if (vm->cur_state)
+			vm->cur_state->changed_mem[(pos + 3) % MEM_SIZE] = 50;
+	}
+	else if (vm->flags & VISUALIZER)
+	{
+		vm->cursor_mem[(pos + 3) % MEM_SIZE] = vm->player_amount - cur->id + 5;
+			vm->changed_mem[(pos + 3) % MEM_SIZE] = 50;
+	}
 }
 
 void	op_ldi(t_vm *vm, t_carriage *cur)

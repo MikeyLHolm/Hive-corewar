@@ -127,7 +127,7 @@ void					op_lld(t_vm *vm, t_carriage *cur);
 
 int						read_bytes(t_vm *vm, int pos, int amount);
 
-void					write_bytes(t_vm *vm, int pos, int amount, unsigned int byte);
+void					write_bytes(t_vm *vm, t_carriage *cur, int pos, unsigned int byte);
 
 void					op_ldi(t_vm *vm, t_carriage *cur);
 
