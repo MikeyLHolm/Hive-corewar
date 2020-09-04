@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   asm.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/17 12:41:59 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/08/26 13:30:35 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/04 12:55:36 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,13 @@
 # include "fcntl.h"
 # include "op.h"
 # include "asm_op.h"
+
+typedef struct		s_validator
+{
+	int				col;
+	int				row;
+}					t_validator;
+
 
 typedef struct		s_token
 {
@@ -46,5 +53,12 @@ typedef struct		s_asm
 	t_token			*token;
 	int				champion_size;
 }					t_asm;
+
+/*
+**	Validation and error handling.
+*/
+
+void		handle_error(char *message);
+void		validator(t_file *file);
 
 #endif

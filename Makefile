@@ -6,14 +6,14 @@
 #    By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/04/10 19:26:38 by sadawi            #+#    #+#              #
-#    Updated: 2020/09/03 09:21:20 by mlindhol         ###   ########.fr        #
+#    Updated: 2020/09/04 12:45:21 by mlindhol         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME_ASM = asm
 NAME_CW = corewar
 
-CFILES_ASM = main.c
+CFILES_ASM = main.c validator.c
 SRCS_ASM = $(addprefix src/asm/, $(CFILES_ASM))
 OBJS_ASM = $(addprefix objs/, $(notdir $(SRCS_ASM:.c=.o)))
 

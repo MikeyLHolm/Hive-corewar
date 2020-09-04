@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/04 11:21:43 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/04 14:13:10 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ char	*get_output_filename(char *input_filename)
 void	write_header(int fd)
 {
 	int		magic_number;
-	char 	buf[4];
+	char	buf[4];
 	int		i;
 
 	magic_number = COREWAR_EXEC_MAGIC;
@@ -91,12 +91,12 @@ void	write_header(int fd)
 		magic_number /= 256;
 	}
 	while (--i >= 0)
-		 write(fd, &buf[i], 1);
+		write(fd, &buf[i], 1);
 }
 
 void	write_name(t_asm *assm, int fd)
 {
-	char 	buf[PROG_NAME_LENGTH];
+	char	buf[PROG_NAME_LENGTH];
 	size_t	i;
 
 	ft_bzero(buf, PROG_NAME_LENGTH);
@@ -113,7 +113,7 @@ void	write_name(t_asm *assm, int fd)
 
 void	write_comment(t_asm *assm, int fd)
 {
-	char 	buf[COMMENT_LENGTH];
+	char	buf[COMMENT_LENGTH];
 	size_t	i;
 
 	ft_bzero(buf, COMMENT_LENGTH);
@@ -212,7 +212,7 @@ void	write_arguments(t_token *token, int fd)
 	if (type == REG_CODE)
 		write_registry(token->arg2, fd);
 	else if (type == DIR_CODE)
-		write_direct(token,  token->arg2, fd);
+		write_direct(token, token->arg2, fd);
 	else if (type == IND_CODE)
 		write_indirect(token->arg2, fd);
 	type = get_arg_type(token->arg3);
@@ -245,7 +245,7 @@ void	handle_writing(t_asm *assm, char *input_filename)
 
 	output_filename = get_output_filename(input_filename);
 	//check if open failed here
-	fd = open(output_filename, O_WRONLY|O_CREAT|O_TRUNC, 0666);
+	fd = open(output_filename, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	free(output_filename);
 	write_header(fd);
 	write_name(assm, fd);
@@ -338,7 +338,7 @@ char	*get_token_label(char *line)
 {
 	int i;
 
-	i  = 0;
+	i = 0;
 	while (line[i] && line[i] != LABEL_CHAR)
 		if (!ft_strchr(LABEL_CHARS, line[i++]))
 			return (NULL);
@@ -370,7 +370,7 @@ char	*get_token_instruction(t_asm *assm)
 			if (ft_isalpha(assm->cur->line[j++]))
 				len++;
 			else
-				break;
+				break ;
 		}
 		if (len)
 			return (ft_strsub(assm->cur->line, i, len));
@@ -450,7 +450,7 @@ void	print_token_info(t_token *token)
 	ft_printf("ARG2: %s\n", token->arg2);
 	ft_printf("ARG3: %s\n", token->arg3);
 	ft_printf("ARGUMENT TYPE CODE: %x\n", token->argument_type_code);
-	ft_printf("SIZE: %d\n",  token->size);
+	ft_printf("SIZE: %d\n", token->size);
 	ft_printf("\n\n");
 }
 
@@ -459,7 +459,7 @@ char	get_argument_type_code(t_token *token)
 	int				type;
 	unsigned char	byte;
 
-	byte =  0;
+	byte = 0;
 	type = get_arg_type(token->arg1);
 	if (type == DIR_CODE || type == IND_CODE)
 		byte |= 1UL << 7;
@@ -560,7 +560,7 @@ void	tokenize_file(t_asm *assm)
 			if (!assm->token)
 			{
 				cur_token = new_token(assm);
-				assm->token  = cur_token;
+				assm->token = cur_token;
 			}
 			else
 			{
@@ -585,9 +585,9 @@ void	convert_argument_label(t_asm *assm, char **arg, int arg_position)
 		if (ft_strequ(cur_token->label, ft_strchr(*arg, ':') + 1))
 		{
 			if ((*arg)[0] == '%')
-				converted_arg = ft_strjoinfree(ft_strdup("%"), ft_itoa(label_position  - arg_position));
+				converted_arg = ft_strjoinfree(ft_strdup("%"), ft_itoa(label_position - arg_position));
 			else
-				converted_arg = ft_itoa(label_position  - arg_position);
+				converted_arg = ft_itoa(label_position - arg_position);
 			free(*arg);
 			*arg = converted_arg;
 			return ;
@@ -657,11 +657,12 @@ int		main(int argc, char **argv)
 	assm = init_assm();
 	assm->file = read_file(argv[1]);
 	remove_file_comments(assm->file);
+	validator(assm->file);
 	//check_file(assm->file);
 	tokenize_file(assm);
 	convert_labels(assm);
 	//print_tokens(assm->token);
-	print_file(assm->file);
+	//print_file(assm->file);
 	//int byte;
 	//byte = -19;
 	//ft_printf("BYTE: %hx\n", byte);
