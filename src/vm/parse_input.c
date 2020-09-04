@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 12:13:13 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/02 17:58:06 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/04 18:19:18 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,6 +236,14 @@ void		parse_input(t_vm *vm, int argc, char **argv)
 			vm->flags = vm->flags | LEAKS;
 		else if (ft_strequ(argv[i], "-v"))
 			vm->flags = vm->flags | VISUALIZER;
+		else if (ft_strequ(argv[i], "-a"))
+			vm->flags = vm->flags | ADV_VISUALIZER;
+		else if (ft_strequ(argv[i], "-s"))
+		{
+			vm->flags = vm->flags | START;
+			vm->start = ft_atoi(argv[i + 1]); //add error handling
+			i++;
+		}
 		else if (ft_strequ(argv[i], "-n"))
 		{
 			vm->flags = vm->flags | N;
