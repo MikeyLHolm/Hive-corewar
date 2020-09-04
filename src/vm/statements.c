@@ -6,11 +6,23 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/31 16:04:19 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/03 18:35:41 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/04 16:58:46 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
+
+int		positive_modulo(int n, int mod)
+{
+	if (n < 0)
+	{
+		n %= mod;
+		n += mod;
+	}
+	else
+		n %= mod;
+	return (n);
+}
 
 int		get_direct(t_vm *vm, t_carriage *cur, int offset)
 {
@@ -234,7 +246,7 @@ void	op_ldi(t_vm *vm, t_carriage *cur)
 		arg2 = get_register_index(vm, cur, offset);
 		offset += 1;
 	}
-	num = read_bytes(vm, cur->position + (arg1 + arg2) % IDX_MOD, 4);
+	num = read_bytes(vm, positive_modulo(cur->position + (arg1 + arg2) % IDX_MOD, MEM_SIZE), 4);
 	reg_num = get_register_index(vm, cur, offset);
 	cur->reg[reg_num] = num;
 	cur->carry = !(num);
@@ -276,7 +288,7 @@ void	op_lldi(t_vm *vm, t_carriage *cur)
 		arg2 = get_register_index(vm, cur, offset);
 		offset += 1;
 	}
-	num = read_bytes(vm, cur->position + arg1 + arg2, 4);
+	num = read_bytes(vm, positive_modulo(cur->position + (arg1 + arg2) % IDX_MOD, MEM_SIZE), 4);
 	reg_num = get_register_index(vm, cur, offset);
 	cur->reg[reg_num] = num;
 	cur->carry = !(num);
@@ -293,12 +305,12 @@ void	op_st(t_vm *vm, t_carriage *cur)
 	if (!((act >> 5) & 0x01))
 	{
 		arg2 = get_register_index(vm, cur, 3);
-		cur->reg[arg2 - 1] = cur->reg[arg1 - 1];
+		cur->reg[arg2] = cur->reg[arg1];
 	}
 	else
 	{
 		arg2 = get_indirect_address_trunc(vm, cur, 3, 0);
-		write_bytes(vm, cur->position + arg2, 4, cur->reg[arg1 - 1]);
+		write_bytes(vm, cur, positive_modulo(cur->position + arg2, MEM_SIZE), cur->reg[arg1]);
 	}
 }
 
@@ -331,17 +343,17 @@ void	op_sti(t_vm *vm, t_carriage *cur)
 	else
 	{
 		arg1 = get_register_index(vm, cur, offset);
-		arg1 = cur->reg[arg1 - 1];
+		arg1 = cur->reg[arg1];
 		offset += 1;
 	}
 	if (!((act >> 3) & 0x01))
 	{
 		arg2 = get_register_index(vm, cur, offset);
-		arg2 = cur->reg[arg2 - 1];
+		arg2 = cur->reg[arg2];
 	}
 	else
 		arg2 = get_direct(vm, cur, offset);
-	write_bytes(vm, cur->position + (arg1 + arg2) % IDX_MOD, 4, cur->reg[reg_num]);
+	write_bytes(vm, cur, positive_modulo(cur->position + (arg1 + arg2) % IDX_MOD, MEM_SIZE), cur->reg[reg_num]);
 }
 
 void	op_and(t_vm *vm, t_carriage *cur)
@@ -367,7 +379,7 @@ void	op_and(t_vm *vm, t_carriage *cur)
 	else
 	{
 		arg1 = get_register_index(vm, cur, offset);
-		arg1 = cur->reg[arg1 - 1];
+		arg1 = cur->reg[arg1];
 		offset += 1;
 	}
 	if (((act >> 5) & 0x01) && !((act >> 4) & 0x01))
@@ -383,7 +395,7 @@ void	op_and(t_vm *vm, t_carriage *cur)
 	else
 	{
 		arg2 = get_register_index(vm, cur, offset);
-		arg2 = cur->reg[arg1 - 1];
+		arg2 = cur->reg[arg1];
 		offset += 1;
 	}
 	reg_num = get_register_index(vm, cur, offset);
@@ -398,7 +410,10 @@ void	op_zjmp(t_vm *vm, t_carriage *cur)
 	if (!cur->carry)
 		return ;
 	arg1 = get_direct(vm, cur, 1);
+	//positive_modulo(cur->position + arg1 % IDX_MOD, MEM_SIZE);
 	cur->position += arg1 % IDX_MOD;
+	if (cur->position < 0)
+		cur->position = MEM_SIZE + cur->position;
 }
 
 void	op_add(t_vm *vm, t_carriage *cur)
@@ -408,9 +423,9 @@ void	op_add(t_vm *vm, t_carriage *cur)
 	int reg_num;
 
 	arg1 = get_register_index(vm, cur, 2);
-	arg1 = cur->reg[arg1 - 1];
+	arg1 = cur->reg[arg1];
 	arg2 = get_register_index(vm, cur, 3);
-	arg2 = cur->reg[arg2 - 1];
+	arg2 = cur->reg[arg2];
 	reg_num = get_register_index(vm, cur, 4);
 	cur->reg[reg_num] = arg1 + arg2;
 	cur->carry = !(arg1 + arg2);
@@ -423,9 +438,9 @@ void	op_sub(t_vm *vm, t_carriage *cur)
 	int reg_num;
 
 	arg1 = get_register_index(vm, cur, 2);
-	arg1 = cur->reg[arg1 - 1];
+	arg1 = cur->reg[arg1];
 	arg2 = get_register_index(vm, cur, 3);
-	arg2 = cur->reg[arg2 - 1];
+	arg2 = cur->reg[arg2];
 	reg_num = get_register_index(vm, cur, 4);
 	cur->reg[reg_num] = arg1 - arg2;
 	cur->carry = !(arg1 - arg2);
@@ -454,7 +469,7 @@ void	op_or(t_vm *vm, t_carriage *cur)
 	else
 	{
 		arg1 = get_register_index(vm, cur, offset);
-		arg1 = cur->reg[arg1 - 1];
+		arg1 = cur->reg[arg1];
 		offset += 1;
 	}
 	if (((act >> 5) & 0x01) && !((act >> 4) & 0x01))
@@ -470,7 +485,7 @@ void	op_or(t_vm *vm, t_carriage *cur)
 	else
 	{
 		arg2 = get_register_index(vm, cur, offset);
-		arg2 = cur->reg[arg1 - 1];
+		arg2 = cur->reg[arg1];
 		offset += 1;
 	}
 	reg_num = get_register_index(vm, cur, offset);
@@ -501,7 +516,7 @@ void	op_xor(t_vm *vm, t_carriage *cur)
 	else
 	{
 		arg1 = get_register_index(vm, cur, offset);
-		arg1 = cur->reg[arg1 - 1];
+		arg1 = cur->reg[arg1];
 		offset += 1;
 	}
 	if (((act >> 5) & 0x01) && !((act >> 4) & 0x01))
@@ -517,7 +532,7 @@ void	op_xor(t_vm *vm, t_carriage *cur)
 	else
 	{
 		arg2 = get_register_index(vm, cur, offset);
-		arg2 = cur->reg[arg1 - 1];
+		arg2 = cur->reg[arg1];
 		offset += 1;
 	}
 	reg_num = get_register_index(vm, cur, offset);
@@ -546,7 +561,7 @@ void	op_fork(t_vm *vm, t_carriage *cur)
 	int arg;
 
 	arg = get_direct(vm, cur, 1);
-	copy_carriage(vm, cur, cur->position + (arg % IDX_MOD));
+	copy_carriage(vm, cur, positive_modulo(cur->position + arg % IDX_MOD, MEM_SIZE));
 }
 
 void	op_lfork(t_vm *vm, t_carriage *cur)
@@ -554,7 +569,7 @@ void	op_lfork(t_vm *vm, t_carriage *cur)
 	int arg;
 
 	arg = get_direct(vm, cur, 1);
-	copy_carriage(vm, cur, cur->position + arg);
+	copy_carriage(vm, cur, positive_modulo(cur->position + arg, MEM_SIZE));
 }
 
 
