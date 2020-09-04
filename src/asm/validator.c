@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 12:44:33 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/04 15:15:37 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/04 15:21:27 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,8 @@ void		validate_header(t_file *cur, t_validator *vd)
 	while (cur)
 	{
 		ft_printf("LINE:: %s\n", cur->line);
-		if (cur->line[0] == '.' && !ft_strncmp(cur->line, ".name ", 6) && !ft_strncmp(cur->line, ".comment ", 9))
-			validation_error("Header str no .name or .comment", vd->row, vd->col);
-
+		if (cur->line[0] == '.' && ft_strncmp(cur->line, ".name ", 6) && ft_strncmp(cur->line, ".comment ", 9))
+			validation_error("Header str not .name or .comment", vd->row, 1);
 		if (cur->line[0] == '\n'/*  && name && comment */)
 			return ;
 		else
