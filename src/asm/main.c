@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/04 11:14:55 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/04 11:21:43 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -317,9 +317,17 @@ void	get_name_and_comment(t_asm *assm)
 	while (cur)
 	{
 		if (ft_strnequ(cur->line, NAME_CMD_STRING, ft_strlen(NAME_CMD_STRING)))
+		{
+			if (assm->name)
+				handle_error("Name already exists");
 			assm->name = get_champion_name(cur);
+		}
 		if (ft_strnequ(cur->line, COMMENT_CMD_STRING, ft_strlen(COMMENT_CMD_STRING)))
+		{
+			if (assm->comment)
+				handle_error("Comment already exists");
 			assm->comment = get_champion_comment(cur);
+		}
 		if (assm->name && assm->comment)
 			break ;
 		cur = cur->next;
