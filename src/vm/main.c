@@ -247,7 +247,7 @@ void	init_carriages(t_vm *vm)
 	cur_player = vm->players;
 	while (cur_player)
 	{
-		head = new_carriage(cur_player->id, head);
+		head = new_carriage(vm->player_amount - cur_player->id + 1, head);
 		cur_player = cur_player->next;
 	}
 	vm->carriages = head;
