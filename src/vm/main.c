@@ -707,11 +707,39 @@ void	init_visualizer(t_vm *vm)
 	initscr();
 	noecho();
 	keypad(stdscr, true);
-	start_color();
-	init_pair(1, COLOR_WHITE, COLOR_BLUE);
-	init_pair(2, COLOR_WHITE, COLOR_GREEN);
-	init_pair(3, COLOR_WHITE, COLOR_RED);
-	init_pair(4, COLOR_WHITE, COLOR_YELLOW);
+	if (has_colors())
+	{
+		use_default_colors();
+		start_color();
+		init_pair(1, COLOR_BLACK, COLOR_BLUE);
+		init_pair(2, COLOR_BLACK, COLOR_GREEN);
+		init_pair(3, COLOR_BLACK, COLOR_RED);
+		init_pair(4, COLOR_BLACK, COLOR_YELLOW);
+		init_pair(5, COLOR_BLUE, COLOR_BLACK);
+		init_pair(6, COLOR_GREEN, COLOR_BLACK);
+		init_pair(7, COLOR_RED, COLOR_BLACK);
+		init_pair(8, COLOR_YELLOW, COLOR_BLACK);
+		init_pair(9, COLOR_BLACK, COLOR_WHITE);
+		init_pair(10, COLOR_BLUE, COLOR_WHITE);
+		init_pair(11, COLOR_GREEN, COLOR_WHITE);
+		init_pair(12, COLOR_RED, COLOR_WHITE);
+		init_pair(13, COLOR_YELLOW, COLOR_WHITE);
+	}
+}
+
+void	dump_memory(t_vm *vm)
+{
+	int i;
+
+	i = 0;
+	while (i < MEM_SIZE)
+	{
+		if (!(i % 64))
+			ft_printf("0x%04x : ", i);
+		ft_printf("%02x ", (unsigned char)vm->arena[i++]);
+		if (!(i % 64))
+			ft_printf("\n");
+	}
 }
 
 int			main(int argc, char **argv)
