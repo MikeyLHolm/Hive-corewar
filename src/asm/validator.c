@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 12:44:33 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/04 15:46:30 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/04 16:37:42 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,56 @@ void		validation_error(char *message, int row, int col)
 	exit(1);
 }
 
+/*
+**	Comment validation:
+**		double name, length > PROG_NAME_LENGTH, bad characters
+**		multi-line name, no quotes
+*/
+
+void		validate_name(t_file *cur, t_validator *vd)
+{
+	if (vd->data & HEADER_NAME)
+		validation_error(ft_strjoin("Duplicate ", NAME_CMD_STRING), vd->row, 1);
+	ft_printf("LINE:: %s\n", cur->line);
+	vd->data = vd->data | HEADER_NAME;
+
+}
+
+/*
+**	Comment validation:
+**		double comment, length > COMMENT_LENGTH, bad characters
+**		multi-line comment, no quotes
+*/
+
+void		validate_comment(t_file *cur, t_validator *vd)
+{
+	if (vd->data & HEADER_NAME)
+		validation_error(ft_strjoin("Duplicate ", COMMENT_CMD_STRING), vd->row, 1);
+	ft_printf("LINE:: %s\n", cur->line);
+	vd->data = vd->data | HEADER_COMMENT;
+
+}
+
+/*
+**	strjoin newline if no closing ".
+**	Check up to 128/2048 chars.
+**
+**	change to COMMENT_CMD_STRING + " " instead ".comment "
+*/
+
 void		validate_header(t_file *cur, t_validator *vd)
 {
 
 	while (cur)
 	{
-		// ft_printf("LINE:: %s\n", cur->line);
+		
 		// Check that line starting with . is either .name or .comment
+		ft_printf("VAL LINE:: [%s]\n", cur->line);
+		// ADD LENGTH / DOUBLE VALIDATION  !!!!
 		if (!ft_strncmp(cur->line, ".name ", 6))
-			vd->data = vd->data | HEADER_NAME;
+			validate_name(cur, vd);
 		else if (!ft_strncmp(cur->line, ".comment ", 9))
-			vd->data = vd->data | HEADER_COMMENT;
+			validate_comment(cur, vd);
 		else if (cur->line[0] == '.')
 			validation_error("Header str not .name or .comment", vd->row, 1);
 		// Add validation for multi-string name or comment. Opening and closing "
@@ -36,13 +75,16 @@ void		validate_header(t_file *cur, t_validator *vd)
 		// check for other whitespace?
 		if (cur->line[0] == '\0' && vd->data == 3)
 			return ;
+		else if (cur->line[0] != '\0' && cur->line[0] != '.' &&
+				cur->line[0] != ALT_COMMENT_CHAR && cur->line[0] != COMMENT_CHAR)
+			validation_error("Wrong character in header.", vd->row, 1);
 		else
 		{
 			cur = cur->next;
 			vd->row++;
 		}
 	}
-	validation_error("Header incomplete, no '.name'/'.comment'", vd->row, 0);
+	validation_error("Header incomplete, no '.name'/'.comment'", vd->row, 1);
 	// if starts with . and not ".name" ".comment"
 
 	// if line starts with anything but .#;\n = instruction time
@@ -50,12 +92,12 @@ void		validate_header(t_file *cur, t_validator *vd)
 	// exit validate_header after first found nl after both .name & .comment are found.
 }
 
-void		validate_instructions(t_file *cur, t_validator *vd)
-{
+// void		validate_instructions(t_file *cur, t_validator *vd)
+// {
 
 
 	
-}
+// }
 
 void		validator(t_file *file)
 {
@@ -64,17 +106,18 @@ void		validator(t_file *file)
 
 	if (!(vd = (t_validator*)ft_memalloc(sizeof(t_validator))))
 		handle_error("Malloc failed");
-	vd->col = 0;
-	vd->row = 0;
+	vd->col = 1;
+	vd->row = 1;
 	cur = file;
 
 	// validate header
-	while (cur)
-	{
-		validate_header(cur, vd);
-		++vd->row;
-		cur = cur->next;
-	}
+	validate_header(cur, vd);
+	++vd->row;
+	cur = cur->next;
+	ft_putendl("Header validated, moving to instructions!\n");
+	// while (cur)
+	// {
+	// }
 	// newline(s) after both name and command have been found.
 
 	// validate instructions
