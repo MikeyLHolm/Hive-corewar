@@ -358,6 +358,10 @@ void	get_statement(t_vm *vm, t_carriage *cur)
 	cur->statement = vm->arena[cur->position];
 	if (cur->statement > 0 && cur->statement < OP_CODE_AMOUNT)
 		cur->cycles_left = g_op_tab[cur->statement - 1].cycles;
+	// if (vm->flags & ADV_VISUALIZER)
+	// 	cur->statement_owner = vm->cur_state->cursor_mem[cur->position];
+	// if (vm->flags & VISUALIZER)
+	// 	cur->statement_owner = vm->cursor_mem[cur->position];
 }
 
 void	set_statement_codes(t_vm *vm)
