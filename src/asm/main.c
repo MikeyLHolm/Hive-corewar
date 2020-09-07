@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/04 14:13:10 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/07 08:32:59 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -288,25 +288,25 @@ char	*get_champion_name(t_file *cur)
 
 char	*get_champion_comment(t_file *cur)
 {
-	char	*name;
+	char	*comment;
 
-	name = NULL;
-	name = ft_strjoin(name, ft_strchr(cur->line, '"') + 1);
-	if (!name)
-		handle_error("Champion name invalid");
+	comment = NULL;
+	comment = ft_strjoin(comment, ft_strchr(cur->line, '"') + 1);
+	if (!comment)
+		handle_error("Champion comment invalid");
 	cur = cur->next;
-	while (!ft_strchr(name, '"') && cur)
+	while (!ft_strchr(comment, '"') && cur)
 	{
-		name = ft_strjoinfree(name, ft_strdup("\n"));
-		name = ft_strjoinfree(name, ft_strdup(cur->line));
-		if (ft_strchr(name, '"'))
+		comment = ft_strjoinfree(comment, ft_strdup("\n"));
+		comment = ft_strjoinfree(comment, ft_strdup(cur->line));
+		if (ft_strchr(comment, '"'))
 			break ;
 		cur = cur->next;
 	}
-	*ft_strrchr(name, '"') = '\0';
-	if (ft_strlen(name) > COMMENT_LENGTH)
+	*ft_strrchr(comment, '"') = '\0';
+	if (ft_strlen(comment) > COMMENT_LENGTH)
 		handle_error("Champion comment too long");
-	return (name);
+	return (comment);
 }
 
 void	get_name_and_comment(t_asm *assm)
