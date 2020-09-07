@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/07 12:10:55 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/07 12:27:20 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -790,6 +790,8 @@ void	visualize_states(t_vm *vm)
 			vm->controls.autoplay = !vm->controls.autoplay;
 			timeout(vm->controls.autoplay ? 1 : -1);
 		}
+		if (!cur_state->next)
+			vm->controls.autoplay = 0;
 	}
 }
 
