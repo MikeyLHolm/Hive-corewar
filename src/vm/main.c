@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/07 11:55:22 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/07 12:10:55 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -537,6 +537,12 @@ void	execute_statement(t_vm *vm, t_carriage *cur)
 
 void	handle_statement(t_vm *vm, t_carriage *cur)
 {
+	if (!(cur->statement > 0 && cur->statement < OP_CODE_AMOUNT))
+	{
+		get_statement(vm, cur);
+		if (cur->statement > 0 && cur->statement < OP_CODE_AMOUNT)
+			return ;
+	}
 	if (cur->statement > 0 && cur->statement < OP_CODE_AMOUNT)
 	{
 		cur->act = (vm->arena[(cur->position + 1) % MEM_SIZE]); //quick fix for act getting overwritten before bytes to skip is calculated
