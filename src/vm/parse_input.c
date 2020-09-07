@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 12:13:13 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/04 18:19:18 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/07 18:50:07 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,7 +229,11 @@ void		parse_input(t_vm *vm, int argc, char **argv)
 	while (++i < argc)
 	{
 		if (ft_strequ(argv[i], "-dump"))
+		{
 			vm->flags = vm->flags | DUMP;
+			vm->dump_cycle = ft_atoi(argv[i + 1]); //add error handling
+			i++;
+		}
 		else if (ft_strequ(argv[i], "-e"))
 			vm->flags = vm->flags | ERROR;
 		else if (ft_strequ(argv[i], "-x"))

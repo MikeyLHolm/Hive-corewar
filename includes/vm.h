@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/07 11:49:50 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/07 18:49:35 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ typedef struct			s_vm
 	int					*cursor_mem;
 	int					*changed_mem;
 	int					start;
+	int					dump_cycle;
 }						t_vm;
 
 int						get_direct(t_vm *vm, t_carriage *cur, int offset);
