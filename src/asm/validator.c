@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 12:44:33 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/07 10:46:49 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/07 16:00:06 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,33 +37,38 @@ t_label		*new_label(char *labelname)
 t_file		*validate_name(t_file *cur, t_validator *vd)
 {
 	char	*name;
-
+	
 	if (vd->data & HEADER_NAME)
 		validation_error(ft_strjoin("Duplicate ", NAME_CMD_STRING), vd->row, 1);
-	ft_printf("LINE:: %s\n", cur->line);
+	ft_printf("LINE:1: %s\n", cur->line);
 	vd->data = vd->data | HEADER_NAME;
+	ft_printf("[%d]\n", vd->data);
 	name = NULL;
 	name = ft_strjoin(name, ft_strchr(cur->line, '"') + 1);
+
 	if (!name)
-		handle_error("Champion name invalid");
-	ft_printf("name is: [%s]\n", name);
-	cur = cur->next;
+		validation_error("Champion name invalid", vd->row, 1);
+	ft_printf("LINE:2: %s\n", cur->line);
 	while (!ft_strchr(name, '"') && cur)
 	{
-		ft_printf("LINE:in: %s\n", cur->line);
+		cur = cur->next;
+		++vd->row;
+		ft_printf("LINE:in1: %s\n", cur->line);
 		name = ft_strjoinfree(name, ft_strdup("\n"));
 		name = ft_strjoinfree(name, ft_strdup(cur->line));
 		if (ft_strchr(name, '"'))
 			break ;
-		cur = cur->next;
+		//cur = cur->next;
+		ft_printf("LINE:in2: %s\n", cur->line);
 	}
-	ft_printf("LINE:after: %s\n", cur->line);
 	*ft_strrchr(name, '"') = '\0';
 	if (ft_strlen(name) > PROG_NAME_LENGTH)
-		handle_error("Champion name too long");
+		validation_error("Champion name too long", vd->row, 1);
 	ft_printf("name at end is: [%s]\n", name);
+	ft_printf("LINE:3: %s\n", cur->line);
 	free(name);
 	cur = cur->next;
+	++vd->row;
 	return (cur);
 }
 
@@ -73,13 +78,15 @@ t_file		*validate_name(t_file *cur, t_validator *vd)
 **		multi-line comment, no quotes
 */
 
-void		validate_comment(t_file *cur, t_validator *vd)
+t_file		*validate_comment(t_file *cur, t_validator *vd)
 {
 	if (vd->data & HEADER_COMMENT)
 		validation_error(ft_strjoin("Duplicate ", COMMENT_CMD_STRING), vd->row, 1);
 	ft_printf("LINE:: %s\n", cur->line);
 	vd->data = vd->data | HEADER_COMMENT;
-
+	cur = cur->next;
+	++vd->row;
+	return (cur);
 }
 
 /*
@@ -95,24 +102,23 @@ t_file		*validate_header(t_file *cur, t_validator *vd)
 	while (cur)
 	{
 		// Check that line starting with . is either .name or .comment
-		ft_printf("VAL LINE:: [%s]\n", cur->line);
+		//ft_printf("VAL LINE:: [%s]\n", cur->line);
 		// ADD LENGTH / DOUBLE VALIDATION  !!!!
 		//if (!ft_strncmp(cur->line, ".name ", 6))
 		if (!ft_strncmp(cur->line, ft_strjoin(NAME_CMD_STRING, " "), ft_strlen(NAME_CMD_STRING) + 1))
 			cur = validate_name(cur, vd);
 		else if (!ft_strncmp(cur->line, ft_strjoin(COMMENT_CMD_STRING, " "), ft_strlen(COMMENT_CMD_STRING) + 1))
-			validate_comment(cur, vd);
+			cur = validate_comment(cur, vd);
 		else if (cur->line[0] == '.')
 			validation_error("Header str not NAME/COMMENT_CMD_STRING", vd->row, 1);
-		// Add validation for multi-string name or comment. Opening and closing "
 		ft_printf("VAL LINE super:: [%s]\n", cur->line);
 		// check for other whitespace?
 		if (cur->line[0] == '\0' && vd->data == 3)
 			return (cur);
 		else if (cur->line[0] != '\0' && cur->line[0] != '.' &&
 				cur->line[0] != ALT_COMMENT_CHAR && cur->line[0] != COMMENT_CHAR)
-			validation_error("Bad string in header.", vd->row, 1);
-		else
+			validation_error("Bad string in header", vd->row, 1);
+		else if (cur->line[0] == '\0' || cur->line[0] == ALT_COMMENT_CHAR || cur->line[0] == COMMENT_CHAR)
 		{
 			cur = cur->next;
 			vd->row++;
