@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/07 12:58:22 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/07 19:44:29 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ t_vm		*init_vm(void)
 	if (!(vm->changed_mem = (int*)ft_memalloc(sizeof(int) * MEM_SIZE)))
 		handle_error("Malloc failed");
 	vm->cursor_mem = NULL;
+	vm->dump_cycle = -1;
 	init_controls(vm);
 	return (vm);
 }
@@ -859,6 +860,21 @@ void	update_changed_memory(t_vm *vm)
 	}
 }
 
+void	dump_memory(t_vm *vm)
+{
+	int i;
+
+	i = 0;
+	while (i < MEM_SIZE)
+	{
+		if (!(i % 64))
+			ft_printf("0x%04x : ", i);
+		ft_printf("%02x ", (unsigned char)vm->arena[i++]);
+		if (!(i % 64))
+			ft_printf("\n");
+	}
+}
+
 void	battle_loop(t_vm *vm)
 {
 	while (1)
@@ -881,6 +897,11 @@ void	battle_loop(t_vm *vm)
 		perform_statements(vm);
 		if (vm->flags & VISUALIZER)
 			visualize(vm);
+		if (vm->flags & DUMP && vm->cycles == vm->dump_cycle)
+		{
+			dump_memory(vm);
+			exit(0);
+		}
 	}
 	if (!(vm->flags & DUMP))
 		get_winner(vm);
@@ -925,21 +946,6 @@ void	init_visualizer(t_vm *vm)
 	}
 }
 
-void	dump_memory(t_vm *vm)
-{
-	int i;
-
-	i = 0;
-	while (i < MEM_SIZE)
-	{
-		if (!(i % 64))
-			ft_printf("0x%04x : ", i);
-		ft_printf("%02x ", (unsigned char)vm->arena[i++]);
-		if (!(i % 64))
-			ft_printf("\n");
-	}
-}
-
 int			main(int argc, char **argv)
 {
 	t_vm	*vm;
@@ -960,8 +966,6 @@ int			main(int argc, char **argv)
 	battle_loop(vm);
 	if (vm->flags & ADV_VISUALIZER)
 		visualize_states(vm);
-	if (vm->flags & DUMP)
-		dump_memory(vm);
 	endwin();
 	// if (vm->flags & LEAKS)
 	//system("leaks corewar");
