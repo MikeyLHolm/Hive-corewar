@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/04 18:18:28 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/07 11:49:50 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ typedef	struct			s_state
 typedef struct			s_controls
 {
 	int					autoplay;
+	int					step_size;
 }						t_controls;
 
 typedef struct			s_vm

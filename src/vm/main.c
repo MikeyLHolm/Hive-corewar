@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/04 18:19:30 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/07 11:55:22 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,11 @@ void	handle_error(char *message)
 {
 	ft_printf("%s.\n", message);
 	exit(1);
+}
+
+void		init_controls(t_vm *vm)
+{
+	vm->controls.step_size = 1;
 }
 
 t_vm		*init_vm(void)
@@ -28,6 +33,7 @@ t_vm		*init_vm(void)
 	if (!(vm->changed_mem = (int*)ft_memalloc(sizeof(int) * MEM_SIZE)))
 		handle_error("Malloc failed");
 	vm->cursor_mem = NULL;
+	init_controls(vm);
 	return (vm);
 }
 
@@ -751,14 +757,26 @@ void	visualize_states(t_vm *vm)
 		printw("CYCLES_TO_DIE: %d\n", cur_state->cycles_to_die);
 		printw("CARRIAGES AMOUNT: %d\n", cur_state->carriage_amount);
 		printw("AUTOPLAY: %s\n", vm->controls.autoplay ? "ON" : "OFF");
+		printw("STEP SIZE: %d", vm->controls.step_size);
 		refresh();
 		key = getch();
 		if (vm->controls.autoplay && key == ERR)
 			key = KEY_RIGHT;
+		i = 0;
 		if (key == KEY_LEFT)
-			cur_state = cur_state->prev ? cur_state->prev : cur_state;
+		{
+			while (i++ < vm->controls.step_size)
+				cur_state = cur_state->prev ? cur_state->prev : cur_state;
+		}
 		if (key == KEY_RIGHT)
-			cur_state = cur_state->next ? cur_state->next : cur_state;
+		{
+			while (i++ < vm->controls.step_size)
+				cur_state = cur_state->next ? cur_state->next : cur_state;
+		}
+		if (key == KEY_UP)
+			vm->controls.step_size++;
+		if (key == KEY_DOWN)
+			vm->controls.step_size > 1 ? vm->controls.step_size-- : (void)vm;
 		if (key == 'q')
 			break ;
 		if (key == 'a')
