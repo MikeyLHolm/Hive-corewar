@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/07 12:27:20 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/07 12:58:22 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -256,7 +256,7 @@ void	init_carriages(t_vm *vm)
 	cur_player = vm->players;
 	while (cur_player)
 	{
-		head = new_carriage(vm->player_amount - cur_player->id + 1, head);
+		head = new_carriage(cur_player->id, head);
 		cur_player = cur_player->next;
 	}
 	vm->carriages = head;
@@ -268,12 +268,12 @@ void	set_carriage_positions(t_vm *vm)
 	int			offset;
 	int			i;
 
-	i = 0;
+	i = vm->player_amount - 1;
 	offset = MEM_SIZE / vm->player_amount;
 	cur_carriage = vm->carriages;
 	while (cur_carriage)
 	{
-		cur_carriage->position = i++ * offset;
+		cur_carriage->position = i-- * offset;
 		cur_carriage = cur_carriage->next;
 	}
 }
