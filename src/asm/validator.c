@@ -6,17 +6,11 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 12:44:33 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/07 16:00:06 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/07 17:17:12 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asm.h"
-
-void		validation_error(char *message, int row, int col)
-{
-	ft_printf("Error at [%03d:%03d]: %s.\n", row, col, message);
-	exit(1);
-}
 
 t_label		*new_label(char *labelname)
 {
@@ -30,46 +24,39 @@ t_label		*new_label(char *labelname)
 
 /*
 **	Comment validation:
-**		double name, length > PROG_NAME_LENGTH, bad characters
-**		multi-line name, no quotes
+**		[x] double name
+**		[x] length > PROG_NAME_LENGTH
+**		[] bad characters
+**		[x] multi-line name
+**		[] no quotes
+**		[] open quote
 */
 
 t_file		*validate_name(t_file *cur, t_validator *vd)
 {
 	char	*name;
-	
+
 	if (vd->data & HEADER_NAME)
 		validation_error(ft_strjoin("Duplicate ", NAME_CMD_STRING), vd->row, 1);
-	ft_printf("LINE:1: %s\n", cur->line);
 	vd->data = vd->data | HEADER_NAME;
-	ft_printf("[%d]\n", vd->data);
 	name = NULL;
 	name = ft_strjoin(name, ft_strchr(cur->line, '"') + 1);
-
+	// is condition below needed?
 	if (!name)
 		validation_error("Champion name invalid", vd->row, 1);
-	ft_printf("LINE:2: %s\n", cur->line);
 	while (!ft_strchr(name, '"') && cur)
 	{
-		cur = cur->next;
-		++vd->row;
-		ft_printf("LINE:in1: %s\n", cur->line);
+		cur = increment_validator(cur, vd);
 		name = ft_strjoinfree(name, ft_strdup("\n"));
 		name = ft_strjoinfree(name, ft_strdup(cur->line));
 		if (ft_strchr(name, '"'))
 			break ;
-		//cur = cur->next;
-		ft_printf("LINE:in2: %s\n", cur->line);
 	}
 	*ft_strrchr(name, '"') = '\0';
 	if (ft_strlen(name) > PROG_NAME_LENGTH)
 		validation_error("Champion name too long", vd->row, 1);
-	ft_printf("name at end is: [%s]\n", name);
-	ft_printf("LINE:3: %s\n", cur->line);
 	free(name);
-	cur = cur->next;
-	++vd->row;
-	return (cur);
+	return (increment_validator(cur, vd));
 }
 
 /*
@@ -80,13 +67,29 @@ t_file		*validate_name(t_file *cur, t_validator *vd)
 
 t_file		*validate_comment(t_file *cur, t_validator *vd)
 {
+	char		*comment;
+
 	if (vd->data & HEADER_COMMENT)
 		validation_error(ft_strjoin("Duplicate ", COMMENT_CMD_STRING), vd->row, 1);
-	ft_printf("LINE:: %s\n", cur->line);
 	vd->data = vd->data | HEADER_COMMENT;
-	cur = cur->next;
-	++vd->row;
-	return (cur);
+	comment = NULL;
+	comment = ft_strjoin(comment, ft_strchr(cur->line, '"') + 1);
+	// is condition below needed?
+	if (!comment)
+		validation_error("Champion comment invalid", vd->row, 1);
+	while (!ft_strchr(comment, '"') && cur)
+	{
+		cur = increment_validator(cur, vd);
+		comment = ft_strjoinfree(comment, ft_strdup("\n"));
+		comment = ft_strjoinfree(comment, ft_strdup(cur->line));
+		if (ft_strchr(comment, '"'))
+			break ;
+	}
+	*ft_strrchr(comment, '"') = '\0';
+	if (ft_strlen(comment) > COMMENT_LENGTH)
+		validation_error("Champion comment too long", vd->row, 1);
+	free(comment);
+	return (increment_validator(cur, vd));
 }
 
 /*
@@ -101,9 +104,6 @@ t_file		*validate_header(t_file *cur, t_validator *vd)
 
 	while (cur)
 	{
-		// Check that line starting with . is either .name or .comment
-		//ft_printf("VAL LINE:: [%s]\n", cur->line);
-		// ADD LENGTH / DOUBLE VALIDATION  !!!!
 		//if (!ft_strncmp(cur->line, ".name ", 6))
 		if (!ft_strncmp(cur->line, ft_strjoin(NAME_CMD_STRING, " "), ft_strlen(NAME_CMD_STRING) + 1))
 			cur = validate_name(cur, vd);
@@ -111,7 +111,7 @@ t_file		*validate_header(t_file *cur, t_validator *vd)
 			cur = validate_comment(cur, vd);
 		else if (cur->line[0] == '.')
 			validation_error("Header str not NAME/COMMENT_CMD_STRING", vd->row, 1);
-		ft_printf("VAL LINE super:: [%s]\n", cur->line);
+		//ft_printf("VAL LINE super:: [%s]\n", cur->line);
 		// check for other whitespace?
 		if (cur->line[0] == '\0' && vd->data == 3)
 			return (cur);
@@ -120,8 +120,7 @@ t_file		*validate_header(t_file *cur, t_validator *vd)
 			validation_error("Bad string in header", vd->row, 1);
 		else if (cur->line[0] == '\0' || cur->line[0] == ALT_COMMENT_CHAR || cur->line[0] == COMMENT_CHAR)
 		{
-			cur = cur->next;
-			vd->row++;
+			cur = increment_validator(cur, vd);
 		}
 	}
 	validation_error("Header incomplete, no '.name'/'.comment'", vd->row, 1);
@@ -166,21 +165,12 @@ void		validator(t_file *file)
 	vd->col = 1;
 	vd->row = 1;
 	cur = file;
-
 	cur = validate_header(cur, vd);
-	cur = cur->next;
-	++vd->row;
+	cur = increment_validator(cur, vd);
 	ft_putendl("Header validated, moving to instructions!\n");
 	ft_printf("Post header LINE:: [%s]\n", cur->line);
 	// save labels
 	//save_labels(file->label);
 	//validate_instructions(cur, vd);
-	// while (cur)
-	// {
-	// 	validate_line(cur->line, col);
-	// 	col = 0;
-	// 	row++;
-	// 	cur = cur->next;
-	// }
 	free(vd);
 }

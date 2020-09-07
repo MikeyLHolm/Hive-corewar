@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/17 12:41:59 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/04 17:01:25 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/07 16:57:33 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@ typedef struct		s_asm
 */
 
 void		handle_error(char *message);
+t_file		*increment_validator(t_file *cur, t_validator *vd);
+void		validation_error(char *message, int row, int col);
 void		validator(t_file *file);
 
 #endif
