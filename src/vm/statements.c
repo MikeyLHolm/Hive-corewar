@@ -432,13 +432,13 @@ void	op_and(t_vm *vm, t_carriage *cur)
 	}
 	else if (((act >> 5) & 0x01) && ((act >> 4) & 0x01))
 	{
-		arg2 = get_indirect_value(vm, cur, offset, 0);
+		arg2 = get_indirect_value_trunc(vm, cur, offset, 0); //should be truncated??
 		offset += 2;
 	}
 	else
 	{
 		arg2 = get_register_index(vm, cur, offset);
-		arg2 = cur->reg[arg1];
+		arg2 = cur->reg[arg2];
 		offset += 1;
 	}
 	reg_num = get_register_index(vm, cur, offset);
@@ -528,7 +528,7 @@ void	op_or(t_vm *vm, t_carriage *cur)
 	else
 	{
 		arg2 = get_register_index(vm, cur, offset);
-		arg2 = cur->reg[arg1];
+		arg2 = cur->reg[arg2];
 		offset += 1;
 	}
 	reg_num = get_register_index(vm, cur, offset);
@@ -575,7 +575,7 @@ void	op_xor(t_vm *vm, t_carriage *cur)
 	else
 	{
 		arg2 = get_register_index(vm, cur, offset);
-		arg2 = cur->reg[arg1];
+		arg2 = cur->reg[arg2];
 		offset += 1;
 	}
 	reg_num = get_register_index(vm, cur, offset);
