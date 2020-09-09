@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/31 16:04:19 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/04 16:58:46 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/09 16:38:07 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -273,6 +273,7 @@ void	op_ldi(t_vm *vm, t_carriage *cur)
 	else
 	{
 		arg1 = get_register_index(vm, cur, offset);
+		arg1 = cur->reg[arg1];
 		offset += 1;
 	}
 	if (((act >> 5) & 0x01) && !((act >> 4) & 0x01))
@@ -283,6 +284,7 @@ void	op_ldi(t_vm *vm, t_carriage *cur)
 	else
 	{
 		arg2 = get_register_index(vm, cur, offset);
+		arg2 = cur->reg[arg2];
 		offset += 1;
 	}
 	num = read_bytes(vm, positive_modulo(cur->position + (arg1 + arg2) % IDX_MOD, MEM_SIZE), 4);
@@ -315,6 +317,7 @@ void	op_lldi(t_vm *vm, t_carriage *cur)
 	else
 	{
 		arg1 = get_register_index(vm, cur, offset);
+		arg1 = cur->reg[arg1];
 		offset += 1;
 	}
 	if (((act >> 5) & 0x01) && !((act >> 4) & 0x01))
@@ -325,6 +328,7 @@ void	op_lldi(t_vm *vm, t_carriage *cur)
 	else
 	{
 		arg2 = get_register_index(vm, cur, offset);
+		arg2 = cur->reg[arg2];
 		offset += 1;
 	}
 	num = read_bytes(vm, positive_modulo(cur->position + (arg1 + arg2) % IDX_MOD, MEM_SIZE), 4);
