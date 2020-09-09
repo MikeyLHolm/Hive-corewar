@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 12:44:33 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/07 17:30:07 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/09 16:58:07 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,9 +149,65 @@ t_file		*validate_header(t_file *cur, t_validator *vd)
 // 	}
 // }
 
+int			is_whitespace(char c)
+{
+	if (c == ' ' || (8 < c && c < 14))
+		return (1);
+	return (0);
+}
+
+int			ft_strchr_i(char *str, char c)
+{
+	int			i;
+
+	i = 0;
+	while (str[i] != c)
+	{
+
+
+
+	}
+	return (i);
+}
+
+t_label		*save_labels(t_file *head)
+{
+	t_file		*cur;
+	t_label		*label;
+	t_label		*label_head;
+
+	cur = head;
+	while (cur)
+	{
+		if (ft_strchr(LABEL_CHARS, cur->line[0]) && cur->line[0])
+		{
+			if (!label->label_name)
+			{
+				ft_putendl("test!\n");
+				label = new_label(get_token_label(cur->line));
+				ft_printf("label name: [%s]\n", label->label_name);
+				label_head = label;
+				if (!label->label_name)
+					validation_error("not a label test", 1, 1);
+			}
+			else
+			{
+				label->next = new_label(get_token_label(cur->line));
+				label = label->next;
+				if (!label->label_name)
+					validation_error("not a label test", 1, 1);
+			}
+		}
+		cur = cur->next;
+	}
+	label = NULL;
+	return (label_head);
+}
+
 void		validator(t_file *file)
 {
 	t_file			*cur;
+	t_label			*label;
 	t_validator		*vd;
 
 	if (!(vd = (t_validator*)ft_memalloc(sizeof(t_validator))))
@@ -163,8 +219,10 @@ void		validator(t_file *file)
 	cur = increment_validator(cur, vd);
 	ft_putendl("Header validated, moving to instructions!\n");
 	ft_printf("Post header LINE:: [%s]\n", cur->line);
+
 	// save labels
-	//save_labels(file->label);
+	label = save_labels(cur);
+	//display_list(label);
 	//validate_instructions(cur, vd);
 	free(vd);
 }

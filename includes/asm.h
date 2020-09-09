@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/17 12:41:59 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/07 16:57:33 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/09 16:48:26 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,12 @@ typedef struct		s_asm
 }					t_asm;
 
 /*
+**	Tokenization
+*/
+
+char		*get_token_label(char *line);
+
+/*
 **	Validation and error handling.
 */
 
@@ -72,5 +78,11 @@ void		handle_error(char *message);
 t_file		*increment_validator(t_file *cur, t_validator *vd);
 void		validation_error(char *message, int row, int col);
 void		validator(t_file *file);
+
+/*
+**	Misc
+*/
+
+void		display_list(t_label *head);
 
 #endif
