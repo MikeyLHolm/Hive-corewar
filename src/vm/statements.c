@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/31 16:04:19 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/09 16:38:07 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/10 13:17:21 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -290,7 +290,6 @@ void	op_ldi(t_vm *vm, t_carriage *cur)
 	num = read_bytes(vm, positive_modulo(cur->position + (arg1 + arg2) % IDX_MOD, MEM_SIZE), 4);
 	reg_num = get_register_index(vm, cur, offset);
 	cur->reg[reg_num] = num;
-	cur->carry = !(num);
 }
 
 void	op_lldi(t_vm *vm, t_carriage *cur)
