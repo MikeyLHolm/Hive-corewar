@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/17 12:41:59 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/10 14:31:27 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/10 15:41:25 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ typedef struct		s_asm
 **	Tokenization
 */
 
+int			get_first_arg_index(char *line, char *instruction);
 char		*get_token_label(char *line);
 
 /*
