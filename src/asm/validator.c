@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 12:44:33 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/10 17:38:07 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/10 17:44:59 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,13 @@ t_file		*validate_name(t_file *cur, t_validator *vd)
 	char	*name;
 
 	if (vd->data & HEADER_NAME)
-		validation_error(ft_strjoin("Duplicate ", NAME_CMD_STRING), vd->row, 1);
+		validation_error(ft_strjoin("Duplicate ", NAME_CMD_STRING), vd->row);
 	vd->data = vd->data | HEADER_NAME;
 	name = NULL;
 	name = ft_strjoin(name, ft_strchr(cur->line, '"') + 1);
 	// is condition below needed?
 	if (!name)
-		validation_error("Champion name invalid", vd->row, 1);
+		validation_error("Champion name invalid", vd->row);
 	while (!ft_strchr(name, '"') && cur)
 	{
 		cur = increment_validator(cur, vd);
@@ -58,7 +58,7 @@ t_file		*validate_name(t_file *cur, t_validator *vd)
 	}
 	*ft_strrchr(name, '"') = '\0';
 	if (ft_strlen(name) > PROG_NAME_LENGTH)
-		validation_error("Champion name too long", vd->row, 1);
+		validation_error("Champion name too long", vd->row);
 	free(name);
 	return (increment_validator(cur, vd));
 }
@@ -77,13 +77,13 @@ t_file		*validate_comment(t_file *cur, t_validator *vd)
 	char		*comment;
 
 	if (vd->data & HEADER_COMMENT)
-		validation_error("Duplicate comment", vd->row, 1);
+		validation_error("Duplicate comment", vd->row);
 	vd->data = vd->data | HEADER_COMMENT;
 	comment = NULL;
 	comment = ft_strjoin(comment, ft_strchr(cur->line, '"') + 1);
 	// is condition below needed?
 	if (!comment)
-		validation_error("Champion comment invalid", vd->row, 1);
+		validation_error("Champion comment invalid", vd->row);
 	while (!ft_strchr(comment, '"') && cur)
 	{
 		cur = increment_validator(cur, vd);
@@ -94,7 +94,7 @@ t_file		*validate_comment(t_file *cur, t_validator *vd)
 	}
 	*ft_strrchr(comment, '"') = '\0';
 	if (ft_strlen(comment) > COMMENT_LENGTH)
-		validation_error("Champion comment too long", vd->row, 1);
+		validation_error("Champion comment too long", vd->row);
 	free(comment);
 	return (increment_validator(cur, vd));
 }
@@ -123,12 +123,12 @@ t_file		*validate_header(t_file *cur, t_validator *vd)
 			return (cur);
 		else if (cur->line[0] != '\0' && cur->line[0] != '.' &&
 			cur->line[0] != ALT_COMMENT_CHAR && cur->line[0] != COMMENT_CHAR)
-			validation_error("Bad string in header", vd->row, 1);
+			validation_error("Bad string in header", vd->row);
 		else if (cur->line[0] == '\0' || cur->line[0] == ALT_COMMENT_CHAR ||
 			cur->line[0] == COMMENT_CHAR)
 			cur = increment_validator(cur, vd);
 	}
-	validation_error("Header incomplete, no '.name'/'.comment'", vd->row, 1);
+	validation_error("Header incomplete, no '.name'/'.comment'", vd->row);
 	return (cur);
 }
 
@@ -189,10 +189,10 @@ void		validate_statement(char *statement, int row, t_label *labels)
 			return ;
 		}
 	}
-	validation_error("Not valid operation", row, 1);
+	validation_error("Not valid operation", row);
 }
 
-void		validate_argument(char *line, char *statement, t_label *labels)
+void		validate_arg(char *line, char *statement, t_label *labels, int arg_i)
 {
 	ft_printf("argument inside [%s]\n", line);
 	(void)statement;
@@ -217,7 +217,7 @@ void		right_n_args(char *statement, int args, int row)
 				return ;
 		}
 	}
-	validation_error("Statement has wrong n of args", row, 1);
+	validation_error("Statement has wrong n of args", row);
 }
 
 /*
@@ -240,11 +240,10 @@ void		validate_args(char *line, char *statement, int row, t_label *labels)
 	while (args[i])
 		i++;
 	ft_printf("index %d\n", i);
-	// Check if n of args is right for statement.
 	right_n_args(statement, i--, row);
 	while (args[i])
 	{
-		validate_argument(ft_strtrim(args[i]), statement, labels);
+		validate_arg(ft_strtrim(args[i]), statement, labels, i);
 	 	free(args[i--]);
 		if (i < 0)
 			break ;
@@ -302,7 +301,7 @@ t_label		*save_labels(t_file *head, t_validator *vd)
 				label = label->next;
 			}
 			if (!label->label_name)
-				validation_error("Not a valid label", vd->row, 1);
+				validation_error("Not a valid label", vd->row);
 		}
 		cur = increment_validator(cur, vd);
 	}
@@ -324,19 +323,18 @@ void		validator(t_file *file)
 
 	if (!(vd = (t_validator*)ft_memalloc(sizeof(t_validator))))
 		handle_error("Malloc failed");
-	vd->col = 1;
 	vd->row = 1;
 	cur = file;
 	cur = validate_header(cur, vd);
 	cur = increment_validator(cur, vd);
 	ft_putendl("Header validated, moving to saving labels!\n");
-	ft_printf("Post header LINE:: [%s]\n", cur->line);
+	//ft_printf("Post header LINE:: [%s]\n", cur->line);
 	row = vd->row;
 	vd->label = save_labels(cur, vd);
 	display_list(vd->label);
 	ft_putendl("Labels saved, moving to instructions!\n");
 	vd->row = row;
-	ft_printf("Post header LINE:: [%s]\n", cur->line);
+	//ft_printf("Post header LINE:: [%s]\n", cur->line);
 	validate_instructions(cur, vd, vd->label);
 	free(vd);
 }

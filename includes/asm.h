@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/17 12:41:59 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/10 15:41:25 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/10 17:43:10 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ typedef struct		s_label
 
 typedef struct		s_validator
 {
-	int				col;
 	int				data;
 	int				row;
 	t_label			*label;
@@ -77,7 +76,7 @@ char		*get_token_label(char *line);
 
 void		handle_error(char *message);
 t_file		*increment_validator(t_file *cur, t_validator *vd);
-void		validation_error(char *message, int row, int col);
+void		validation_error(char *message, int row);
 void		validator(t_file *file);
 
 /*
