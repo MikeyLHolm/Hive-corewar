@@ -6,11 +6,15 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 12:44:33 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/10 17:34:52 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/10 17:38:07 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asm.h"
+
+/*
+**	Creates new label during save_labels.
+*/
 
 t_label		*new_label(char *labelname)
 {
@@ -128,6 +132,10 @@ t_file		*validate_header(t_file *cur, t_validator *vd)
 	return (cur);
 }
 
+/*
+**	Finds statement from line and returns it
+*/
+
 char		*get_statement(char *line)
 {
 	int i;
@@ -192,6 +200,10 @@ void		validate_argument(char *line, char *statement, t_label *labels)
 	// if  label, check that its real label.
 }
 
+/*
+**	Validates amount of args statement has.
+*/
+
 void		right_n_args(char *statement, int args, int row)
 {
 	int			i;
@@ -207,6 +219,10 @@ void		right_n_args(char *statement, int args, int row)
 	}
 	validation_error("Statement has wrong n of args", row, 1);
 }
+
+/*
+**	Dispatcher to validate arguments.
+*/
 
 void		validate_args(char *line, char *statement, int row, t_label *labels)
 {
@@ -235,6 +251,10 @@ void		validate_args(char *line, char *statement, int row, t_label *labels)
 	}
 	free (args);
 }
+
+/*
+**	Dispatcher for instruction validation.
+*/
 
 void		validate_instructions(t_file *cur, t_validator *vd,t_label *labels)
 {
