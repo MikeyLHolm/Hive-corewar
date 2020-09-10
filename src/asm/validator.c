@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 12:44:33 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/09 16:58:07 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/10 11:01:31 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,19 +174,18 @@ t_label		*save_labels(t_file *head)
 {
 	t_file		*cur;
 	t_label		*label;
-	t_label		*label_head;
 
 	cur = head;
 	while (cur)
 	{
 		if (ft_strchr(LABEL_CHARS, cur->line[0]) && cur->line[0])
 		{
-			if (!label->label_name)
+			if (!head->label)
 			{
 				ft_putendl("test!\n");
 				label = new_label(get_token_label(cur->line));
-				ft_printf("label name: [%s]\n", label->label_name);
-				label_head = label;
+				ft_printf("label 3name: [%s]\n", label->label_name);
+				head->label = label;
 				if (!label->label_name)
 					validation_error("not a label test", 1, 1);
 			}
@@ -201,13 +200,13 @@ t_label		*save_labels(t_file *head)
 		cur = cur->next;
 	}
 	label = NULL;
-	return (label_head);
+	ft_printf("label head name %s\n", head->label->label_name);
+	return (head->label);
 }
 
 void		validator(t_file *file)
 {
 	t_file			*cur;
-	t_label			*label;
 	t_validator		*vd;
 
 	if (!(vd = (t_validator*)ft_memalloc(sizeof(t_validator))))
@@ -221,8 +220,8 @@ void		validator(t_file *file)
 	ft_printf("Post header LINE:: [%s]\n", cur->line);
 
 	// save labels
-	label = save_labels(cur);
-	//display_list(label);
+	file->label = save_labels(cur);
+	display_list(file->label);
 	//validate_instructions(cur, vd);
 	free(vd);
 }

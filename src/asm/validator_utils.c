@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/07 16:54:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/09 16:47:59 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/10 11:02:01 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void		display_list(t_label *head)
 {
 	if (head != NULL)
 	{
-		ft_printf("\nLabel:: [%s]\n", head->label_name);
+		ft_printf("Label:: [%s]\n", head->label_name);
 		display_list(head->next);
 	}
 }
