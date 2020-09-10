@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 12:44:33 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/10 13:35:02 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/10 15:32:12 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,14 +137,75 @@ t_file		*validate_header(t_file *cur, t_validator *vd)
 // {
 // }
 
-// void		validate_instructions(t_file *cur, t_validator *vd,t_label *lists)
-// {
-// 	while (cur)
-// 	{
-		
-// 		cur = increment_validator(cur, vd);
-// 	}
-// }
+char		*get_instruction(char *line)
+{
+	int i;
+	int j;
+	int len;
+
+	i = 0;
+	while (ft_strchr(LABEL_CHARS, line[i]))
+		i++;
+	if (line[i] == LABEL_CHAR)
+		i++;
+	len = 0;
+	while (line[i] && ft_isspace(line[i]))
+		i++;
+	j = i;
+	while (line[j])
+	{
+		if (ft_isalpha(line[j++]))
+			len++;
+		else
+			break ;
+	}
+	if (len)
+		return (ft_strsub(line, i, len));
+	return (NULL);
+}
+
+void		validate_instruction(char *instruction, int row, t_label *labels)
+{
+	int			i;
+	t_label		*cur;
+
+	i = -1;
+	cur = labels;
+	while (++i < OP_CODE_AMOUNT)
+	{
+		ft_printf("op tab [%s] || instr [%s]\n", g_op_tab[i].op_name, instruction);
+		if (ft_strequ(g_op_tab[i].op_name, instruction))
+		{
+			// while (cur)
+			// {
+			// 	ft_printf("label name [%s]\n", cur->label_name);
+			// 	if (ft_strequ(cur->label_name, instruction))
+			// 		return ;
+			// 	cur = cur->next;
+			// }
+			return ;
+		}
+	}
+	validation_error("Not valid operation", row, 1);
+}
+
+void		validate_instructions(t_file *cur, t_validator *vd,t_label *labels)
+{
+	char 		*instruction;
+	//int			instr_i;
+
+	while (cur)
+	{
+		instruction = get_instruction(cur->line);
+		if (instruction)
+			validate_instruction(instruction, vd->row, labels);
+		// instr_i = get_instruction_index(instruction);
+		// get arguments
+		// validate arguments
+		// comments at end or invalid chars
+		cur = increment_validator(cur, vd);
+	}
+}
 
 /*
 **	Save labels before validating instructions.
@@ -208,6 +269,6 @@ void		validator(t_file *file)
 	ft_putendl("Labels saved, moving to instructions!\n");
 	vd->row = row;
 	ft_printf("Post header LINE:: [%s]\n", cur->line);
-	//validate_instructions(cur, vd, vd->label);
+	validate_instructions(cur, vd, vd->label);
 	free(vd);
 }
