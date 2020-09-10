@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 12:44:33 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/10 17:20:32 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/10 17:34:52 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,6 +192,22 @@ void		validate_argument(char *line, char *statement, t_label *labels)
 	// if  label, check that its real label.
 }
 
+void		right_n_args(char *statement, int args, int row)
+{
+	int			i;
+
+	i = -1;
+	while (++i < OP_CODE_AMOUNT)
+	{
+		if (ft_strequ(g_op_tab[i].op_name, statement))
+		{
+			if (g_op_tab[i].args_n == args)
+				return ;
+		}
+	}
+	validation_error("Statement has wrong n of args", row, 1);
+}
+
 void		validate_args(char *line, char *statement, int row, t_label *labels)
 {
 	int			i;
@@ -207,8 +223,9 @@ void		validate_args(char *line, char *statement, int row, t_label *labels)
 	i = 0;
 	while (args[i])
 		i++;
-	i -= 1;
 	ft_printf("index %d\n", i);
+	// Check if n of args is right for statement.
+	right_n_args(statement, i--, row);
 	while (args[i])
 	{
 		validate_argument(ft_strtrim(args[i]), statement, labels);
