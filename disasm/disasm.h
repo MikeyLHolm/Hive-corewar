@@ -6,12 +6,19 @@
 /*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 13:02:27 by elindber          #+#    #+#             */
-/*   Updated: 2020/09/09 15:08:45 by elindber         ###   ########.fr       */
+/*   Updated: 2020/09/10 15:51:29 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef DISASM_H
 # define DISASM_H
+
+# include <unistd.h>
+# include <fcntl.h>
+# include <stdio.h> // remove
+# include "../libft/includes/libft.h"
+# include "../includes/asm_op.h"
+# include "../includes/op.h"
 
 # define LIVE 1
 # define LD 2
@@ -37,8 +44,12 @@ typedef struct	s_command
 	int			arg_types[3];
 	int			champion_size;
 	char		*nbrs;
-	
 }				t_command;
 
+int				check_header(int fd);
+int				validate_file
+(int input, t_command *cmnd, int name_len, int comment_len);
+void			write_instructions(int input, int output, t_command *cmnd);
+void			write_arguments(int input, int output, t_command *cmnd);
 
 #endif
