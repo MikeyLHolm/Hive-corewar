@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 12:44:33 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/10 15:49:33 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/10 17:12:24 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,6 +189,12 @@ void		validate_instruction(char *instruction, int row, t_label *labels)
 	validation_error("Not valid operation", row, 1);
 }
 
+void		validate_argument(char *line, char *instruction)
+{
+	ft_printf("argument inside [%s]\n", line);
+	(void)instruction;
+}
+
 void		validate_args(char *line, char *instruction, int row, t_label *labels)
 {
 	int			i;
@@ -200,9 +206,18 @@ void		validate_args(char *line, char *instruction, int row, t_label *labels)
 	args = ft_strsplit(&line[i], SEPARATOR_CHAR);
 	i = -1;
 	while (args[++i])
+		ft_printf("argument %d = [%s]\n", i + 1, ft_strtrim(args[i]));
+	i = 0;
+	while (args[i])
+		i++;
+	i -= 1;
+	ft_printf("index %d\n", i);
+	while (args[i])
 	{
-		ft_printf("argument %d = [%s]\n", i + 1, args[i]);
-
+		validate_argument(ft_strtrim(args[i]), instruction);
+	 	free(args[i--]);
+		if (i < 0)
+			break ;
 	}
 	free (args);
 }
@@ -218,7 +233,6 @@ void		validate_instructions(t_file *cur, t_validator *vd,t_label *labels)
 		{
 			validate_instruction(instruction, vd->row, labels);
 			validate_args(cur->line, instruction, vd->row, labels);
-
 		}
 		// get arguments
 		// validate arguments
