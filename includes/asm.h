@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/17 12:41:59 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/09 16:48:26 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/10 13:29:20 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ typedef struct		s_validator
 	int				col;
 	int				data;
 	int				row;
+	t_label			*label;
 }					t_validator;
 
 typedef struct		s_token
@@ -51,7 +52,6 @@ typedef struct		s_file
 {
 	char			*line;
 	struct s_file	*next;
-	t_label			*label;
 }					t_file;
 
 typedef struct		s_asm

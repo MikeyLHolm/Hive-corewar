@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 12:44:33 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/10 11:01:31 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/10 13:35:02 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ t_file		*validate_comment(t_file *cur, t_validator *vd)
 	char		*comment;
 
 	if (vd->data & HEADER_COMMENT)
-		validation_error(ft_strjoin("Duplicate ", COMMENT_CMD_STRING), vd->row, 1);
+		validation_error("Duplicate comment", vd->row, 1);
 	vd->data = vd->data | HEADER_COMMENT;
 	comment = NULL;
 	comment = ft_strjoin(comment, ft_strchr(cur->line, '"') + 1);
@@ -114,7 +114,7 @@ t_file		*validate_header(t_file *cur, t_validator *vd)
 			ft_strlen(COMMENT_CMD_STRING) + 1))
 			cur = validate_comment(cur, vd);
 		else if (cur->line[0] == '.')
-			validation_error("Header str not NAME/COMMENT_CMD_STRING", vd->row, 1);
+			validation_error("Str not NAME/COMMENT_CMD_STRING", vd->row, 1);
 		if (cur->line[0] == '\0' && vd->data == 3)
 			return (cur);
 		else if (cur->line[0] != '\0' && cur->line[0] != '.' &&
@@ -137,40 +137,21 @@ t_file		*validate_header(t_file *cur, t_validator *vd)
 // {
 // }
 
-// void		validate_instructions(t_file *cur, t_validator *vd)
+// void		validate_instructions(t_file *cur, t_validator *vd,t_label *lists)
 // {
 // 	while (cur)
 // 	{
-// 		if ()
-
-// 		else if (cur->line[0] != '\0')
-// 			validate_statement()
-// 		cur = cur->next;
+		
+// 		cur = increment_validator(cur, vd);
 // 	}
 // }
 
-int			is_whitespace(char c)
-{
-	if (c == ' ' || (8 < c && c < 14))
-		return (1);
-	return (0);
-}
+/*
+**	Save labels before validating instructions.
+**	Since labels can be called before they appear in instructions.
+*/
 
-int			ft_strchr_i(char *str, char c)
-{
-	int			i;
-
-	i = 0;
-	while (str[i] != c)
-	{
-
-
-
-	}
-	return (i);
-}
-
-t_label		*save_labels(t_file *head)
+t_label		*save_labels(t_file *head, t_validator *vd)
 {
 	t_file		*cur;
 	t_label		*label;
@@ -178,36 +159,39 @@ t_label		*save_labels(t_file *head)
 	cur = head;
 	while (cur)
 	{
-		if (ft_strchr(LABEL_CHARS, cur->line[0]) && cur->line[0])
+		if (ft_strchr(LABEL_CHARS, cur->line[0]) && cur->line[0] &&
+		cur->line[0] != ALT_COMMENT_CHAR && cur->line[0] != COMMENT_CHAR)
 		{
-			if (!head->label)
+			if (!vd->label)
 			{
-				ft_putendl("test!\n");
 				label = new_label(get_token_label(cur->line));
-				ft_printf("label 3name: [%s]\n", label->label_name);
-				head->label = label;
-				if (!label->label_name)
-					validation_error("not a label test", 1, 1);
+				vd->label = label;
 			}
 			else
 			{
 				label->next = new_label(get_token_label(cur->line));
 				label = label->next;
-				if (!label->label_name)
-					validation_error("not a label test", 1, 1);
 			}
+			if (!label->label_name)
+				validation_error("Not a valid label", vd->row, 1);
 		}
-		cur = cur->next;
+		cur = increment_validator(cur, vd);
 	}
-	label = NULL;
-	ft_printf("label head name %s\n", head->label->label_name);
-	return (head->label);
+	return (vd->label);
 }
+
+/*
+**	Main validator function. Does it in  3 main parts:
+**		validate header
+**		save labels
+**		validate instructions
+*/
 
 void		validator(t_file *file)
 {
 	t_file			*cur;
 	t_validator		*vd;
+	int				row;
 
 	if (!(vd = (t_validator*)ft_memalloc(sizeof(t_validator))))
 		handle_error("Malloc failed");
@@ -216,12 +200,14 @@ void		validator(t_file *file)
 	cur = file;
 	cur = validate_header(cur, vd);
 	cur = increment_validator(cur, vd);
-	ft_putendl("Header validated, moving to instructions!\n");
+	ft_putendl("Header validated, moving to saving labels!\n");
 	ft_printf("Post header LINE:: [%s]\n", cur->line);
-
-	// save labels
-	file->label = save_labels(cur);
-	display_list(file->label);
-	//validate_instructions(cur, vd);
+	row = vd->row;
+	vd->label = save_labels(cur, vd);
+	display_list(vd->label);
+	ft_putendl("Labels saved, moving to instructions!\n");
+	vd->row = row;
+	ft_printf("Post header LINE:: [%s]\n", cur->line);
+	//validate_instructions(cur, vd, vd->label);
 	free(vd);
 }
