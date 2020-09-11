@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 12:44:33 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/11 10:55:02 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/11 14:19:36 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,13 +170,13 @@ char		*get_statement(char *line, int row)
 **
 */
 
-void		validate_statement(char *statement, int row, t_label *labels)
+void		validate_statement(char *statement, t_validator *vd)
 {
 	int			i;
 	t_label		*cur;
 
 	i = -1;
-	cur = labels;
+	cur = vd->label;
 	while (++i < OP_CODE_AMOUNT)
 	{
 		//ft_printf("op tab [%s] || instr [%s]\n", g_op_tab[i].op_name, statement);
@@ -192,15 +192,60 @@ void		validate_statement(char *statement, int row, t_label *labels)
 			return ;
 		}
 	}
-	validation_error("Not valid operation", row);
+	validation_error("Not valid operation", vd->row);
 }
 
-void		validate_arg(char *line, char *statement, t_label *labels, int arg_i)
+/*
+**	Returns type of argument as int.
+*/
+
+static int		get_arg_type(char *arg)
 {
+	if (!arg[0])
+		return (0);
+	if (arg[0] == '%')
+		return (T_DIR);
+	if (arg[0] == 'r' && !ft_strchr(arg, LABEL_CHAR))
+		return (T_REG);
+	return (T_IND);
+}
+
+// void			validate_arg_type(int op_i, int arg_i, int type)
+// {
+// 	int			i;
+
+// 	i = 0;
+// 	while (g_op_tab[op_i].args_type[arg_i][i])
+// 	{
+// 		if (type == g_op_tab[op_i].args_type[arg_i][i])
+
+
+// 	}
+
+
+// }
+
+void			validate_arg(char *line, char *statement, t_validator *vd, int arg_i)
+{
+	int			i;
+	int			type;
+
+	i = -1;
 	ft_printf("argument inside [%s]\n", line);
-	(void)statement;
-	(void)labels;
-	(void)arg_i;
+	while (++i < OP_CODE_AMOUNT)
+	{
+		if (ft_strequ(g_op_tab[i].op_name, statement))
+		{
+			//get arg
+			type = get_arg_type(line);
+			// check that type is for statement
+			//ft_printf("weird %d\n", type);
+			if (!(g_op_tab[i].args_type[arg_i] & type))
+				validation_error("Wrong arg type for the statement", vd->row);
+			//validate_arg_type(i, arg_i, type);
+		}
+
+	}
 	// if  label, check that its real label.
 
 	// if args_type is right at arg_i. Aka statement args_type[i] has same char
@@ -230,12 +275,11 @@ void		right_n_args(char *statement, int args, int row)
 **	Dispatcher to validate arguments.
 */
 
-void		validate_args(char *line, char *statement, int row, t_label *labels)
+void		validate_args(char *line, char *statement, t_validator *vd)
 {
 	int			i;
 	char		**args;
 
-	(void)labels;
 	i = get_first_arg_index(line, statement);
 	args = ft_strsplit(&line[i], SEPARATOR_CHAR);
 	i = -1;
@@ -245,13 +289,13 @@ void		validate_args(char *line, char *statement, int row, t_label *labels)
 	while (args[i])
 		i++;
 	ft_printf("index %d\n", i);
-	right_n_args(statement, i--, row);
-	while (args[i])
+	right_n_args(statement, i--, vd->row);
+	while (i >= 0 && args[i])
 	{
-		validate_arg(ft_strtrim(args[i]), statement, labels, i);
+		validate_arg(ft_strtrim(args[i]), statement, vd, i);
 	 	free(args[i--]);
-		if (i < 0)
-			break ;
+		// if (i < 0)
+		// 	break ;
 	}
 	free (args);
 }
@@ -264,7 +308,7 @@ void		validate_args(char *line, char *statement, int row, t_label *labels)
 **
 */
 
-void		validate_instructions(t_file *cur, t_validator *vd,t_label *labels)
+void		validate_instructions(t_file *cur, t_validator *vd)
 {
 	char 		*statement;
 
@@ -276,8 +320,8 @@ void		validate_instructions(t_file *cur, t_validator *vd,t_label *labels)
 			ft_printf("statement [%s]\n", statement);
 			if (statement)
 			{
-				validate_statement(statement, vd->row, labels);
-				validate_args(cur->line, statement, vd->row, labels);
+				validate_statement(statement, vd);
+				validate_args(cur->line, statement, vd);
 			}
 		}
 		// get arguments
@@ -349,6 +393,6 @@ void		validator(t_file *file)
 	ft_putendl("Labels saved, moving to instructions!\n");
 	vd->row = row;
 	//ft_printf("Post header LINE:: [%s]\n", cur->line);
-	validate_instructions(cur, vd, vd->label);
+	validate_instructions(cur, vd);
 	free(vd);
 }

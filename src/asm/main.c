@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/10 17:10:32 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/11 12:23:05 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,7 @@ void	write_argument_type_code(t_token *token, int fd)
 	}
 }
 
-int		get_arg_type(char *arg)
+static int		get_arg_type(char *arg)
 {
 	if (!arg)
 		return (0);
