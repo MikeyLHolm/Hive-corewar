@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/08 17:45:03 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/11 14:12:46 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -327,14 +327,17 @@ void	disable_dead_carriages(t_vm *vm) //memory is not freed
 
 void	perform_check(t_vm *vm)
 {
-	static int cycle;
+	static int cycle = -1;
 
 	cycle++;
 	if (cycle >= vm->cycles_to_die)
 	{
 		disable_dead_carriages(vm);
 		if (vm->period_live_statements >= NBR_LIVE)
+		{
 			vm->cycles_to_die -= CYCLE_DELTA;
+			vm->checks_without_change = 0;
+		}
 		else
 		{
 			vm->checks_without_change++;
