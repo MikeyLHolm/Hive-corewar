@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 12:44:33 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/10 17:44:59 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/11 10:55:02 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ t_file		*validate_header(t_file *cur, t_validator *vd)
 			ft_strlen(COMMENT_CMD_STRING) + 1))
 			cur = validate_comment(cur, vd);
 		else if (cur->line[0] == '.')
-			validation_error("Str not NAME/COMMENT_CMD_STRING", vd->row, 1);
+			validation_error("Str not NAME/COMMENT_CMD_STRING", vd->row);
 		if (cur->line[0] == '\0' && vd->data == 3)
 			return (cur);
 		else if (cur->line[0] != '\0' && cur->line[0] != '.' &&
@@ -136,7 +136,7 @@ t_file		*validate_header(t_file *cur, t_validator *vd)
 **	Finds statement from line and returns it
 */
 
-char		*get_statement(char *line)
+char		*get_statement(char *line, int row)
 {
 	int i;
 	int j;
@@ -150,11 +150,13 @@ char		*get_statement(char *line)
 	len = 0;
 	while (line[i] && ft_isspace(line[i]))
 		i++;
-	j = i;
-	while (line[j])
+	j = i - 1;
+	while (line[++j])
 	{
-		if (ft_isalpha(line[j++]))
+		if (ft_isalpha(line[j]))
 			len++;
+		else if (!ft_isspace(line[j]))
+			validation_error("No space after statement", row);
 		else
 			break ;
 	}
@@ -165,6 +167,7 @@ char		*get_statement(char *line)
 
 /*
 **	Checks that instruction has
+**
 */
 
 void		validate_statement(char *statement, int row, t_label *labels)
@@ -197,7 +200,10 @@ void		validate_arg(char *line, char *statement, t_label *labels, int arg_i)
 	ft_printf("argument inside [%s]\n", line);
 	(void)statement;
 	(void)labels;
+	(void)arg_i;
 	// if  label, check that its real label.
+
+	// if args_type is right at arg_i. Aka statement args_type[i] has same char
 }
 
 /*
@@ -230,7 +236,6 @@ void		validate_args(char *line, char *statement, int row, t_label *labels)
 	char		**args;
 
 	(void)labels;
-	row = 0;
 	i = get_first_arg_index(line, statement);
 	args = ft_strsplit(&line[i], SEPARATOR_CHAR);
 	i = -1;
@@ -253,6 +258,10 @@ void		validate_args(char *line, char *statement, int row, t_label *labels)
 
 /*
 **	Dispatcher for instruction validation.
+**
+**	after statement must be space
+**	no space between r%- and number
+**
 */
 
 void		validate_instructions(t_file *cur, t_validator *vd,t_label *labels)
@@ -261,15 +270,20 @@ void		validate_instructions(t_file *cur, t_validator *vd,t_label *labels)
 
 	while (cur)
 	{
-		statement = get_statement(cur->line);
-		if (statement)
+		if (cur->line[0])
 		{
-			validate_statement(statement, vd->row, labels);
-			validate_args(cur->line, statement, vd->row, labels);
+			statement = get_statement(cur->line, vd->row);
+			ft_printf("statement [%s]\n", statement);
+			if (statement)
+			{
+				validate_statement(statement, vd->row, labels);
+				validate_args(cur->line, statement, vd->row, labels);
+			}
 		}
 		// get arguments
 		// validate arguments
 		// comments at end or invalid chars
+		statement = NULL;
 		cur = increment_validator(cur, vd);
 	}
 }
