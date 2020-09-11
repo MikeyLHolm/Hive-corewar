@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/31 16:04:19 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/10 13:17:21 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/11 14:58:40 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -379,7 +379,7 @@ void	op_sti(t_vm *vm, t_carriage *cur)
 	}
 	else if (((act >> 5) & 0x01) && ((act >> 4) & 0x01))
 	{
-		arg1 = get_indirect_address_trunc(vm, cur, offset, 0);
+		arg1 = get_indirect_value_trunc(vm, cur, offset, 0);
 		offset += 2;
 	}
 	else
