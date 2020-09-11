@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 12:44:33 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/11 14:19:36 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/11 16:41:04 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,20 +210,94 @@ static int		get_arg_type(char *arg)
 	return (T_IND);
 }
 
-// void			validate_arg_type(int op_i, int arg_i, int type)
-// {
-// 	int			i;
+void			validate_arg_value(char *line, int type, t_validator *vd)
+{
+	int				i;
+	int				j;
+	int				len;
+	long			r;
 
-// 	i = 0;
-// 	while (g_op_tab[op_i].args_type[arg_i][i])
-// 	{
-// 		if (type == g_op_tab[op_i].args_type[arg_i][i])
+	i = 0;
+	j = 1;
+	len = 0;
+	r = -1;
+	if (type == T_REG)
+	{
+		while (line[++i])
+		{
+			if (ft_isdigit(line[i]))
+				++len;
+			else if (ft_isspace(line[i]))
+				++i;
+			else if (line[i] && (line[i] == COMMENT_CHAR || line[i] == ALT_COMMENT_CHAR))
+				break ;
+			else
+			{
+				ft_printf("pre error [%c]\n", line[i]);
+				validation_error("Extra chars in instruction", vd->row);
+			}
+		}
+		if (len > 0)
+			r = ft_atoilong(ft_strsub(line, 1, len));
+		if (!len || r < 0 || r > 2147483647)
+		{
+
+			validation_error("Registry not an int", vd->row);
+		}
+		ft_printf("len %d, R %d\n", len, r);
+	}
+	else if (type == T_DIR)
+	{
+		// line[1] = value tai ':'
+
+	}
+	else if (type == T_IND)
+	{
 
 
-// 	}
+	}
+}
 
+void			validate_reg_value(char *line, t_validator *vd)
+{
+	int				i;
+	int				j;
+	int				len;
+	long			r;
 
-// }
+	i = 0;
+	j = 1;
+	len = 0;
+	r = -1;
+	while (line[++i])
+	{
+		if (ft_isdigit(line[i]))
+			++len;
+		else if (ft_isspace(line[i]))
+			++i;
+		else if (line[i] && (line[i] == COMMENT_CHAR || line[i] == ALT_COMMENT_CHAR))
+			break ;
+		else
+			validation_error("Extra chars in instruction", vd->row);
+	}
+	if (len > 0)
+		r = ft_atoilong(ft_strsub(line, 1, len));
+	if (len < 1 || r < 0 || r > 2147483647)
+		validation_error("Registry not an int", vd->row);
+}
+
+void			validate_dir_value(char *line, t_validator *vd)
+{
+	(void)line;
+	vd->row += 0;
+}
+
+void			validate_ind_value(char *line, t_validator *vd)
+{
+	(void)line;
+	vd->row += 0;
+}
+
 
 void			validate_arg(char *line, char *statement, t_validator *vd, int arg_i)
 {
@@ -236,13 +310,16 @@ void			validate_arg(char *line, char *statement, t_validator *vd, int arg_i)
 	{
 		if (ft_strequ(g_op_tab[i].op_name, statement))
 		{
-			//get arg
 			type = get_arg_type(line);
-			// check that type is for statement
-			//ft_printf("weird %d\n", type);
 			if (!(g_op_tab[i].args_type[arg_i] & type))
 				validation_error("Wrong arg type for the statement", vd->row);
-			//validate_arg_type(i, arg_i, type);
+			if (type == T_REG)
+				validate_reg_value(line, vd);
+			else if (type == T_DIR)
+				validate_dir_value(line, vd);
+			else if (type == T_IND)
+				validate_ind_value(line, vd);
+			//validate_arg_value(line, type, vd);
 		}
 
 	}
