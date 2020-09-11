@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/03 09:01:11 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/11 14:29:32 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -476,22 +476,22 @@ void	move_carriage_next_statement(t_carriage *cur)
 
 void	execute_statement(t_vm *vm, t_carriage *cur)
 {
-	cur->statement == 1 ? op_live(vm, cur) : 0;
-	cur->statement == 2 ? op_ld(vm, cur) : 0;
-	cur->statement == 3 ? op_st(vm, cur) : 0;
-	cur->statement == 4 ? op_add(vm, cur) : 0;
-	cur->statement == 5 ? op_sub(vm, cur) : 0;
-	cur->statement == 6 ? op_and(vm, cur) : 0;
-	cur->statement == 7 ? op_or(vm, cur) : 0;
-	cur->statement == 8 ? op_xor(vm, cur) : 0;
-	cur->statement == 9 ? op_zjmp(vm, cur) : 0;
-	cur->statement == 10 ? op_ldi(vm, cur) : 0;
-	cur->statement == 11 ? op_sti(vm, cur) : 0;
-	cur->statement == 12 ? op_fork(vm, cur) : 0;
-	cur->statement == 13 ? op_lld(vm, cur) : 0;
-	cur->statement == 14 ? op_lldi(vm, cur) : 0;
-	cur->statement == 15 ? op_lfork(vm, cur) : 0;
-	cur->statement == 16 ? op_aff(vm, cur) : 0;
+	cur->statement == LIVE ? op_live(vm, cur) : 0;
+	cur->statement == LD ? op_ld(vm, cur) : 0;
+	cur->statement == ST ? op_st(vm, cur) : 0;
+	cur->statement == ADD ? op_add(vm, cur) : 0;
+	cur->statement == SUB ? op_sub(vm, cur) : 0;
+	cur->statement == AND ? op_and(vm, cur) : 0;
+	cur->statement == OR ? op_or(vm, cur) : 0;
+	cur->statement == XOR ? op_xor(vm, cur) : 0;
+	cur->statement == ZJMP ? op_zjmp(vm, cur) : 0;
+	cur->statement == LDI ? op_ldi(vm, cur) : 0;
+	cur->statement == STI ? op_sti(vm, cur) : 0;
+	cur->statement == FORK ? op_fork(vm, cur) : 0;
+	cur->statement == LLD ? op_lld(vm, cur) : 0;
+	cur->statement == LLDI ? op_lldi(vm, cur) : 0;
+	cur->statement == LFORK ? op_lfork(vm, cur) : 0;
+	cur->statement == AFF ? op_aff(vm, cur) : 0;
 }
 
 void	handle_statement(t_vm *vm, t_carriage *cur)
