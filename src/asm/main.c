@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/08/27 14:28:50 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/07 18:32:31 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,8 +107,8 @@ void	write_name(t_asm *assm, int fd)
 		i++;
 	}
 	i = 0;
-	write(fd, buf, PROG_NAME_LENGTH);
-	write(fd, "\0\0\0\0", 4);
+	write(fd, buf, PROG_NAME_LENGTH + 1);
+	write(fd, "\0\0\0\0", 3);
 }
 
 void	write_comment(t_asm *assm, int fd)
