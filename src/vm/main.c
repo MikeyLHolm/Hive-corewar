@@ -6,7 +6,7 @@
 /*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/11 14:29:32 by elindber         ###   ########.fr       */
+/*   Updated: 2020/09/14 15:27:05 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,8 @@ int		get_player_size(int fd)
 	size += buf[2] * 16 * 16;
 	size += buf[1] * 16 * 16 * 16 * 16;
 	size += buf[0] * 16 * 16 * 16 * 16 * 16 * 16;
-	if (size > CHAMP_MAX_SIZE)
-		handle_error("Player exceeds maximum champion size");
+//	if (size > CHAMP_MAX_SIZE)
+//		handle_error("Player exceeds maximum champion size");
 	return (size);
 }
 
@@ -131,6 +131,7 @@ void	get_player_info(t_player *player)
 	player->size = get_player_size(fd);
 	player->comment = get_player_comment(fd);
 	player->code = get_player_code(player, fd);
+	validate_player(player);
 }
 
 void		validate_filename(char *filename, char *extension)
@@ -150,7 +151,7 @@ t_player	*save_player(t_vm *vm, char *filename, char *n)
 	player->id = ++id;
 	validate_filename(filename, ".cor");
 	player->filename = filename;
-	player->n = n ? ft_atoi(n) : 0;
+	player->player_nbr = n ? ft_atoi(n) : 0;
 	get_player_info(player);
 	return (player);
 }
@@ -577,7 +578,7 @@ int			main(int argc, char **argv)
 	(void)argv;
 	parse_input(vm, argc, argv);
 	//read_input();
-	//validate();
+	//validate(vm);
 	//manually_create_players(vm); //used to create players before argument parsing is functional
 	init_arena(vm);
 	introduce_contestants(vm);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/03 09:06:13 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/14 15:10:26 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include "fcntl.h"
 # include "op.h"
 # include "asm_op.h"
+# include "limits.h"
 
 /*
 **	Define flags
@@ -37,8 +38,9 @@ typedef struct			s_player
 	char				*comment;
 	char				*name;
 	int					id;
-	int					n;
+	int					player_nbr;
 	int					size;
+	int					arg_types[3];
 	struct s_player		*next;
 }						t_player;
 
@@ -154,6 +156,7 @@ t_player				*save_player(t_vm *vm, char *filename, char *n);
 
 void					validate_n_flag(char **argv, int i);
 void					check_duplicate_n(t_player *head, t_vm *vm);
+void					validate_player(t_player *player);
 
 /*
 **	Utils
