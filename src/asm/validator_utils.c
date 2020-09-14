@@ -6,17 +6,25 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/07 16:54:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/14 10:42:48 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/14 14:45:56 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asm.h"
+
+/*
+**	Exits with error message and row number for the error
+*/
 
 void		validation_error(char *message, int row)
 {
 	ft_printf("Error at row [%03d]: %s.\n", row, message);
 	exit(1);
 }
+
+/*
+**	Moves to next node and line
+*/
 
 t_file		*increment_validator(t_file *cur, t_validator *vd)
 {
@@ -26,7 +34,7 @@ t_file		*increment_validator(t_file *cur, t_validator *vd)
 }
 
 /*
-**	Auxilliary function to display LL recursively.
+**	Auxilliary functions to display LL.
 */
 
 void		display_list(t_label *head)

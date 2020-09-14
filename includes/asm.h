@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/17 12:41:59 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/14 10:24:43 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/14 15:01:04 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,12 @@ void		handle_error(char *message);
 t_file		*increment_validator(t_file *cur, t_validator *vd);
 void		validation_error(char *message, int row);
 void		validator(t_file *file);
+void		validate_arg(char *line, char *statement, t_validator *vd, int arg_i);
+t_file		*validate_header(t_file *cur, t_validator *vd);
+void		validate_instructions(t_file *cur, t_validator *vd);
+void		validate_label(char *label, int row, t_label *head);
+t_label		*save_labels(t_file *head, t_validator *vd);
+void		right_n_args(char *statement, int args, int row);
 
 /*
 **	Misc
