@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/14 17:37:08 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/14 18:40:21 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -736,7 +736,7 @@ void	visualize(t_vm *vm)
 	printw("CARRIAGES AMOUNT: %d\n", j);
 	printw("AUTOPLAY: %s\n", vm->controls.autoplay ? "ON" : "OFF");
 	key = getch();
-	if (key == 'a')
+	if (key == ' ')
 	{
 		vm->controls.autoplay = !vm->controls.autoplay;
 		timeout(vm->controls.autoplay ? 1 : -1);
@@ -815,7 +815,7 @@ void	visualize_states(t_vm *vm)
 			vm->controls.step_size > 1 ? vm->controls.step_size-- : (void)vm;
 		if (key == 'q')
 			break ;
-		if (key == 'a')
+		if (key == ' ')
 		{
 			vm->controls.autoplay = !vm->controls.autoplay;
 			timeout(vm->controls.autoplay ? 1 : -1);
