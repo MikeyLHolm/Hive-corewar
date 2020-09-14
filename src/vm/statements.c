@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/31 16:04:19 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/14 14:27:26 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/14 17:34:57 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int		get_direct(t_vm *vm, t_carriage *cur, int offset)
 
 int		get_indirect_value_trunc(t_vm *vm, t_carriage *cur, int offset, int addition)
 {
-	int relative_address;
+	short relative_address; //maybe short instead of int??
 	int	arg;
 
 	relative_address = 0;
@@ -65,7 +65,7 @@ int		get_indirect_value_trunc(t_vm *vm, t_carriage *cur, int offset, int additio
 
 int		get_indirect_value(t_vm *vm, t_carriage *cur, int offset, int addition)
 {
-	int relative_address;
+	short relative_address; //maybe short instead of int??
 	int	arg;
 
 	relative_address = 0;
@@ -73,16 +73,33 @@ int		get_indirect_value(t_vm *vm, t_carriage *cur, int offset, int addition)
 	relative_address += vm->arena[(cur->position + offset + 1) % MEM_SIZE];
 	relative_address += addition;
 	arg = 0;
-	arg += vm->arena[(cur->position + relative_address) % MEM_SIZE] * 256 * 256 * 256;
-	arg += vm->arena[(cur->position + relative_address + 1) % MEM_SIZE] * 256 * 256;
-	arg += vm->arena[(cur->position + relative_address + 2) % MEM_SIZE] * 256;
-	arg += vm->arena[(cur->position + relative_address + 3) % MEM_SIZE];
+	arg += vm->arena[positive_modulo(cur->position + relative_address, MEM_SIZE)] * 256 * 256 * 256;
+	arg += vm->arena[positive_modulo(cur->position + relative_address + 1, MEM_SIZE)] * 256 * 256;
+	arg += vm->arena[positive_modulo(cur->position + relative_address + 2, MEM_SIZE)] * 256;
+	arg += vm->arena[positive_modulo(cur->position + relative_address + 3, MEM_SIZE)];
+	return (arg);
+}
+
+int		get_indirect_value_2_bytes(t_vm *vm, t_carriage *cur, int offset, int addition)
+{
+	short relative_address; //maybe short instead of int??
+	int	arg;
+
+	relative_address = 0;
+	relative_address += vm->arena[(cur->position + offset) % MEM_SIZE] * 256;
+	relative_address += vm->arena[(cur->position + offset + 1) % MEM_SIZE];
+	relative_address += addition;
+	arg = 0;
+	//arg += vm->arena[positive_modulo(cur->position + relative_address, MEM_SIZE)] * 256 * 256 * 256;
+	//arg += vm->arena[positive_modulo(cur->position + relative_address + 1, MEM_SIZE)] * 256 * 256;
+	arg += vm->arena[positive_modulo(cur->position + relative_address, MEM_SIZE)] * 256;
+	arg += vm->arena[positive_modulo(cur->position + relative_address + 1, MEM_SIZE)];
 	return (arg);
 }
 
 int		get_indirect_address_trunc(t_vm *vm, t_carriage *cur, int offset, int addition)
 {
-	int relative_address;
+	short relative_address;
 
 	relative_address = 0;
 	relative_address += vm->arena[(cur->position + offset) % MEM_SIZE] * 256;
@@ -94,7 +111,7 @@ int		get_indirect_address_trunc(t_vm *vm, t_carriage *cur, int offset, int addit
 
 int		get_indirect_address(t_vm *vm, t_carriage *cur, int offset, int addition)
 {
-	int relative_address;
+	short relative_address;
 
 	relative_address = 0;
 	relative_address += vm->arena[(cur->position + offset) % MEM_SIZE] * 256;
