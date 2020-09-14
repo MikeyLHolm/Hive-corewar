@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/17 12:41:59 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/10 17:43:10 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/14 10:24:43 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ void		validator(t_file *file);
 */
 
 void		display_list(t_label *head);
+void		display_filelist(t_file *head);
 int			ft_isspace(int c);
 
 #endif

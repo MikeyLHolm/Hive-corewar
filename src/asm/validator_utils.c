@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/07 16:54:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/10 17:43:37 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/14 10:42:48 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,24 @@ t_file		*increment_validator(t_file *cur, t_validator *vd)
 
 void		display_list(t_label *head)
 {
-	if (head != NULL)
+	t_label		*cur;
+
+	cur = head;
+	while (cur != NULL)
 	{
-		ft_printf("Label:: [%s]\n", head->label_name);
-		display_list(head->next);
+		ft_printf("Label:: [%s]\n", cur->label_name);
+		cur = cur->next;
+	}
+}
+
+void		display_filelist(t_file *head)
+{
+	t_file		*cur;
+
+	cur = head;
+	while (cur != NULL)
+	{
+		ft_printf("Current line:: [%s]\n", cur->line);
+		cur = cur->next;
 	}
 }

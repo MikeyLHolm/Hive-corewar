@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/11 12:23:05 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/14 10:45:18 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -656,7 +656,7 @@ int		main(int argc, char **argv)
 		handle_error("./asm [filename.s]");
 	assm = init_assm();
 	assm->file = read_file(argv[1]);
-	remove_file_comments(assm->file);
+	//remove_file_comments(assm->file);
 	validator(assm->file);
 	//check_file(assm->file);
 	tokenize_file(assm);

@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 12:44:33 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/11 16:41:04 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/14 11:00:34 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,6 +258,10 @@ void			validate_arg_value(char *line, int type, t_validator *vd)
 	}
 }
 
+/*
+**	Test comments and other shitty inputs to args!
+*/
+
 void			validate_reg_value(char *line, t_validator *vd)
 {
 	int				i;
@@ -298,6 +302,9 @@ void			validate_ind_value(char *line, t_validator *vd)
 	vd->row += 0;
 }
 
+/*
+**	Validates single argument
+*/
 
 void			validate_arg(char *line, char *statement, t_validator *vd, int arg_i)
 {
@@ -319,13 +326,10 @@ void			validate_arg(char *line, char *statement, t_validator *vd, int arg_i)
 				validate_dir_value(line, vd);
 			else if (type == T_IND)
 				validate_ind_value(line, vd);
-			//validate_arg_value(line, type, vd);
 		}
 
 	}
 	// if  label, check that its real label.
-
-	// if args_type is right at arg_i. Aka statement args_type[i] has same char
 }
 
 /*
@@ -349,6 +353,33 @@ void		right_n_args(char *statement, int args, int row)
 }
 
 /*
+**	Removes comments from the end of last arg
+*/
+
+char		*remove_comment(char *arg, int row)
+{
+	int			i;
+	int			j;
+	int			len;
+
+	i = 0;
+	len = 0;
+	while (arg[i] && ft_isspace(arg[i]))
+		++i;
+	j = i;
+	while (arg[i] && !ft_isspace(arg[i]))
+	{
+		++i;
+		++len;
+	}
+	while (arg[i] && ft_isspace(arg[i]))
+		++i;
+	if (arg[i] != '\0' && arg[i] != COMMENT_CHAR && arg[i] != ALT_COMMENT_CHAR)
+		validation_error("Extra chars at end of args", row);
+	return (ft_strsub(arg, j, len));
+}
+
+/*
 **	Dispatcher to validate arguments.
 */
 
@@ -358,21 +389,22 @@ void		validate_args(char *line, char *statement, t_validator *vd)
 	char		**args;
 
 	i = get_first_arg_index(line, statement);
+	ft_printf("whole line [%s]\n", line);
 	args = ft_strsplit(&line[i], SEPARATOR_CHAR);
 	i = -1;
 	while (args[++i])
-		ft_printf("argument %d = [%s]\n", i + 1, ft_strtrim(args[i]));
+		ft_printf("argument %d = [%s]\n", i + 1, args[i]);
 	i = 0;
-	while (args[i])
+	while (args[++i])
 		i++;
-	ft_printf("index %d\n", i);
 	right_n_args(statement, i--, vd->row);
+	args[i] = remove_comment(args[i], vd->row);
+	ft_printf("argument after removal %d = [%s]\n", i + 1, args[i]);
+	ft_printf("index %d\n", i);
 	while (i >= 0 && args[i])
 	{
 		validate_arg(ft_strtrim(args[i]), statement, vd, i);
 	 	free(args[i--]);
-		// if (i < 0)
-		// 	break ;
 	}
 	free (args);
 }
@@ -458,18 +490,20 @@ void		validator(t_file *file)
 
 	if (!(vd = (t_validator*)ft_memalloc(sizeof(t_validator))))
 		handle_error("Malloc failed");
+
 	vd->row = 1;
 	cur = file;
+	display_filelist(cur);
 	cur = validate_header(cur, vd);
 	cur = increment_validator(cur, vd);
 	ft_putendl("Header validated, moving to saving labels!\n");
 	//ft_printf("Post header LINE:: [%s]\n", cur->line);
 	row = vd->row;
 	vd->label = save_labels(cur, vd);
-	display_list(vd->label);
+	//display_list(vd->label);
 	ft_putendl("Labels saved, moving to instructions!\n");
 	vd->row = row;
-	//ft_printf("Post header LINE:: [%s]\n", cur->line);
+	ft_printf("Post header LINE:: [%s]\n", cur->line);
 	validate_instructions(cur, vd);
 	free(vd);
 }
