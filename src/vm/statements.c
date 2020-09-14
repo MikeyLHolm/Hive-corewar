@@ -156,8 +156,9 @@ void	op_live(t_vm *vm, t_carriage *cur)
 //t_carriage	*carriage_to_update;
 
 	arg = get_direct(vm, cur, 1);
+	arg *= -1;
 	cur->last_live_cycle = vm->cycles;
-	if (arg > 0 && arg < vm->player_amount)
+	if (arg > 0 && arg <= vm->player_amount)
 	{
 		vm->player_last_alive = arg;
 		// carriage_to_update = get_carriage_by_id(vm, arg);
