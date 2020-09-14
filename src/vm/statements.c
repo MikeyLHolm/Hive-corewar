@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/31 16:04:19 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/14 17:39:51 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/14 17:44:26 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -479,10 +479,7 @@ void	op_zjmp(t_vm *vm, t_carriage *cur)
 	if (!cur->carry)
 		return ;
 	arg1 = get_direct(vm, cur, 1);
-	//positive_modulo(cur->position + arg1 % IDX_MOD, MEM_SIZE);
-	cur->position += arg1 % IDX_MOD;
-	if (cur->position < 0)
-		cur->position = MEM_SIZE + cur->position;
+	cur->position = positive_modulo(cur->position + arg1 % IDX_MOD, MEM_SIZE);
 }
 
 void	op_add(t_vm *vm, t_carriage *cur)
