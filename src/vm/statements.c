@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/31 16:04:19 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/14 17:34:57 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/14 17:39:51 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,10 @@ int		get_indirect_value_trunc(t_vm *vm, t_carriage *cur, int offset, int additio
 	relative_address += addition;
 	relative_address %= IDX_MOD;
 	arg = 0;
-	arg += vm->arena[(cur->position + relative_address) % MEM_SIZE] * 256 * 256 * 256;
-	arg += vm->arena[(cur->position + relative_address + 1) % MEM_SIZE] * 256 * 256;
-	arg += vm->arena[(cur->position + relative_address + 2) % MEM_SIZE] * 256;
-	arg += vm->arena[(cur->position + relative_address + 3) % MEM_SIZE];
+	arg += vm->arena[positive_modulo(cur->position + relative_address, MEM_SIZE)] * 256 * 256 * 256;
+	arg += vm->arena[positive_modulo(cur->position + relative_address + 1, MEM_SIZE)] * 256 * 256;
+	arg += vm->arena[positive_modulo(cur->position + relative_address + 2, MEM_SIZE)] * 256;
+	arg += vm->arena[positive_modulo(cur->position + relative_address + 3, MEM_SIZE)];
 	return (arg);
 }
 
