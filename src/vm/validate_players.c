@@ -6,7 +6,7 @@
 /*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 12:52:52 by elindber          #+#    #+#             */
-/*   Updated: 2020/09/14 16:36:13 by elindber         ###   ########.fr       */
+/*   Updated: 2020/09/14 17:37:28 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ int		validate_instruction(t_player *player, int tab)
 	int		statement;
 
 	i = tab;
-	if (player->code[tab] < LIVE || player->code[tab] > AFF)
+	if (player->code[tab] < 1 || player->code[tab] > REG_NUMBER)
 		handle_error(ft_strjoin(player->name,
 		": invalid statement in player code"));
 	statement = player->code[tab++];
