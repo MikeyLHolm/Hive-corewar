@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/14 16:26:10 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/14 17:08:24 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -314,7 +314,7 @@ void	disable_dead_carriages(t_vm *vm) //memory is not freed
 	prev_carriage = NULL;
 	while (cur_carriage)
 	{
-		if (cur_carriage->last_live_cycle <= vm->cycles - vm->cycles_to_die)
+		if (cur_carriage->last_live_cycle < vm->cycles - vm->cycles_to_die)
 		{
 			cur_carriage->alive = 0;
 			if (prev_carriage)
