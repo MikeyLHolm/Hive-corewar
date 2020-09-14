@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/14 17:08:24 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/14 17:37:08 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -373,7 +373,7 @@ int		check_carriages_alive(t_vm *vm)
 void	get_statement(t_vm *vm, t_carriage *cur)
 {
 	cur->statement = vm->arena[cur->position];
-	if (cur->statement > 0 && cur->statement < OP_CODE_AMOUNT)
+	if (cur->statement > 0 && cur->statement <= OP_CODE_AMOUNT)
 		cur->cycles_left = g_op_tab[cur->statement - 1].cycles;
 	// if (vm->flags & ADV_VISUALIZER)
 	// 	cur->statement_owner = vm->cur_state->cursor_mem[cur->position];
@@ -532,13 +532,7 @@ void	execute_statement(t_vm *vm, t_carriage *cur)
 
 void	handle_statement(t_vm *vm, t_carriage *cur)
 {
-	if (!(cur->statement > 0 && cur->statement < OP_CODE_AMOUNT))
-	{
-		get_statement(vm, cur);
-		if (cur->statement > 0 && cur->statement < OP_CODE_AMOUNT)
-			return ;
-	}
-	if (cur->statement > 0 && cur->statement < OP_CODE_AMOUNT)
+	if (cur->statement > 0 && cur->statement <= OP_CODE_AMOUNT)
 	{
 		cur->act = (vm->arena[(cur->position + 1) % MEM_SIZE]); //quick fix for act getting overwritten before bytes to skip is calculated
 		if (check_arguments_valid(vm, cur))
