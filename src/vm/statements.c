@@ -399,11 +399,6 @@ void	op_sti(t_vm *vm, t_carriage *cur)
 	act = (vm->arena[(cur->position + 1) % MEM_SIZE]);
 	reg_num = get_register_index(vm, cur, 2);
 	offset = 3;
-	// ft_printf("%d%d%d%d%d%d%d%d\n", ((act >> 7) & 0x01),
-	// ((act >> 6) & 0x01),
-	// ((act >> 5) & 0x01), ((act >> 4) & 0x01),
-	// ((act >> 3) & 0x01), ((act >> 2) & 0x01),
-	// ((act >> 1) & 0x01), ((act >> 0) & 0x01));
 	if (((act >> 5) & 0x01) && !((act >> 4) & 0x01))
 	{
 		arg1 = get_direct(vm, cur, offset);
