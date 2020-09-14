@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 12:44:33 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/14 11:00:34 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/14 13:57:22 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,32 @@ t_label		*new_label(char *labelname)
 		handle_error("Malloc failed while creating new label");
 	new->label_name = labelname;
 	return (new);
+}
+
+/*
+**	Checking that label is from list of real labels
+*/
+
+void		validate_label(char *label, int row, t_label *head)
+{
+	int			i;
+	t_label		*cur;
+
+	ft_printf("LABEL [%s]\n", label);
+	cur = head;
+	while (cur)
+	{
+		if (ft_strequ(label, cur->label_name))
+			return ;
+		cur = cur->next;
+	}
+	i = -1;
+	while (++i < OP_CODE_AMOUNT)
+	{
+		if (ft_strequ(label, g_op_tab[i].op_name))
+			return ;
+	}
+	validation_error("Not a real label/statement", row);
 }
 
 /*
@@ -210,54 +236,6 @@ static int		get_arg_type(char *arg)
 	return (T_IND);
 }
 
-void			validate_arg_value(char *line, int type, t_validator *vd)
-{
-	int				i;
-	int				j;
-	int				len;
-	long			r;
-
-	i = 0;
-	j = 1;
-	len = 0;
-	r = -1;
-	if (type == T_REG)
-	{
-		while (line[++i])
-		{
-			if (ft_isdigit(line[i]))
-				++len;
-			else if (ft_isspace(line[i]))
-				++i;
-			else if (line[i] && (line[i] == COMMENT_CHAR || line[i] == ALT_COMMENT_CHAR))
-				break ;
-			else
-			{
-				ft_printf("pre error [%c]\n", line[i]);
-				validation_error("Extra chars in instruction", vd->row);
-			}
-		}
-		if (len > 0)
-			r = ft_atoilong(ft_strsub(line, 1, len));
-		if (!len || r < 0 || r > 2147483647)
-		{
-
-			validation_error("Registry not an int", vd->row);
-		}
-		ft_printf("len %d, R %d\n", len, r);
-	}
-	else if (type == T_DIR)
-	{
-		// line[1] = value tai ':'
-
-	}
-	else if (type == T_IND)
-	{
-
-
-	}
-}
-
 /*
 **	Test comments and other shitty inputs to args!
 */
@@ -265,24 +243,20 @@ void			validate_arg_value(char *line, int type, t_validator *vd)
 void			validate_reg_value(char *line, t_validator *vd)
 {
 	int				i;
-	int				j;
 	int				len;
 	long			r;
 
 	i = 0;
-	j = 1;
 	len = 0;
 	r = -1;
+	if (ft_strchr(line, COMMENT_CHAR) || ft_strchr(line, ALT_COMMENT_CHAR))
+		validation_error("Comment in wrong place", vd->row);
 	while (line[++i])
 	{
 		if (ft_isdigit(line[i]))
 			++len;
-		else if (ft_isspace(line[i]))
-			++i;
-		else if (line[i] && (line[i] == COMMENT_CHAR || line[i] == ALT_COMMENT_CHAR))
-			break ;
-		else
-			validation_error("Extra chars in instruction", vd->row);
+		else if (!ft_isspace(line[i]))
+			validation_error("Extra chars in registry value", vd->row);
 	}
 	if (len > 0)
 		r = ft_atoilong(ft_strsub(line, 1, len));
@@ -292,8 +266,38 @@ void			validate_reg_value(char *line, t_validator *vd)
 
 void			validate_dir_value(char *line, t_validator *vd)
 {
-	(void)line;
-	vd->row += 0;
+	int				i;
+	int				len;
+	long			r;
+
+	i = line[1] != LABEL_CHAR ? 0 : 1;
+	len = 0;
+	r = -1;
+	if (ft_strchr(line, COMMENT_CHAR) || ft_strchr(line, ALT_COMMENT_CHAR))
+		validation_error("Comment in wrong place", vd->row);
+	while (line[++i])
+	{
+		if (line[1] != LABEL_CHAR)
+		{
+			if (ft_isdigit(line[i]))
+				++len;
+			else if (!ft_isspace(line[i]))
+				validation_error("Extra chars in instruction", vd->row);
+		}
+		else
+		{
+			if (ft_strchr(LABEL_CHARS, line[i]))
+				++len;
+			else if (!ft_isspace(line[i]))
+				validation_error("Extra chars in direct value", vd->row);
+		}
+	}
+	if (len > 0 && line[1] != LABEL_CHAR)
+		r = ft_atoilong(ft_strsub(line, 1, len));
+	else if (len > 0)
+		validate_label(ft_strsub(line, 2, len), vd->row, vd->label);
+	if (len < 1 || (line[1] != LABEL_CHAR && (r < 0 || r > 2147483647)))
+		validation_error("Direct value not an int or label", vd->row);
 }
 
 void			validate_ind_value(char *line, t_validator *vd)
@@ -391,16 +395,11 @@ void		validate_args(char *line, char *statement, t_validator *vd)
 	i = get_first_arg_index(line, statement);
 	ft_printf("whole line [%s]\n", line);
 	args = ft_strsplit(&line[i], SEPARATOR_CHAR);
-	i = -1;
-	while (args[++i])
-		ft_printf("argument %d = [%s]\n", i + 1, args[i]);
 	i = 0;
-	while (args[++i])
+	while (args[i])
 		i++;
 	right_n_args(statement, i--, vd->row);
 	args[i] = remove_comment(args[i], vd->row);
-	ft_printf("argument after removal %d = [%s]\n", i + 1, args[i]);
-	ft_printf("index %d\n", i);
 	while (i >= 0 && args[i])
 	{
 		validate_arg(ft_strtrim(args[i]), statement, vd, i);
