@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/14 14:26:24 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/14 18:19:46 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ typedef struct			s_vm
 	t_controls			controls;
 	int					*cursor_mem;
 	int					*changed_mem;
+	int					*color_mem;
 	int					start;
 	int					dump_cycle;
 	int					*updated_color_mem;

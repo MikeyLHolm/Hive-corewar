@@ -32,11 +32,13 @@ t_vm		*init_vm(void)
 	vm->cycles_to_die = CYCLE_TO_DIE;
 	if (!(vm->changed_mem = (int*)ft_memalloc(sizeof(int) * MEM_SIZE)))
 		handle_error("Malloc failed");
-	vm->cursor_mem = NULL;
+	vm->color_mem = NULL;
 	vm->dump_cycle = -1;
 	if (!(vm->updated_color_mem = (int*)ft_memalloc(sizeof(int) * MEM_SIZE)))
 		handle_error("Malloc failed");
 	if (!(vm->updated_changed_mem = (int*)ft_memalloc(sizeof(int) * MEM_SIZE)))
+		handle_error("Malloc failed");
+	if (!(vm->cursor_mem = (int*)ft_memalloc(sizeof(int) * MEM_SIZE)))
 		handle_error("Malloc failed");
 	init_controls(vm);
 	return (vm);
@@ -583,38 +585,51 @@ void	load_player_colors(t_vm *vm, int *cursor_mem)
 	}
 }
 
-int		*get_cursor_mem_old(t_vm *vm, int *prev_mem)
+int		*get_color_mem_old(t_vm *vm, int *prev_mem)
 {
 	t_carriage	*cur;
-	int			*cursor_mem;
+	int			*color_mem;
 	int			i;
 
-	cursor_mem = (int*)ft_memalloc(sizeof(int) * MEM_SIZE);
+	if (!(color_mem = (int*)ft_memalloc(sizeof(int) * MEM_SIZE)))
+		handle_error("Malloc failed");
 	cur = vm->carriages;
 	if (!prev_mem)
-		load_player_colors(vm, cursor_mem);
+		load_player_colors(vm, color_mem);
 	else
 	{
 		i = 0;
 		while (i < MEM_SIZE)
 		{
-			if (prev_mem[i] > vm->player_amount && prev_mem[i] != 9)
-				cursor_mem[i] = prev_mem[i];
-			else if (prev_mem[i] < 0)
-				cursor_mem[i] = -prev_mem[i] + 4;
+			if (vm->updated_color_mem[i])
+			{
+				color_mem[i] = vm->updated_color_mem[i];
+			}
+			else if (prev_mem[i] > vm->player_amount && prev_mem[i] != 9)
+				color_mem[i] = prev_mem[i];
 			i++;
 		}
 	}
+	ft_bzero(vm->updated_color_mem, MEM_SIZE * sizeof(int));
+	free(prev_mem);
+	return (color_mem);
+}
+
+int		*get_cursor_mem_old(t_vm *vm, int *prev)
+{
+	t_carriage	*cur;
+	int			*cursor_mem;
+
+	if (!(cursor_mem = (int*)ft_memalloc(sizeof(int) * MEM_SIZE)))
+		handle_error("Malloc failed");
+	cur = vm->carriages;
+	(void)prev;
 	while (cur)
 	{
-		if (cursor_mem[cur->position % MEM_SIZE] || cursor_mem[cur->position % MEM_SIZE] == 9)
-			(void)cursor_mem;
-		else if (cursor_mem[cur->position % MEM_SIZE])
-			cursor_mem[cur->position % MEM_SIZE] = (cursor_mem[cur->position % MEM_SIZE] - 4) * -1;
-		else
-			cursor_mem[cur->position % MEM_SIZE] = 9;
+		cursor_mem[cur->position] = 1;
 		cur = cur->next;
 	}
+	free(prev);
 	return (cursor_mem);
 }
 
@@ -644,16 +659,6 @@ int		*get_color_mem(t_vm *vm, t_state *prev)
 		}
 	}
 	ft_bzero(vm->updated_color_mem, MEM_SIZE * sizeof(int));
-	// while (cur)
-	// {
-	// 	if (color_mem[cur->position % MEM_SIZE] < 0 || color_mem[cur->position % MEM_SIZE] == 9)
-	// 		(void)color_mem;
-	// 	else if (color_mem[cur->position % MEM_SIZE])
-	// 		color_mem[cur->position % MEM_SIZE] = (color_mem[cur->position % MEM_SIZE] - 4) * -1;
-	// 	else
-	// 		color_mem[cur->position % MEM_SIZE] = 9;
-	// 	cur = cur->next;
-	// }
 	return (color_mem);
 }
 
@@ -712,14 +717,16 @@ void	visualize(t_vm *vm)
 	while (i < MEM_SIZE)
 	{
 		if (cursor_mem[i])
-		{
-			if (cursor_mem[i] < 0)
-				attron(COLOR_PAIR((unsigned char)ft_abs(cursor_mem[i])));
+				attron(COLOR_PAIR((unsigned char)ft_abs(vm->color_mem[i] ? vm->color_mem[i] - 4 : 9)));
+			else if (vm->color_mem[i])
+			{
+				attron(COLOR_PAIR((unsigned char)ft_abs(vm->color_mem[i] + (vm->changed_mem[i] ? 5 : 0))));
+			}
+			printw("%02x", (unsigned char)vm->arena[i]);
+			if (cursor_mem[i])
+				attroff(COLOR_PAIR((unsigned char)ft_abs(vm->color_mem[i] - 4)));
 			else
-				attron(COLOR_PAIR((unsigned char)ft_abs(cursor_mem[i] + (vm->changed_mem[i] && vm->changed_mem[i] < 50 ? 5 : 0))));
-		}
-		printw("%02x", (unsigned char)vm->arena[i]);
-		attroff(COLOR_PAIR((unsigned char)ft_abs(cursor_mem[i] + (vm->changed_mem[i] && vm->changed_mem[i] < 50 ? 5 : 0))));
+				attroff(COLOR_PAIR((unsigned char)ft_abs(vm->color_mem[i] + (vm->changed_mem[i] ? 5 : 0))));
 		printw(" ");
 		i++;
 		if (!(i % 64))
@@ -735,6 +742,7 @@ void	visualize(t_vm *vm)
 	}
 	printw("CARRIAGES AMOUNT: %d\n", j);
 	printw("AUTOPLAY: %s\n", vm->controls.autoplay ? "ON" : "OFF");
+	//printw("STEP SIZE: %d", vm->controls.step_size);
 	key = getch();
 	if (key == ' ')
 	{
@@ -918,6 +926,7 @@ void	battle_loop(t_vm *vm)
 	{
 		if (vm->flags & VISUALIZER)
 		{
+			vm->color_mem = get_color_mem_old(vm, vm->color_mem);
 			vm->cursor_mem = get_cursor_mem_old(vm, vm->cursor_mem);
 			update_changed_memory(vm);
 		}
