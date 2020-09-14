@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/14 14:39:35 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/14 16:26:10 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -381,30 +381,17 @@ void	get_statement(t_vm *vm, t_carriage *cur)
 	// 	cur->statement_owner = vm->cursor_mem[cur->position];
 }
 
-void	set_statement_codes(t_vm *vm)
+void	set_statement_codes(t_vm *vm, t_carriage *cur)
 {
-	t_carriage *cur_carriage;
-
-	cur_carriage = vm->carriages;
-	while (cur_carriage)
-	{
-		if (!cur_carriage->cycles_left)
-			get_statement(vm, cur_carriage);
-		cur_carriage = cur_carriage->next;
-	}
+	if (!cur->cycles_left)
+		get_statement(vm, cur);
 }
 
-void	reduce_cycles(t_vm *vm)
+void	reduce_cycles(t_vm *vm, t_carriage *cur)
 {
-	t_carriage *cur_carriage;
-
-	cur_carriage = vm->carriages;
-	while (cur_carriage)
-	{
-		if (cur_carriage->cycles_left)
-			cur_carriage->cycles_left--;
-		cur_carriage = cur_carriage->next;
-	}
+	(void)vm;
+	if (cur->cycles_left)
+		cur->cycles_left--;
 }
 
 int		check_argument_indirect(t_carriage *cur, int *offset, int n)
@@ -563,19 +550,12 @@ void	handle_statement(t_vm *vm, t_carriage *cur)
 		cur->position = (cur->position + 1) % MEM_SIZE;
 }
 
-void	perform_statements(t_vm *vm)
+void	perform_statements(t_vm *vm, t_carriage *cur)
 {
-	t_carriage *cur_carriage;
-
-	cur_carriage = vm->carriages;
-	while (cur_carriage)
+	if (cur->alive)
 	{
-		if (cur_carriage->alive)
-		{
-			if (!cur_carriage->cycles_left)
-				handle_statement(vm, cur_carriage);
-		}
-		cur_carriage = cur_carriage->next;
+		if (!cur->cycles_left)
+			handle_statement(vm, cur);
 	}
 }
 
@@ -937,10 +917,11 @@ void	dump_memory(t_vm *vm)
 
 void	battle_loop(t_vm *vm)
 {
+	t_carriage *cur;
+
+	save_state(vm);
 	while (1)
 	{
-		if (vm->flags & ADV_VISUALIZER)
-			save_state(vm);
 		if (vm->flags & VISUALIZER)
 		{
 			vm->cursor_mem = get_cursor_mem_old(vm, vm->cursor_mem);
@@ -948,22 +929,32 @@ void	battle_loop(t_vm *vm)
 		}
 		vm->cycles++;
 		perform_check(vm);
+		if (vm->flags & DUMP && vm->cycles - 1 == vm->dump_cycle)
+		{
+			if (!check_carriages_alive(vm))
+				get_winner(vm);
+			else
+				dump_memory(vm);
+			exit(0);
+		}
 		if (!check_carriages_alive(vm))
 			break;
 		if (!(vm->flags & (VISUALIZER | DUMP))) //tmp debug
 			ft_printf("CYCLE: %d\n", vm->cycles);
-		set_statement_codes(vm);
-		reduce_cycles(vm);
-		perform_statements(vm);
+		cur = vm->carriages;
+		while (cur)
+		{
+			set_statement_codes(vm, cur);
+			reduce_cycles(vm, cur);
+			perform_statements(vm, cur);
+			cur = cur->next;
+		}
 		if (vm->flags & VISUALIZER)
 			visualize(vm);
-		if (vm->flags & DUMP && vm->cycles == vm->dump_cycle)
-		{
-			dump_memory(vm);
-			exit(0);
-		}
+		if (vm->flags & ADV_VISUALIZER)
+			save_state(vm);
 	}
-	if (!(vm->flags & DUMP))
+	//if (!(vm->flags & DUMP))
 		get_winner(vm);
 }
 
