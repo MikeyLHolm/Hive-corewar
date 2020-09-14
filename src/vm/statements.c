@@ -342,7 +342,7 @@ void	op_lldi(t_vm *vm, t_carriage *cur)
 	}
 	else if (((act >> 7) & 0x01) && ((act >> 6) & 0x01))
 	{
-		arg1 = get_indirect_value(vm, cur, offset, 0);
+		arg1 = get_indirect_value_trunc(vm, cur, offset, 0);
 		offset += 2;
 	}
 	else
@@ -362,7 +362,7 @@ void	op_lldi(t_vm *vm, t_carriage *cur)
 		arg2 = cur->reg[arg2];
 		offset += 1;
 	}
-	num = read_bytes(vm, positive_modulo(cur->position + (arg1 + arg2) % IDX_MOD, MEM_SIZE), 4);
+	num = read_bytes(vm, positive_modulo(cur->position + (arg1 + arg2), MEM_SIZE), 4);
 	reg_num = get_register_index(vm, cur, offset);
 	cur->reg[reg_num] = num;
 	cur->carry = !(num);
@@ -447,7 +447,7 @@ void	op_and(t_vm *vm, t_carriage *cur)
 	}
 	else if (((act >> 7) & 0x01) && ((act >> 6) & 0x01))
 	{
-		arg1 = get_indirect_value(vm, cur, offset, 0);
+		arg1 = get_indirect_value_trunc(vm, cur, offset, 0); //should be truncated??
 		offset += 2;
 	}
 	else
