@@ -178,7 +178,10 @@ void	op_ld(t_vm *vm, t_carriage *cur)
 		num = get_direct(vm, cur, 2);
 	else
 		num = get_indirect_value_trunc(vm, cur, 2, 0);
-	reg_num = get_register_index(vm, cur, 6);
+	if (!((act >> 6) & 0x01))
+		reg_num = get_register_index(vm, cur, 6);
+	else
+		reg_num = get_register_index(vm, cur, 4); //should only skip 2 bytes with indirect???
 	cur->reg[reg_num] = num;
 	cur->carry = !(num);
 }
@@ -193,8 +196,11 @@ void	op_lld(t_vm *vm, t_carriage *cur)
 	if (!((act >> 6) & 0x01))
 		num = get_direct(vm, cur, 2);
 	else
-		num = get_indirect_value(vm, cur, 2, 0);
-	reg_num = get_register_index(vm, cur, 6);
+		num = get_indirect_value_2_bytes(vm, cur, 2, 0);
+	if (!((act >> 6) & 0x01))
+		reg_num = get_register_index(vm, cur, 6);
+	else
+		reg_num = get_register_index(vm, cur, 4); //should only skip 2 bytes with indirect???
 	cur->reg[reg_num] = num;
 	cur->carry = !(num);
 }
