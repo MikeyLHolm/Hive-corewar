@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/11 14:12:46 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/14 14:39:35 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,10 @@ t_vm		*init_vm(void)
 		handle_error("Malloc failed");
 	vm->cursor_mem = NULL;
 	vm->dump_cycle = -1;
+	if (!(vm->updated_color_mem = (int*)ft_memalloc(sizeof(int) * MEM_SIZE)))
+		handle_error("Malloc failed");
+	if (!(vm->updated_changed_mem = (int*)ft_memalloc(sizeof(int) * MEM_SIZE)))
+		handle_error("Malloc failed");
 	init_controls(vm);
 	return (vm);
 }
@@ -640,36 +644,77 @@ int		*get_cursor_mem_old(t_vm *vm, int *prev_mem)
 	return (cursor_mem);
 }
 
-int		*get_cursor_mem(t_vm *vm, t_state *prev)
+int		*get_color_mem(t_vm *vm, t_state *prev)
 {
 	t_carriage	*cur;
-	int			*cursor_mem;
+	int			*color_mem;
 	int			i;
 
-	cursor_mem = (int*)ft_memalloc(sizeof(int) * MEM_SIZE);
+	if (!(color_mem = (int*)ft_memalloc(sizeof(int) * MEM_SIZE)))
+		handle_error("Malloc failed");
 	cur = vm->carriages;
 	if (!prev)
-		load_player_colors(vm, cursor_mem);
+		load_player_colors(vm, color_mem);
 	else
 	{
 		i = 0;
 		while (i < MEM_SIZE)
 		{
-			if (prev->cursor_mem[i] > vm->player_amount && prev->cursor_mem[i] != 9)
-				cursor_mem[i] = prev->cursor_mem[i];
-			else if (prev->cursor_mem[i] < 0)
-				cursor_mem[i] = -prev->cursor_mem[i] + 4;
+			if (vm->updated_color_mem[i])
+			{
+				color_mem[i] = vm->updated_color_mem[i];
+			}
+			else if (prev->color_mem[i] > vm->player_amount && prev->color_mem[i] != 9)
+				color_mem[i] = prev->color_mem[i];
 			i++;
 		}
 	}
+	ft_bzero(vm->updated_color_mem, MEM_SIZE * sizeof(int));
+	// while (cur)
+	// {
+	// 	if (color_mem[cur->position % MEM_SIZE] < 0 || color_mem[cur->position % MEM_SIZE] == 9)
+	// 		(void)color_mem;
+	// 	else if (color_mem[cur->position % MEM_SIZE])
+	// 		color_mem[cur->position % MEM_SIZE] = (color_mem[cur->position % MEM_SIZE] - 4) * -1;
+	// 	else
+	// 		color_mem[cur->position % MEM_SIZE] = 9;
+	// 	cur = cur->next;
+	// }
+	return (color_mem);
+}
+
+int		*get_cursor_mem(t_vm *vm, t_state *prev)
+{
+	t_carriage	*cur;
+	int			*cursor_mem;
+
+	if (!(cursor_mem = (int*)ft_memalloc(sizeof(int) * MEM_SIZE)))
+		handle_error("Malloc failed");
+	cur = vm->carriages;
+	(void)prev;
+	// if (!prev)
+	// 	load_player_colors(vm, cursor_mem);
+	// else
+	// {
+	// 	i = 0;
+	// 	while (i < MEM_SIZE)
+	// 	{
+	// 		if (prev->cursor_mem[i] > vm->player_amount && prev->cursor_mem[i] != 9)
+	// 			cursor_mem[i] = prev->cursor_mem[i];
+	// 		else if (prev->cursor_mem[i] < 0)
+	// 			cursor_mem[i] = -prev->cursor_mem[i] + 4;
+	// 		i++;
+	// 	}
+	// }
 	while (cur)
 	{
-		if (cursor_mem[cur->position % MEM_SIZE] < 0 || cursor_mem[cur->position % MEM_SIZE] == 9)
-			(void)cursor_mem;
-		else if (cursor_mem[cur->position % MEM_SIZE])
-			cursor_mem[cur->position % MEM_SIZE] = (cursor_mem[cur->position % MEM_SIZE] - 4) * -1;
-		else
-			cursor_mem[cur->position % MEM_SIZE] = 9;
+		cursor_mem[cur->position] = 1;
+		// if (cursor_mem[cur->position % MEM_SIZE] < 0 || cursor_mem[cur->position % MEM_SIZE] == 9)
+		// 	(void)cursor_mem;
+		// else if (cursor_mem[cur->position % MEM_SIZE])
+		// 	cursor_mem[cur->position % MEM_SIZE] = (cursor_mem[cur->position % MEM_SIZE] - 4) * -1;
+		// else
+		// 	cursor_mem[cur->position % MEM_SIZE] = 9;
 		cur = cur->next;
 	}
 	return (cursor_mem);
@@ -746,17 +791,24 @@ void	visualize_states(t_vm *vm)
 		while (i < MEM_SIZE)
 		{
 			if (cur_state->cursor_mem[i])
+				attron(COLOR_PAIR((unsigned char)ft_abs(cur_state->color_mem[i] ? cur_state->color_mem[i] - 4 : 9)));
+			else if (cur_state->color_mem[i])
 			{
-				if (cur_state->cursor_mem[i] < 0)
-					attron(COLOR_PAIR((unsigned char)ft_abs(cur_state->cursor_mem[i])));
-				else
-					attron(COLOR_PAIR((unsigned char)ft_abs(cur_state->cursor_mem[i] + (cur_state->changed_mem[i] && cur_state->changed_mem[i] < 50 ? 5 : 0))));
+				// if (cur_state->cursor_mem[i] < 0)
+				// 	attron(COLOR_PAIR((unsigned char)ft_abs(cur_state->cursor_mem[i])));
+				// else
+				// 	attron(COLOR_PAIR((unsigned char)ft_abs(cur_state->cursor_mem[i] + (cur_state->changed_mem[i] && cur_state->changed_mem[i] < 50 ? 5 : 0))));
+				attron(COLOR_PAIR((unsigned char)ft_abs(cur_state->color_mem[i] + (cur_state->changed_mem[i] ? 5 : 0))));
 			}
 			printw("%02x", (unsigned char)cur_state->arena[i]);
-			if (cur_state->cursor_mem[i] < 0)
-				attroff(COLOR_PAIR((unsigned char)ft_abs(cur_state->cursor_mem[i])));
+			// if (cur_state->cursor_mem[i] < 0)
+			// 	attroff(COLOR_PAIR((unsigned char)ft_abs(cur_state->cursor_mem[i])));
+			// else
+			// 	attroff(COLOR_PAIR((unsigned char)ft_abs(cur_state->cursor_mem[i] + (cur_state->changed_mem[i] && cur_state->changed_mem[i] < 50 ? 5 : 0))));
+			if (cur_state->cursor_mem[i])
+				attroff(COLOR_PAIR((unsigned char)ft_abs(cur_state->color_mem[i] - 4)));
 			else
-				attroff(COLOR_PAIR((unsigned char)ft_abs(cur_state->cursor_mem[i] + (cur_state->changed_mem[i] && cur_state->changed_mem[i] < 50 ? 5 : 0))));
+				attroff(COLOR_PAIR((unsigned char)ft_abs(cur_state->color_mem[i] + (cur_state->changed_mem[i] ? 5 : 0))));
 			printw(" ");
 			i++;
 			if (!(i % 64))
@@ -813,6 +865,7 @@ t_state	*new_state(t_vm *vm, t_state *prev)
 		i++;
 	}
 	state->cursor_mem = get_cursor_mem(vm, prev);
+	state->color_mem = get_color_mem(vm, prev);
 	if (!(state->changed_mem = (int*)ft_memalloc(sizeof(int) * MEM_SIZE)))
 		handle_error("Malloc failed");
 	if (prev)
@@ -820,10 +873,14 @@ t_state	*new_state(t_vm *vm, t_state *prev)
 		i = 0;
 		while (i < MEM_SIZE)
 		{
-			state->changed_mem[i] = prev->changed_mem[i] - 1 > 0? prev->changed_mem[i] - 1 : 0;
+			if (vm->updated_changed_mem[i])
+				state->changed_mem[i] = vm->updated_changed_mem[i];
+			else
+				state->changed_mem[i] = prev->changed_mem[i] - 1 > 0 ? prev->changed_mem[i] - 1 : 0;
 			i++;
 		}
 	}
+	ft_bzero(vm->updated_changed_mem, MEM_SIZE * sizeof(int));
 	int j = 0;
 	for (t_carriage *cur = vm->carriages; cur; cur = cur->next)
 	{

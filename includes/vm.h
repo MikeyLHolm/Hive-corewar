@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/07 18:49:35 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/14 14:26:24 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ typedef	struct			s_state
 	unsigned char		arena[MEM_SIZE];
 	int					*cursor_mem;
 	int					*changed_mem;
+	int					*color_mem;
 	int					cycle;
 	int					carriage_amount;
 	int					cycles_to_die;
@@ -106,6 +107,8 @@ typedef struct			s_vm
 	int					*changed_mem;
 	int					start;
 	int					dump_cycle;
+	int					*updated_color_mem;
+	int					*updated_changed_mem;
 }						t_vm;
 
 int						get_direct(t_vm *vm, t_carriage *cur, int offset);

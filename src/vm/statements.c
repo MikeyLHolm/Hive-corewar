@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/31 16:04:19 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/11 14:58:40 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/14 14:27:26 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,48 +202,72 @@ void	write_bytes(t_vm *vm, t_carriage *cur, int pos, unsigned int byte)
 	vm->arena[pos % MEM_SIZE] = byte / 256 / 256 / 256 % 256;
 	if (vm->flags & ADV_VISUALIZER)
 	{
-		vm->cur_state->cursor_mem[pos % MEM_SIZE] = vm->player_amount - cur->id + 5;
-		if (vm->cur_state)
-			vm->cur_state->changed_mem[pos % MEM_SIZE] = 50;
+		// if (vm->cur_state->cursor_mem[pos % MEM_SIZE] < 0 || vm->cur_state->cursor_mem[pos % MEM_SIZE] == 9)
+		// 	vm->cur_state->cursor_mem[pos % MEM_SIZE] = vm->player_amount - cur->id + 10;
+		// else
+			//vm->cur_state->color_mem[pos % MEM_SIZE] = vm->player_amount - cur->id + 5;
+		vm->updated_color_mem[pos % MEM_SIZE] = vm->player_amount - cur->id + 5;
+		vm->updated_changed_mem[pos % MEM_SIZE] = 50;
 	}
 	else if (vm->flags & VISUALIZER)
 	{
+		// if (vm->cur_state->cursor_mem[pos % MEM_SIZE] < 0 || vm->cur_state->cursor_mem[pos % MEM_SIZE] == 9)
+		// 	vm->cur_state->cursor_mem[pos % MEM_SIZE] = vm->player_amount - cur->id + 10;
+		// else
 		vm->cursor_mem[pos % MEM_SIZE] = vm->player_amount - cur->id + 5;
 			vm->changed_mem[pos % MEM_SIZE] = 50;
 	}
 	vm->arena[(pos + 1) % MEM_SIZE] = byte / 256 / 256 % 256;
 	if (vm->flags & ADV_VISUALIZER)
 	{
-		vm->cur_state->cursor_mem[(pos + 1) % MEM_SIZE] = vm->player_amount - cur->id + 5;
-		if (vm->cur_state)
-			vm->cur_state->changed_mem[(pos + 1) % MEM_SIZE] = 50;
+		// if (vm->cur_state->cursor_mem[(pos + 1) % MEM_SIZE] < 0 || vm->cur_state->cursor_mem[(pos + 1) % MEM_SIZE] == 9)
+		// 	vm->cur_state->cursor_mem[(pos + 1) % MEM_SIZE] = vm->player_amount - cur->id + 10;
+		// else
+		//vm->cur_state->color_mem[(pos + 1) % MEM_SIZE] = vm->player_amount - cur->id + 5;
+		vm->updated_color_mem[(pos + 1) % MEM_SIZE] = vm->player_amount - cur->id + 5;
+			vm->updated_changed_mem[(pos + 1) % MEM_SIZE] = 50;
 	}
 	else if (vm->flags & VISUALIZER)
 	{
+		// if (vm->cur_state->cursor_mem[(pos + 1) % MEM_SIZE] < 0 || vm->cur_state->cursor_mem[(pos + 1) % MEM_SIZE] == 9)
+		// 	vm->cur_state->cursor_mem[(pos + 1)% MEM_SIZE] = vm->player_amount - cur->id + 10;
+		// else
 		vm->cursor_mem[(pos + 1) % MEM_SIZE] = vm->player_amount - cur->id + 5;
 			vm->changed_mem[(pos + 1) % MEM_SIZE] = 50;
 	}
 	vm->arena[(pos + 2) % MEM_SIZE] = byte / 256 % 256;
 	if (vm->flags & ADV_VISUALIZER)
 	{
-		vm->cur_state->cursor_mem[(pos + 2) % MEM_SIZE] = vm->player_amount - cur->id + 5;
-		if (vm->cur_state)
-			vm->cur_state->changed_mem[(pos + 2) % MEM_SIZE] = 50;
+		// if (vm->cur_state->cursor_mem[(pos + 2) % MEM_SIZE] < 0 || vm->cur_state->cursor_mem[(pos + 2) % MEM_SIZE] == 9)
+		// 	vm->cur_state->cursor_mem[(pos + 2) % MEM_SIZE] = vm->player_amount - cur->id + 10;
+		// else
+		//vm->cur_state->color_mem[(pos + 2) % MEM_SIZE] = vm->player_amount - cur->id + 5;
+		vm->updated_color_mem[(pos + 2) % MEM_SIZE] = vm->player_amount - cur->id + 5;
+		vm->updated_changed_mem[(pos + 2) % MEM_SIZE] = 50;
 	}
 	else if (vm->flags & VISUALIZER)
 	{
+		// if (vm->cur_state->cursor_mem[(pos + 2) % MEM_SIZE] < 0 || vm->cur_state->cursor_mem[(pos + 2) % MEM_SIZE] == 9)
+		// 	vm->cur_state->cursor_mem[(pos + 2) % MEM_SIZE] = vm->player_amount - cur->id + 10;
+		// else
 		vm->cursor_mem[(pos + 2) % MEM_SIZE] = vm->player_amount - cur->id + 5;
 			vm->changed_mem[(pos + 2) % MEM_SIZE] = 50;
 	}
 	vm->arena[(pos + 3) % MEM_SIZE] = byte % 256;
 	if (vm->flags & ADV_VISUALIZER)
 	{
-		vm->cur_state->cursor_mem[(pos + 3) % MEM_SIZE] = vm->player_amount - cur->id + 5;
-		if (vm->cur_state)
-			vm->cur_state->changed_mem[(pos + 3) % MEM_SIZE] = 50;
+		// if (vm->cur_state->cursor_mem[(pos + 3) % MEM_SIZE] < 0 || vm->cur_state->cursor_mem[(pos + 3) % MEM_SIZE] == 9)
+		// 	vm->cur_state->cursor_mem[(pos + 3) % MEM_SIZE] = vm->player_amount - cur->id + 10;
+		// else
+		//vm->cur_state->color_mem[(pos + 3) % MEM_SIZE] = vm->player_amount - cur->id + 5;
+		vm->updated_color_mem[(pos + 3) % MEM_SIZE] = vm->player_amount - cur->id + 5;
+		vm->updated_changed_mem[(pos + 3) % MEM_SIZE] = 50;
 	}
 	else if (vm->flags & VISUALIZER)
 	{
+		// if (vm->cur_state->cursor_mem[(pos + 3) % MEM_SIZE] < 0 || vm->cur_state->cursor_mem[(pos + 3) % MEM_SIZE] == 9)
+		// 	vm->cur_state->cursor_mem[(pos + 3) % MEM_SIZE] = vm->player_amount - cur->id + 10;
+		// else
 		vm->cursor_mem[(pos + 3) % MEM_SIZE] = vm->player_amount - cur->id + 5;
 			vm->changed_mem[(pos + 3) % MEM_SIZE] = 50;
 	}
