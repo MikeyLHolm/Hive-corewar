@@ -644,5 +644,5 @@ void	op_aff(t_vm *vm, t_carriage *cur)
 	int arg;
 
 	arg = get_register_index(vm, cur, 2);
-	ft_putchar(arg);
+	//ft_putchar(arg); //disable aff for now, causes problems with diff_finder.py
 }
