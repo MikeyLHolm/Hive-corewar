@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/31 16:04:19 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/14 18:20:50 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/15 16:25:10 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -633,5 +633,6 @@ void	op_aff(t_vm *vm, t_carriage *cur)
 	int arg;
 
 	arg = get_register_index(vm, cur, 2);
-	//ft_putchar(arg); //disable aff for now, causes problems with diff_finder.py
+	arg = cur->reg[arg];
+	ft_printf("AFF: %c\n", (char)arg); //disable aff for now, causes problems with diff_finder.py
 }
