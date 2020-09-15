@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/07 16:54:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/14 14:45:56 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/15 09:39:14 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,26 @@ void		validation_error(char *message, int row)
 }
 
 /*
+**	Validates amount of args statement has.
+*/
+
+void			right_n_args(char *statement, int args, int row)
+{
+	int			i;
+
+	i = -1;
+	while (++i < OP_CODE_AMOUNT)
+	{
+		if (ft_strequ(g_op_tab[i].op_name, statement))
+		{
+			if (g_op_tab[i].args_n == args)
+				return ;
+		}
+	}
+	validation_error("Statement has wrong n of args", row);
+}
+
+/*
 **	Moves to next node and line
 */
 
@@ -34,7 +54,7 @@ t_file		*increment_validator(t_file *cur, t_validator *vd)
 }
 
 /*
-**	Auxilliary functions to display LL.
+**	Auxilliary functions to display LL for debugging.
 */
 
 void		display_list(t_label *head)

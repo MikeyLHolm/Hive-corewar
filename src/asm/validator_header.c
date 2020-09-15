@@ -6,20 +6,14 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 14:47:54 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/14 15:04:27 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/15 09:38:44 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asm.h"
 
 /*
-**	Comment validation:
-**		[x] double name
-**		[x] length > PROG_NAME_LENGTH
-**		[] bad characters
-**		[x] multi-line name
-**		[] no quotes
-**		[] open quote
+**	Comment validation
 */
 
 t_file		*validate_name(t_file *cur, t_validator *vd)
@@ -31,9 +25,6 @@ t_file		*validate_name(t_file *cur, t_validator *vd)
 	vd->data = vd->data | HEADER_NAME;
 	name = NULL;
 	name = ft_strjoin(name, ft_strchr(cur->line, '"') + 1);
-	// is condition below needed?
-	if (!name)
-		validation_error("Champion name invalid", vd->row);
 	while (!ft_strchr(name, '"') && cur)
 	{
 		cur = increment_validator(cur, vd);
@@ -67,9 +58,6 @@ t_file		*validate_comment(t_file *cur, t_validator *vd)
 	vd->data = vd->data | HEADER_COMMENT;
 	comment = NULL;
 	comment = ft_strjoin(comment, ft_strchr(cur->line, '"') + 1);
-	// is condition below needed?
-	if (!comment)
-		validation_error("Champion comment invalid", vd->row);
 	while (!ft_strchr(comment, '"') && cur)
 	{
 		cur = increment_validator(cur, vd);
@@ -105,6 +93,8 @@ t_file		*validate_header(t_file *cur, t_validator *vd)
 			cur = validate_comment(cur, vd);
 		else if (cur->line[0] == '.')
 			validation_error("Str not NAME/COMMENT_CMD_STRING", vd->row);
+		if (!cur)
+			validation_error("Header incomplete, !cur", vd->row);
 		if (cur->line[0] == '\0' && vd->data == 3)
 			return (cur);
 		else if (cur->line[0] != '\0' && cur->line[0] != '.' &&

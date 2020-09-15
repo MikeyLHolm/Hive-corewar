@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 14:51:13 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/14 15:06:30 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/15 09:37:05 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ void		validate_args(char *line, char *statement, t_validator *vd)
 	char		**args;
 
 	i = get_first_arg_index(line, statement);
-	ft_printf("whole line [%s]\n", line);
+	//ft_printf("whole line [%s]\n", line);
 	args = ft_strsplit(&line[i], SEPARATOR_CHAR);
 	i = 0;
 	while (args[i])
@@ -126,13 +126,16 @@ void		validate_args(char *line, char *statement, t_validator *vd)
 void		validate_instructions(t_file *cur, t_validator *vd)
 {
 	char		*statement;
+	int			not_empty;
 
+	not_empty = 0;
 	while (cur)
 	{
 		if (cur->line[0])
 		{
+			not_empty = 1;
 			statement = get_statement(cur->line, vd->row);
-			ft_printf("statement [%s]\n", statement);
+			//ft_printf("statement [%s]\n", statement);
 			if (statement)
 			{
 				validate_statement(statement, vd);
@@ -142,4 +145,6 @@ void		validate_instructions(t_file *cur, t_validator *vd)
 		statement = NULL;
 		cur = increment_validator(cur, vd);
 	}
+	if (not_empty == 0)
+		validation_error("No instructions!", vd->row);
 }

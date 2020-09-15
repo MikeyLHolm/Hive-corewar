@@ -6,31 +6,11 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 14:53:42 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/14 15:13:20 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/15 09:37:37 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asm.h"
-
-/*
-**	Validates amount of args statement has.
-*/
-
-void			right_n_args(char *statement, int args, int row)
-{
-	int			i;
-
-	i = -1;
-	while (++i < OP_CODE_AMOUNT)
-	{
-		if (ft_strequ(g_op_tab[i].op_name, statement))
-		{
-			if (g_op_tab[i].args_n == args)
-				return ;
-		}
-	}
-	validation_error("Statement has wrong n of args", row);
-}
 
 /*
 **	Returns type of argument as int.
@@ -158,7 +138,7 @@ void			validate_arg(char *line, char *statement,
 	int			type;
 
 	i = -1;
-	ft_printf("argument inside [%s]\n", line);
+	//ft_printf("argument inside [%s]\n", line);
 	while (++i < OP_CODE_AMOUNT)
 	{
 		if (ft_strequ(g_op_tab[i].op_name, statement))
