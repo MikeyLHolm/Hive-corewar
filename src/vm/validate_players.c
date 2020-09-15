@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validate_players.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 12:52:52 by elindber          #+#    #+#             */
-/*   Updated: 2020/09/14 17:37:28 by elindber         ###   ########.fr       */
+/*   Updated: 2020/09/15 16:57:33 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,6 @@ int		validate_instruction(t_player *player, int tab)
 		handle_error(ft_strjoin(player->name,
 		": invalid statement in player code"));
 	statement = player->code[tab++];
-	ft_printf("statement %d\n", statement);
 	tab += validate_arguments(player, statement, tab);
 	return (tab - i);
 }
