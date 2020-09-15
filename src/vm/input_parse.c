@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input_parse.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 12:13:13 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/15 09:48:46 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/15 17:06:56 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,11 @@ void		parse_input(t_vm *vm, int argc, char **argv)
 		if (ft_strequ(argv[i], "-dump"))
 		{
 			vm->flags = vm->flags | DUMP;
-			vm->dump_cycle = ft_atoi(argv[i + 1]); //add error handling
 			i++;
+			if (i < argc)
+				vm->dump_cycle = ft_atoi(argv[i]);
+			else
+				handle_error("Dump flag not followed with digit");
 		}
 		else if (ft_strequ(argv[i], "-e"))
 			vm->flags = vm->flags | ERROR;
@@ -59,8 +62,11 @@ void		parse_input(t_vm *vm, int argc, char **argv)
 		else if (ft_strequ(argv[i], "-s"))
 		{
 			vm->flags = vm->flags | START;
-			vm->start = ft_atoi(argv[i + 1]); //add error handling
 			i++;
+			if (i < argc)
+				vm->start = ft_atoi(argv[i]);
+			else
+				handle_error("Start flag not followed with digit");
 		}
 		else if (ft_strequ(argv[i], "-n"))
 		{
@@ -74,6 +80,8 @@ void		parse_input(t_vm *vm, int argc, char **argv)
 			parse_player(vm, argv[i], 0);
 		}
 	}
+	if (!vm->players)
+		handle_error("No valid players specified");
 	sort_players(vm);
 	vm->player_last_alive = vm->player_amount;
 }
