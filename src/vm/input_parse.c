@@ -59,6 +59,12 @@ void		parse_input(t_vm *vm, int argc, char **argv)
 			vm->flags = vm->flags | VISUALIZER;
 		else if (ft_strequ(argv[i], "-a"))
 			vm->flags = vm->flags | ADV_VISUALIZER;
+		else if (ft_strequ(argv[i], "-f"))
+			vm->flags = vm->flags | LLD_FIX;
+		else if (ft_strequ(argv[i], "-z"))
+			vm->flags = vm->flags | AFF_PRINT;
+		else if (ft_strequ(argv[i], "-l"))
+			vm->flags = vm->flags | LIVE_PRINT;
 		else if (ft_strequ(argv[i], "-s"))
 		{
 			vm->flags = vm->flags | START;

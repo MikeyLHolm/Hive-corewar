@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/15 16:39:48 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/15 16:51:36 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,9 @@
 # define VISUALIZER		16
 # define ADV_VISUALIZER	32
 # define START			64
+# define LLD_FIX		128
+# define AFF_PRINT		256
+# define LIVE_PRINT		512
 
 # define BUFFER_SIZE	4096
 

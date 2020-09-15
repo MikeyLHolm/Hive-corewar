@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/31 16:04:19 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/15 16:39:52 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/15 17:01:27 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,19 @@ t_carriage	*get_carriage_by_id(t_vm *vm, int id)
 	return (NULL);
 }
 
+void	print_player_alive(t_vm *vm, int player_num)
+{
+	t_player *cur;
+
+	cur = vm->players;
+	while (cur)
+	{
+		if (cur->id == player_num)
+			break ;
+		cur = cur->next;
+	}
+	ft_printf("A process shows that player %d (%s) is alive.\n", player_num, cur->name);
+}
 void	op_live(t_vm *vm, t_carriage *cur)
 {
 	int			arg;
@@ -161,6 +174,8 @@ void	op_live(t_vm *vm, t_carriage *cur)
 	if (arg > 0 && arg <= vm->player_amount)
 	{
 		vm->player_last_alive = arg;
+		if (vm->flags & LIVE_PRINT)
+			print_player_alive(vm, arg);
 		// carriage_to_update = get_carriage_by_id(vm, arg);
 		// carriage_to_update->last_live_cycle = vm->cycles;
 	}
@@ -196,7 +211,12 @@ void	op_lld(t_vm *vm, t_carriage *cur)
 	if (!((act >> 6) & 0x01))
 		num = get_direct(vm, cur, 2);
 	else
-		num = get_indirect_value_2_bytes(vm, cur, 2, 0);
+	{
+		if (vm->flags & LLD_FIX)
+			num = get_indirect_value(vm, cur, 2, 0);
+		else
+			num = get_indirect_value_2_bytes(vm, cur, 2, 0);
+	}
 	if (!((act >> 6) & 0x01))
 		reg_num = get_register_index(vm, cur, 6);
 	else
@@ -662,5 +682,6 @@ void	op_aff(t_vm *vm, t_carriage *cur)
 
 	arg = get_register_index(vm, cur, 2);
 	arg = cur->reg[arg];
-	ft_printf("AFF: %c\n", (char)arg); //disable aff for now, causes problems with diff_finder.py
+	if (vm->flags & AFF_PRINT)
+		ft_printf("AFF: %c\n", (char)arg);
 }
