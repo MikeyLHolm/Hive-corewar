@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/14 14:26:24 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/15 09:56:06 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,7 +177,16 @@ void					handle_error(char *message);
 **	Input parsing functions.
 */
 
-void					parse_input(t_vm *vm, int argc, char **argv);
 t_player				*save_player(t_vm *vm, char *filename, char *n);
+void					check_duplicate_n(t_player *head, t_vm *vm);
+void					parse_input(t_vm *vm, int argc, char **argv);
+void					sort_players(t_vm *vm);
+void					validate_n_flag(char **argv, int i);
+
+/*
+**	remove these!
+*/
+
+void				display_list(t_player *head);
 
 #endif
