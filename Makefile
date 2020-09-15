@@ -6,7 +6,7 @@
 #    By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/04/10 19:26:38 by sadawi            #+#    #+#              #
-#    Updated: 2020/09/14 14:59:34 by mlindhol         ###   ########.fr        #
+#    Updated: 2020/09/15 08:52:34 by mlindhol         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ CFILES_ASM = main.c \
 SRCS_ASM = $(addprefix src/asm/, $(CFILES_ASM))
 OBJS_ASM = $(addprefix objs/, $(notdir $(SRCS_ASM:.c=.o)))
 
-CFILES_CW = main.c statements.c parse_input.c sort_players.c validate_input.c
+CFILES_CW = main.c statements.c parse_input.c
 SRCS_CW = $(addprefix src/vm/, $(CFILES_CW))
 OBJS_CW = $(addprefix objs/, $(notdir $(SRCS_CW:.c=.o)))
 

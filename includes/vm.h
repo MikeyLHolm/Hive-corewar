@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/03 09:06:13 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/14 14:26:24 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include "fcntl.h"
 # include "op.h"
 # include "asm_op.h"
+# include <ncurses.h>
 
 /*
 **	Define flags
@@ -27,6 +28,8 @@
 # define LEAKS			4
 # define N				8
 # define VISUALIZER		16
+# define ADV_VISUALIZER	32
+# define START			64
 
 # define BUFFER_SIZE	4096
 
@@ -54,13 +57,34 @@ typedef struct			s_carriage
 	int					carry;
 	int					reg[REG_NUMBER];
 	int					statement;
+	int					statement_owner;
 	int					cycles_left;
 	int					last_live_cycle;
 	int					position;
 	int					alive;
 	int					bytes_to_jump;
+	int					act;
 	struct s_carriage	*next;
 }						t_carriage;
+
+typedef	struct			s_state
+{
+	unsigned char		arena[MEM_SIZE];
+	int					*cursor_mem;
+	int					*changed_mem;
+	int					*color_mem;
+	int					cycle;
+	int					carriage_amount;
+	int					cycles_to_die;
+	struct s_state		*prev;
+	struct s_state		*next;
+}						t_state;
+
+typedef struct			s_controls
+{
+	int					autoplay;
+	int					step_size;
+}						t_controls;
 
 typedef struct			s_vm
 {
@@ -76,6 +100,15 @@ typedef struct			s_vm
 	int					period_live_statements;
 	int					checks_without_change;
 	t_carriage			*carriages;
+	t_state				*arena_history_head;
+	t_state				*cur_state;
+	t_controls			controls;
+	int					*cursor_mem;
+	int					*changed_mem;
+	int					start;
+	int					dump_cycle;
+	int					*updated_color_mem;
+	int					*updated_changed_mem;
 }						t_vm;
 
 int						get_direct(t_vm *vm, t_carriage *cur, int offset);
@@ -100,7 +133,7 @@ void					op_lld(t_vm *vm, t_carriage *cur);
 
 int						read_bytes(t_vm *vm, int pos, int amount);
 
-void					write_bytes(t_vm *vm, int pos, int amount, unsigned int byte);
+void					write_bytes(t_vm *vm, t_carriage *cur, int pos, unsigned int byte);
 
 void					op_ldi(t_vm *vm, t_carriage *cur);
 
@@ -135,30 +168,16 @@ void					op_fork(t_vm *vm, t_carriage *cur);
 void					op_lfork(t_vm *vm, t_carriage *cur);
 
 /*
-**	Error management.
+**	Error management functions.
 */
 
 void					handle_error(char *message);
 
 /*
-**	Parse input.
+**	Input parsing functions.
 */
 
 void					parse_input(t_vm *vm, int argc, char **argv);
-void					sort_players(t_vm *vm);
 t_player				*save_player(t_vm *vm, char *filename, char *n);
-
-/*
-**	Validate input.
-*/
-
-void					validate_n_flag(char **argv, int i);
-void					check_duplicate_n(t_player *head, t_vm *vm);
-
-/*
-**	Utils
-*/
-
-void					display_list(t_player *head);
 
 #endif

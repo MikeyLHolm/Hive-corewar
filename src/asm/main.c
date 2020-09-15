@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/14 10:45:18 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/15 08:54:04 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,8 +107,8 @@ void	write_name(t_asm *assm, int fd)
 		i++;
 	}
 	i = 0;
-	write(fd, buf, PROG_NAME_LENGTH);
-	write(fd, "\0\0\0\0", 4);
+	write(fd, buf, PROG_NAME_LENGTH + 1);
+	write(fd, "\0\0\0\0", 3);
 }
 
 void	write_comment(t_asm *assm, int fd)
