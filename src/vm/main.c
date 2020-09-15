@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/14 17:37:08 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/15 16:29:06 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,6 +159,7 @@ void	get_player_info(t_player *player)
 	player->size = get_player_size(fd);
 	player->comment = get_player_comment(fd);
 	player->code = get_player_code(player, fd);
+	validate_player(player);
 }
 
 void		validate_filename(char *filename, char *extension)
@@ -179,7 +180,7 @@ t_player	*save_player(t_vm *vm, char *filename, char *n)
 	//ft_printf("Name is: [%s]\n", filename);
 	validate_filename(filename, ".cor");
 	player->filename = filename;
-	player->n = n ? ft_atoi(n) : 0;
+	player->player_nbr = n ? ft_atoi(n) : 0;
 	get_player_info(player);
 	return (player);
 }
@@ -512,22 +513,22 @@ void	move_carriage_next_statement(t_carriage *cur)
 
 void	execute_statement(t_vm *vm, t_carriage *cur)
 {
-	cur->statement == 1 ? op_live(vm, cur) : 0;
-	cur->statement == 2 ? op_ld(vm, cur) : 0;
-	cur->statement == 3 ? op_st(vm, cur) : 0;
-	cur->statement == 4 ? op_add(vm, cur) : 0;
-	cur->statement == 5 ? op_sub(vm, cur) : 0;
-	cur->statement == 6 ? op_and(vm, cur) : 0;
-	cur->statement == 7 ? op_or(vm, cur) : 0;
-	cur->statement == 8 ? op_xor(vm, cur) : 0;
-	cur->statement == 9 ? op_zjmp(vm, cur) : 0;
-	cur->statement == 10 ? op_ldi(vm, cur) : 0;
-	cur->statement == 11 ? op_sti(vm, cur) : 0;
-	cur->statement == 12 ? op_fork(vm, cur) : 0;
-	cur->statement == 13 ? op_lld(vm, cur) : 0;
-	cur->statement == 14 ? op_lldi(vm, cur) : 0;
-	cur->statement == 15 ? op_lfork(vm, cur) : 0;
-	cur->statement == 16 ? op_aff(vm, cur) : 0;
+	cur->statement == LIVE ? op_live(vm, cur) : 0;
+	cur->statement == LD ? op_ld(vm, cur) : 0;
+	cur->statement == ST ? op_st(vm, cur) : 0;
+	cur->statement == ADD ? op_add(vm, cur) : 0;
+	cur->statement == SUB ? op_sub(vm, cur) : 0;
+	cur->statement == AND ? op_and(vm, cur) : 0;
+	cur->statement == OR ? op_or(vm, cur) : 0;
+	cur->statement == XOR ? op_xor(vm, cur) : 0;
+	cur->statement == ZJMP ? op_zjmp(vm, cur) : 0;
+	cur->statement == LDI ? op_ldi(vm, cur) : 0;
+	cur->statement == STI ? op_sti(vm, cur) : 0;
+	cur->statement == FORK ? op_fork(vm, cur) : 0;
+	cur->statement == LLD ? op_lld(vm, cur) : 0;
+	cur->statement == LLDI ? op_lldi(vm, cur) : 0;
+	cur->statement == LFORK ? op_lfork(vm, cur) : 0;
+	cur->statement == AFF ? op_aff(vm, cur) : 0;
 }
 
 void	handle_statement(t_vm *vm, t_carriage *cur)
@@ -1001,7 +1002,7 @@ int			main(int argc, char **argv)
 	(void)argv;
 	parse_input(vm, argc, argv);
 	//read_input();
-	//validate();
+	//validate(vm);
 	//manually_create_players(vm); //used to create players before argument parsing is functional
 	init_arena(vm);
 	introduce_contestants(vm);

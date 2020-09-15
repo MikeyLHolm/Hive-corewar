@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   statements.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/31 16:04:19 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/14 17:44:26 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/15 16:29:16 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,6 +205,33 @@ void	op_lld(t_vm *vm, t_carriage *cur)
 	cur->carry = !(num);
 }
 
+/*
+** This way works with all possible byte amounts
+*/
+
+int		read_bytes(t_vm *vm, int pos, int amount)
+{
+	int		arg;
+
+	arg = 0;
+	if (amount == 4)
+	{
+		arg += vm->arena[pos % MEM_SIZE] * 256 * 256 * 256;
+		arg += vm->arena[(pos + 1) % MEM_SIZE] * 256 * 256;
+		arg += vm->arena[(pos + 2) % MEM_SIZE] * 256;
+		arg += vm->arena[(pos + 3) % MEM_SIZE];
+	}
+	else if (amount == 2)
+	{
+		arg += vm->arena[pos % MEM_SIZE] * 256;
+		arg += vm->arena[(pos + 1) % MEM_SIZE];
+	}
+	else
+		arg += vm->arena[pos % MEM_SIZE];
+	return (arg);
+}
+
+/*
 int		read_bytes(t_vm *vm, int pos, int amount)
 {
 	int arg;
@@ -220,6 +247,7 @@ int		read_bytes(t_vm *vm, int pos, int amount)
 		arg += vm->arena[(pos + 3) % MEM_SIZE];
 	return (arg);
 }
+*/
 
 void	write_bytes(t_vm *vm, t_carriage *cur, int pos, unsigned int byte)
 {
