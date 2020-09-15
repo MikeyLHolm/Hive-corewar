@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/14 18:40:21 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/15 16:21:46 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -942,8 +942,8 @@ void	battle_loop(t_vm *vm)
 		}
 		if (!check_carriages_alive(vm))
 			break;
-		if (!(vm->flags & (VISUALIZER | DUMP))) //tmp debug
-			ft_printf("CYCLE: %d\n", vm->cycles);
+		//if (!(vm->flags & (VISUALIZER | DUMP))) //tmp debug
+			//ft_printf("CYCLE: %d\n", vm->cycles);
 		cur = vm->carriages;
 		while (cur)
 		{
