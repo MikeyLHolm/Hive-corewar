@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/17 12:41:59 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/15 08:52:55 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/15 11:01:15 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ void		validate_instructions(t_file *cur, t_validator *vd);
 void		validate_label(char *label, int row, t_label *head);
 t_label		*save_labels(t_file *head, t_validator *vd);
 void		right_n_args(char *statement, int args, int row);
+void		trailing_comma(char *line, int row);
 
 /*
 **	Misc

@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 14:51:13 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/15 09:37:05 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/15 11:04:52 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ void		validate_args(char *line, char *statement, t_validator *vd)
 	int			i;
 	char		**args;
 
+	trailing_comma(line, vd->row);
 	i = get_first_arg_index(line, statement);
 	//ft_printf("whole line [%s]\n", line);
 	args = ft_strsplit(&line[i], SEPARATOR_CHAR);

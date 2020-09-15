@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/07 16:54:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/15 09:39:14 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/15 11:04:10 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,24 @@ t_file		*increment_validator(t_file *cur, t_validator *vd)
 	cur = cur->next;
 	++vd->row;
 	return (cur);
+}
+
+/*
+**	check if last char of line before null and whitespaces is comma
+*/
+
+void		trailing_comma(char *line, int row)
+{
+	int			i;
+
+	i = 0;
+	while (line[i])
+		++i;
+	--i;
+	while (ft_isspace(line[i]))
+		--i;
+	if (line[i] == ',')
+		validation_error("Trailing comma in line", row);
 }
 
 /*
