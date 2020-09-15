@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/07 16:54:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/15 11:04:10 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/15 12:43:32 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,26 +23,6 @@ void		validation_error(char *message, int row)
 }
 
 /*
-**	Validates amount of args statement has.
-*/
-
-void			right_n_args(char *statement, int args, int row)
-{
-	int			i;
-
-	i = -1;
-	while (++i < OP_CODE_AMOUNT)
-	{
-		if (ft_strequ(g_op_tab[i].op_name, statement))
-		{
-			if (g_op_tab[i].args_n == args)
-				return ;
-		}
-	}
-	validation_error("Statement has wrong n of args", row);
-}
-
-/*
 **	Moves to next node and line
 */
 
@@ -51,24 +31,6 @@ t_file		*increment_validator(t_file *cur, t_validator *vd)
 	cur = cur->next;
 	++vd->row;
 	return (cur);
-}
-
-/*
-**	check if last char of line before null and whitespaces is comma
-*/
-
-void		trailing_comma(char *line, int row)
-{
-	int			i;
-
-	i = 0;
-	while (line[i])
-		++i;
-	--i;
-	while (ft_isspace(line[i]))
-		--i;
-	if (line[i] == ',')
-		validation_error("Trailing comma in line", row);
 }
 
 /*

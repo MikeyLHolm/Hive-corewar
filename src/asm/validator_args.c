@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 14:53:42 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/15 12:25:19 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/15 13:25:43 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static int		get_arg_type(char *arg)
 }
 
 /*
-**	Test comments and other shitty inputs to args!
+**	Validate value when argument is a registry
 */
 
 void			validate_reg_value(char *line, t_validator *vd)
@@ -43,17 +43,16 @@ void			validate_reg_value(char *line, t_validator *vd)
 	if (ft_strchr(line, COMMENT_CHAR) || ft_strchr(line, ALT_COMMENT_CHAR))
 		validation_error("Comment in wrong place", vd->row);
 	while (line[++i])
-	{
-		if (ft_isdigit(line[i]))
-			++len;
-		else if (!ft_isspace(line[i]))
-			validation_error("Extra chars in registry value", vd->row);
-	}
+		len += arg_traverse_value(line, i, vd->row, REG_CODE);
 	if (len > 0)
 		r = ft_atoilong(ft_strsub(line, 1, len));
 	if (len < 1 || r < 0 || r > 2147483647)
 		validation_error("Registry not an int", vd->row);
 }
+
+/*
+**	Validate value when argument is a direct
+*/
 
 void			validate_dir_value(char *line, t_validator *vd)
 {
@@ -69,19 +68,9 @@ void			validate_dir_value(char *line, t_validator *vd)
 	while (line[++i])
 	{
 		if (line[1] != LABEL_CHAR)
-		{
-			if (ft_isdigit(line[i]))
-				++len;
-			else if (!ft_isspace(line[i]))
-				validation_error("Extra chars in instruction", vd->row);
-		}
+			len += arg_traverse_value(line, i, vd->row, DIR_CODE);
 		else
-		{
-			if (ft_strchr(LABEL_CHARS, line[i]))
-				++len;
-			else if (!ft_isspace(line[i]))
-				validation_error("Extra chars in direct value", vd->row);
-		}
+			len += arg_traverse_label(line, i, vd->row, DIR_CODE);
 	}
 	if (len > 0 && line[1] != LABEL_CHAR)
 		r = ft_atoilong(ft_strsub(line, 1, len));
@@ -90,6 +79,10 @@ void			validate_dir_value(char *line, t_validator *vd)
 	if (len < 1 || (line[1] != LABEL_CHAR && (r < 0 || r > 2147483647)))
 		validation_error("Direct value not an int or label", vd->row);
 }
+
+/*
+**	Validate value when argument is an indirect
+*/
 
 void			validate_ind_value(char *line, t_validator *vd)
 {
@@ -105,19 +98,9 @@ void			validate_ind_value(char *line, t_validator *vd)
 	while (line[++i])
 	{
 		if (line[0] != LABEL_CHAR)
-		{
-			if (ft_isdigit(line[i]))
-				++len;
-			else if (!ft_isspace(line[i]))
-				validation_error("Extra chars in instruction", vd->row);
-		}
+			len += arg_traverse_value(line, i, vd->row, IND_CODE);
 		else
-		{
-			if (ft_strchr(LABEL_CHARS, line[i]))
-				++len;
-			else if (!ft_isspace(line[i]))
-				validation_error("Extra chars in indirect value", vd->row);
-		}
+			len += arg_traverse_label(line, i, vd->row, DIR_CODE);
 	}
 	if (len > 0 && line[0] != LABEL_CHAR)
 		r = ft_atoilong(ft_strsub(line, 0, len));
