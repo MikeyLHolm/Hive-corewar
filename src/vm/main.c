@@ -6,7 +6,7 @@
 /*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/14 15:27:05 by elindber         ###   ########.fr       */
+/*   Updated: 2020/09/15 13:30:22 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,8 @@ int		get_player_size(int fd)
 	size += buf[2] * 16 * 16;
 	size += buf[1] * 16 * 16 * 16 * 16;
 	size += buf[0] * 16 * 16 * 16 * 16 * 16 * 16;
-//	if (size > CHAMP_MAX_SIZE)
-//		handle_error("Player exceeds maximum champion size");
+	if (size > CHAMP_MAX_SIZE)
+		handle_error("Player exceeds maximum champion size");
 	return (size);
 }
 
