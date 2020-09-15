@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 14:53:42 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/15 11:05:26 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/15 12:25:19 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ void			validate_ind_value(char *line, t_validator *vd)
 	int				len;
 	long			r;
 
-	i = line[1] != LABEL_CHAR ? -1 : 0;
+	i = line[0] != LABEL_CHAR ? -1 : 0;
 	len = 0;
 	r = -1;
 	if (ft_strchr(line, COMMENT_CHAR) || ft_strchr(line, ALT_COMMENT_CHAR))
@@ -124,7 +124,7 @@ void			validate_ind_value(char *line, t_validator *vd)
 	else if (len > 0)
 		validate_label(ft_strsub(line, 1, len), vd->row, vd->label);
 	if (len < 1 || (line[0] != LABEL_CHAR && (r < 0 || r > 2147483647)))
-		validation_error("Direct value not an int or label", vd->row);
+		validation_error("Indirect value not an int or label", vd->row);
 }
 
 /*
