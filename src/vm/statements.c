@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/31 16:04:19 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/15 17:01:27 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/16 17:09:14 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,8 +161,10 @@ void	print_player_alive(t_vm *vm, int player_num)
 			break ;
 		cur = cur->next;
 	}
+	cur->last_live_cycle = vm->cycles;
 	ft_printf("A process shows that player %d (%s) is alive.\n", player_num, cur->name);
 }
+
 void	op_live(t_vm *vm, t_carriage *cur)
 {
 	int			arg;

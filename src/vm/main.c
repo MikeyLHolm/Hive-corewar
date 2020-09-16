@@ -758,6 +758,50 @@ void	visualize(t_vm *vm)
 	refresh();
 }
 
+void	print_player_last_alive(t_vm *vm, int player_num)
+{
+	t_player *cur;
+
+	cur = vm->players;
+	while (cur)
+	{
+		if (cur->id == player_num)
+			break ;
+		cur = cur->next;
+	}
+	printw("PLAYER WITH LAST LIVE: %d (%s)\t\t", player_num, cur->name);
+}
+
+void	print_player_lives(t_vm *vm)
+{
+	t_player *cur;
+
+	cur = vm->players;
+	while (cur)
+	{
+		printw("PLAYER %d (%s) last live: %d\n\n", cur->id, cur->name, cur->last_live_cycle);
+		cur = cur->next;
+	}
+}
+
+void	print_visualizer_info(t_vm *vm, t_state *cur_state)
+{
+	char *str;
+	printw("\n");
+	str = ft_sprintf("CYCLE: %d", cur_state->cycle);
+	printw("%-30s", str);
+	free(str);
+	printw("AUTOPLAY: %s\n\n", vm->controls.autoplay ? "ON" : "OFF");
+	str = ft_sprintf("CYCLES_TO_DIE: %d", cur_state->cycles_to_die);
+	printw("%-30s", str);
+	free(str);
+	printw("STEP SIZE: %d\n\n", vm->controls.step_size);
+	str = ft_sprintf("CARRIAGES AMOUNT: %d", cur_state->carriage_amount);
+	printw("%-30s", str);
+	print_player_last_alive(vm, vm->player_last_alive);
+	print_player_lives(vm);
+}
+
 void	visualize_states(t_vm *vm)
 {
 	t_state	*cur_state;
@@ -769,7 +813,7 @@ void	visualize_states(t_vm *vm)
 		cur_state = cur_state->next;
 	while (1)
 	{
-		erase();
+		clear();
 		i = 0;
 		while (i < MEM_SIZE)
 		{
@@ -797,12 +841,7 @@ void	visualize_states(t_vm *vm)
 			if (!(i % 64))
 				printw("\n");
 		}
-		printw("\n");
-		printw("CYCLE: %d\n", cur_state->cycle);
-		printw("CYCLES_TO_DIE: %d\n", cur_state->cycles_to_die);
-		printw("CARRIAGES AMOUNT: %d\n", cur_state->carriage_amount);
-		printw("AUTOPLAY: %s\n", vm->controls.autoplay ? "ON" : "OFF");
-		printw("STEP SIZE: %d", vm->controls.step_size);
+		print_visualizer_info(vm, cur_state);
 		refresh();
 		key = getch();
 		if (vm->controls.autoplay && key == ERR)

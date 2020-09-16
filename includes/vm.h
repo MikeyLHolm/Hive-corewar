@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/15 16:51:36 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/16 17:07:57 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef struct			s_player
 	int					player_nbr;
 	int					size;
 	int					arg_types[3];
+	int					last_live_cycle;
 	struct s_player		*next;
 }						t_player;
 
