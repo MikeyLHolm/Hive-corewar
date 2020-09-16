@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/17 12:41:59 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/15 13:20:02 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/16 13:45:56 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ typedef struct		s_validator
 {
 	int				data;
 	int				row;
+	char			*name;
+	char			*comment;
 	t_label			*label;
 }					t_validator;
 

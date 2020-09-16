@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 14:48:17 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/15 11:05:41 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/16 16:11:01 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,32 @@ void				validate_label(char *label, int row, t_label *head)
 }
 
 /*
+**	Checks if line starts with statement instead label.
+*/
+
+int					statement_at_start(char *line)
+{
+	int			i;
+	char		*str;
+
+	i = 0;
+	while (line[i] && !ft_isspace(line[i]))
+		i++;
+	str = ft_strsub(line, 0, i);
+	i = -1;
+	while (++i < OP_CODE_AMOUNT)
+	{
+		if (ft_strequ(str, g_op_tab[i].op_name))
+		{
+			free(str);
+			return (1);
+		}
+	}
+	free(str);
+	return (0);
+}
+
+/*
 **	Save labels before validating instructions.
 **	Since labels can be called before they appear in instructions.
 */
@@ -65,8 +91,8 @@ t_label				*save_labels(t_file *head, t_validator *vd)
 	cur = head;
 	while (cur)
 	{
-		if (ft_strchr(LABEL_CHARS, cur->line[0]) && cur->line[0] &&
-		cur->line[0] != ALT_COMMENT_CHAR && cur->line[0] != COMMENT_CHAR)
+		if (ft_strchr(LABEL_CHARS, cur->line[0]) && cur->line[0]
+			&& !statement_at_start(cur->line))
 		{
 			if (!vd->label)
 			{

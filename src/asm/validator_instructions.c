@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 14:51:13 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/15 11:04:52 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/16 15:42:21 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,15 +98,21 @@ void		validate_statement(char *statement, t_validator *vd)
 void		validate_args(char *line, char *statement, t_validator *vd)
 {
 	int			i;
+	//char		*line_no_comment;
 	char		**args;
 
+	// add check for , in comments
+	//line_no_comment = ft_strsub()
 	trailing_comma(line, vd->row);
 	i = get_first_arg_index(line, statement);
-	//ft_printf("whole line [%s]\n", line);
+	ft_printf("whole line [%s]\n", line);
 	args = ft_strsplit(&line[i], SEPARATOR_CHAR);
 	i = 0;
 	while (args[i])
+	{
+		ft_printf("Arg nbr [%d] is [%s]\n", i, args[i]);
 		i++;
+	}
 	right_n_args(statement, i--, vd->row);
 	args[i] = remove_comment(args[i], vd->row);
 	while (i >= 0 && args[i])
@@ -136,7 +142,6 @@ void		validate_instructions(t_file *cur, t_validator *vd)
 		{
 			not_empty = 1;
 			statement = get_statement(cur->line, vd->row);
-			//ft_printf("statement [%s]\n", statement);
 			if (statement)
 			{
 				validate_statement(statement, vd);
@@ -148,4 +153,5 @@ void		validate_instructions(t_file *cur, t_validator *vd)
 	}
 	if (not_empty == 0)
 		validation_error("No instructions!", vd->row);
+	system("leaks asm");
 }

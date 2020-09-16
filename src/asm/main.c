@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/15 08:54:04 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/16 15:16:33 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -339,12 +339,22 @@ char	*get_token_label(char *line)
 	int i;
 
 	i = 0;
+	ft_printf("get token from line [%s]\n", line);
 	while (line[i] && line[i] != LABEL_CHAR)
+	{
+		ft_printf("index thing [%c]\n", line[i]);
 		if (!ft_strchr(LABEL_CHARS, line[i++]))
+		{
+			ft_printf("NULL returning [%c]\n", line[i]);
 			return (NULL);
+		}
+	}
+	ft_printf("supaindex1 [%d]\n", i);
 	i = 0;
 	while (line[i] != LABEL_CHAR)
 		i++;
+	ft_printf("supaindex2 [%d]\n", i);
+	ft_printf("returned label [%s]\n", ft_strsub(line, 0, i));
 	return (ft_strsub(line, 0, i));
 }
 
