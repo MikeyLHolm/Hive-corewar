@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/17 12:41:59 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/16 13:45:56 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/16 17:07:27 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,10 @@
 # define ASM_H
 
 # include "../libft/includes/libft.h"
-# include "fcntl.h"
 # include "op.h"
 # include "asm_op.h"
+# include <fcntl.h>
+# include <limits.h>
 
 # define HEADER_NAME		1
 # define HEADER_COMMENT		2
@@ -89,6 +90,7 @@ void		right_n_args(char *statement, int args, int row);
 void		trailing_comma(char *line, int row);
 int			arg_traverse_label(char *line, int i, int row, int type);
 int			arg_traverse_value(char *line, int i, int row, int type);
+void		remove_file_comments(t_file *file);
 
 /*
 **	Misc

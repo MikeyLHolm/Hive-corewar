@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 14:51:13 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/16 16:45:59 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/16 17:24:23 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,11 +97,8 @@ void		validate_statement(char *statement, t_validator *vd)
 void		validate_args(char *line, char *statement, t_validator *vd)
 {
 	int			i;
-	//char		*line_no_comment;
 	char		**args;
 
-	// add check for , in comments
-	//line_no_comment = ft_strsub()
 	trailing_comma(line, vd->row);
 	i = get_first_arg_index(line, statement);
 	ft_printf("whole line [%s]\n", line);
@@ -145,9 +142,9 @@ void		validate_instructions(t_file *cur, t_validator *vd)
 			{
 				validate_statement(statement, vd);
 				validate_args(cur->line, statement, vd);
+				free(statement);
 			}
 		}
-		statement = NULL;
 		cur = increment_validator(cur, vd);
 	}
 	if (not_empty == 0)
