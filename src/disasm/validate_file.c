@@ -6,7 +6,7 @@
 /*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/10 15:37:52 by elindber          #+#    #+#             */
-/*   Updated: 2020/09/10 15:49:16 by elindber         ###   ########.fr       */
+/*   Updated: 2020/09/16 14:38:56 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ int		validate_file(int input, t_command *cmnd, int name_len, int comment_len)
 		if (ft_isprint((int)code) || code == '\n' || code == '\t')
 			name_len++;
 	}
+	while (++i < PROG_NAME_LENGTH + 8)
+		read(input, &code, 1);
 	i = -1;
 	while (++i < COMMENT_LENGTH + 4)
 	{
@@ -40,10 +42,11 @@ int		validate_file(int input, t_command *cmnd, int name_len, int comment_len)
 	&& comment_len <= COMMENT_LENGTH && i - 4 <= CHAMP_MAX_SIZE);
 }
 
-int		check_header(int fd)
+int		check_header_and_file_name(int fd, char *name)
 {
 	int				i;
 	int				magic_header[4];
+	char			*cmp;
 	unsigned char	byte;
 
 	i = 0;
@@ -58,5 +61,6 @@ int		check_header(int fd)
 			return (0);
 		i++;
 	}
-	return (1);
+	cmp = ft_strchr(name, '.');
+	return (ft_strequ(cmp, ".cor"));
 }

@@ -6,13 +6,13 @@
 /*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/10 15:37:49 by elindber          #+#    #+#             */
-/*   Updated: 2020/09/10 15:49:10 by elindber         ###   ########.fr       */
+/*   Updated: 2020/09/16 14:54:07 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "disasm.h"
 
-void	get_arg_types(int input, int output, t_command *cmnd)
+void	get_arg_types(int input, t_command *cmnd)
 {
 	int				i;
 	int				bit;
@@ -62,18 +62,16 @@ void	write_statement(int input, int output, t_command *cmnd)
 
 void	write_instructions(int input, int output, t_command *cmnd)
 {
-	unsigned char	byte;
 	int				i;
-	int				len;
-	int				*arg_types;
 
 	i = 0;
+	cmnd->bytes_read = 0;
 	while (cmnd->bytes_read < cmnd->champion_size)
 	{
 		write_statement(input, output, cmnd);
 		if (cmnd->statement != LIVE && cmnd->statement != ZJMP
 		&& cmnd->statement != FORK && cmnd->statement != LFORK)
-			get_arg_types(input, output, cmnd);
+			get_arg_types(input, cmnd);
 		else
 		{
 			cmnd->arg_types[0] = 2;
@@ -84,4 +82,6 @@ void	write_instructions(int input, int output, t_command *cmnd)
 		write(output, "\n", 1);
 		i++;
 	}
+	close(output);
+	close(input);
 }

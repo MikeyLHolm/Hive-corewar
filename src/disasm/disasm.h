@@ -6,7 +6,7 @@
 /*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 13:02:27 by elindber          #+#    #+#             */
-/*   Updated: 2020/09/10 15:51:29 by elindber         ###   ########.fr       */
+/*   Updated: 2020/09/16 14:33:16 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 # include <unistd.h>
 # include <fcntl.h>
-# include <stdio.h> // remove
 # include "../libft/includes/libft.h"
 # include "../includes/asm_op.h"
 # include "../includes/op.h"
@@ -39,6 +38,7 @@
 
 typedef struct	s_command
 {
+	int			size_told;
 	int			bytes_read;
 	int			statement;
 	int			arg_types[3];
@@ -46,7 +46,7 @@ typedef struct	s_command
 	char		*nbrs;
 }				t_command;
 
-int				check_header(int fd);
+int				check_header_and_file_name(int fd, char *name);
 int				validate_file
 (int input, t_command *cmnd, int name_len, int comment_len);
 void			write_instructions(int input, int output, t_command *cmnd);
