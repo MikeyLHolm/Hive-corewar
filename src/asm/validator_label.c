@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 14:48:17 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/16 16:11:01 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/16 16:17:39 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void				validate_label(char *label, int row, t_label *head)
 	int			i;
 	t_label		*cur;
 
-	//ft_printf("LABEL [%s]\n", label);
+	ft_printf("LABEL [%s]\n", label);
 	cur = head;
 	while (cur)
 	{
@@ -62,8 +62,11 @@ int					statement_at_start(char *line)
 	char		*str;
 
 	i = 0;
+	str = NULL;
 	while (line[i] && !ft_isspace(line[i]))
 		i++;
+	if (i < 1)
+		return (0);
 	str = ft_strsub(line, 0, i);
 	i = -1;
 	while (++i < OP_CODE_AMOUNT)
