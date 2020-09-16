@@ -6,7 +6,7 @@
 /*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 13:02:27 by elindber          #+#    #+#             */
-/*   Updated: 2020/09/16 14:33:16 by elindber         ###   ########.fr       */
+/*   Updated: 2020/09/16 16:10:10 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,7 @@ typedef struct	s_command
 }				t_command;
 
 int				check_header_and_file_name(int fd, char *name);
-int				validate_file
-(int input, t_command *cmnd, int name_len, int comment_len);
+int				validate_file(int input, t_command *cmnd);
 void			write_instructions(int input, int output, t_command *cmnd);
 void			write_arguments(int input, int output, t_command *cmnd);
 
