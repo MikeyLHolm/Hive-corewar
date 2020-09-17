@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 14:53:42 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 12:19:59 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/17 13:13:18 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 **	Returns type of argument as int.
 */
 
-static int		get_arg_type(char *arg)
+static int		get_argument_type(char *arg)
 {
 	if (!arg[0])
 		return (0);
@@ -129,7 +129,7 @@ void			validate_arg(char *line, char *statement,
 	{
 		if (ft_strequ(g_op_tab[i].op_name, statement))
 		{
-			type = get_arg_type(line);
+			type = get_argument_type(line);
 			if (!(g_op_tab[i].args_type[arg_i] & type))
 				validation_error("Wrong arg type for the statement", vd->row);
 			if (type == T_REG)

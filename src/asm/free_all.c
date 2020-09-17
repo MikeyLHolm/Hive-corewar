@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/17 10:27:42 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 12:29:37 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/17 12:50:47 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void		free_label(t_label *head)
 	t_label		*tmp;
 
 	cur = head;
-	while(cur)
+	while (cur)
 	{
 		tmp = cur;
 		cur = cur->next;
@@ -33,7 +33,7 @@ void		free_file(t_file *head)
 	t_file		*tmp;
 
 	cur = head;
-	while(cur)
+	while (cur)
 	{
 		tmp = cur;
 		cur = cur->next;

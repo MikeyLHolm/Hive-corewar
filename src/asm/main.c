@@ -6,22 +6,11 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/17 12:25:23 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/17 13:12:26 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asm.h"
-
-int		ft_isspace(int c)
-{
-	return (c == ' ' || c == '\t');
-}
-
-void	handle_error(char *message)
-{
-	ft_printf("%s.\n", message);
-	exit(1);
-}
 
 t_file	*new_file_link(char *line)
 {
@@ -59,103 +48,13 @@ t_file	*read_file(char *filename)
 	return (head);
 }
 
-void	print_file(t_file *head)
-{
-	t_file *cur;
-
-	cur = head;
-	while (cur)
-	{
-		ft_printf("%s\n", cur->line);
-		cur = cur->next;
-	}
-}
-
 char	*get_output_filename(char *input_filename)
 {
 	*ft_strrchr(input_filename, '.') = '\0';
 	return (ft_strjoin(input_filename, ".cor"));
 }
 
-void	write_header(int fd)
-{
-	int		magic_number;
-	char	buf[4];
-	int		i;
-
-	magic_number = COREWAR_EXEC_MAGIC;
-	i = 0;
-	while (i < 4)
-	{
-		buf[i++] = magic_number % 256;
-		magic_number /= 256;
-	}
-	while (--i >= 0)
-		write(fd, &buf[i], 1);
-}
-
-void	write_name(t_asm *assm, int fd)
-{
-	char	buf[PROG_NAME_LENGTH];
-	size_t	i;
-
-	ft_bzero(buf, PROG_NAME_LENGTH);
-	i = 0;
-	while (i < ft_strlen(assm->name))
-	{
-		buf[i] = assm->name[i];
-		i++;
-	}
-	i = 0;
-	write(fd, buf, PROG_NAME_LENGTH + 1);
-	write(fd, "\0\0\0\0", 3);
-}
-
-void	write_comment(t_asm *assm, int fd)
-{
-	char	buf[COMMENT_LENGTH];
-	size_t	i;
-
-	ft_bzero(buf, COMMENT_LENGTH);
-	i = 0;
-	while (i < ft_strlen(assm->comment))
-	{
-		buf[i] = assm->comment[i];
-		i++;
-	}
-	i = 0;
-	write(fd, buf, COMMENT_LENGTH);
-	write(fd, "\0\0\0\0", 4);
-}
-
-void	write_exec_code_size_placeholder(t_asm *assm, int fd)
-{
-	write(fd, &((unsigned char*)&assm->champion_size)[3], 1);
-	write(fd, &((unsigned char*)&assm->champion_size)[2], 1);
-	write(fd, &((unsigned char*)&assm->champion_size)[1], 1);
-	write(fd, &((unsigned char*)&assm->champion_size)[0], 1);
-}
-
-void	write_statement(t_token *token, int fd)
-{
-	unsigned char	buf;
-
-	buf = token->instruction_index + 1;
-	write(fd, &buf, 1);
-}
-
-void	write_argument_type_code(t_token *token, int fd)
-{
-	unsigned char	buf;
-
-	if (g_op_tab[token->instruction_index].args_type_code)
-	{
-		buf = token->argument_type_code;
-		write(fd, &buf, 1);
-	}
-}
-
-static int		get_arg_type(char *arg)
+int			get_arg_type(char *arg)
 {
 	if (!arg)
 		return (0);
@@ -164,94 +63,6 @@ static int		get_arg_type(char *arg)
 	if (ft_strchr(arg, 'r') && !ft_strchr(arg, LABEL_CHAR))
 		return (REG_CODE);
 	return (IND_CODE);
-}
-
-void	write_registry(char *arg, int fd)
-{
-	unsigned char	buf;
-
-	buf = ft_atoi(ft_strchr(arg, 'r') + 1);
-	write(fd, &buf, 1);
-}
-
-void	write_direct(t_token *token, char *arg, int fd)
-{
-	int bytes;
-
-	bytes = ft_atoi(&arg[1]);
-	if (!g_op_tab[token->instruction_index].size_t_dir)
-	{
-		write(fd, &((unsigned char*)&bytes)[3], 1);
-		write(fd, &((unsigned char*)&bytes)[2], 1);
-	}
-	write(fd, &((unsigned char*)&bytes)[1], 1);
-	write(fd, &((unsigned char*)&bytes)[0], 1);
-}
-
-void	write_indirect(char *arg, int fd)
-{
-	short bytes;
-
-	bytes = ft_atoi(arg);
-	write(fd, &((unsigned char*)&bytes)[1], 1);
-	write(fd, &((unsigned char*)&bytes)[0], 1);
-}
-
-void	write_arguments(t_token *token, int fd)
-{
-	int	type;
-
-	type = get_arg_type(token->arg1);
-	if (type == REG_CODE)
-		write_registry(token->arg1, fd);
-	else if (type == DIR_CODE)
-		write_direct(token, token->arg1, fd);
-	else if (type == IND_CODE)
-		write_indirect(token->arg1, fd);
-	type = get_arg_type(token->arg2);
-	if (type == REG_CODE)
-		write_registry(token->arg2, fd);
-	else if (type == DIR_CODE)
-		write_direct(token, token->arg2, fd);
-	else if (type == IND_CODE)
-		write_indirect(token->arg2, fd);
-	type = get_arg_type(token->arg3);
-	if (type == REG_CODE)
-		write_registry(token->arg3, fd);
-	else if (type == DIR_CODE)
-		write_direct(token, token->arg3, fd);
-	else if (type == IND_CODE)
-		write_indirect(token->arg3, fd);
-}
-
-void	write_instructions(t_asm *assm, int fd)
-{
-	t_token	*token;
-
-	token = assm->token;
-	while (token)
-	{
-		write_statement(token, fd);
-		write_argument_type_code(token, fd);
-		write_arguments(token, fd);
-		token = token->next;
-	}
-}
-
-void	handle_writing(t_asm *assm, char *input_filename)
-{
-	int		fd;
-	char	*output_filename;
-
-	output_filename = get_output_filename(input_filename);
-	//check if open failed here
-	fd = open(output_filename, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-	free(output_filename);
-	write_header(fd);
-	write_name(assm, fd);
-	write_exec_code_size_placeholder(assm, fd);
-	write_comment(assm, fd);
-	write_instructions(assm, fd);
 }
 
 t_asm	*init_assm(void)
@@ -442,19 +253,6 @@ void	get_token_arguments(t_asm *assm, t_token *token)
 	free(args);
 }
 
-void	print_token_info(t_token *token)
-{
-	ft_printf("LABEL: %s\n", token->label);
-	ft_printf("INSTRUCTION: %s\n", token->instruction);
-	ft_printf("INSTRUCTION_INDEX: %d\n", token->instruction_index);
-	ft_printf("ARG1: %s\n", token->arg1);
-	ft_printf("ARG2: %s\n", token->arg2);
-	ft_printf("ARG3: %s\n", token->arg3);
-	ft_printf("ARGUMENT TYPE CODE: %x\n", token->argument_type_code);
-	ft_printf("SIZE: %d\n", token->size);
-	ft_printf("\n\n");
-}
-
 char	get_argument_type_code(t_token *token)
 {
 	int				type;
@@ -615,19 +413,6 @@ void	convert_labels(t_asm *assm)
 			convert_argument_label(assm, &cur_token->arg3, position);
 		position += cur_token->size;
 		cur_token = cur_token->next;
-	}
-}
-
-void	print_tokens(t_token *token)
-{
-	t_token *cur;
-
-	cur = token;
-	while (cur)
-	{
-		ft_printf("CONVERTED TOKEN\n");
-		print_token_info(cur);
-		cur = cur->next;
 	}
 }
 
