@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 12:44:33 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/16 17:24:39 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/17 10:47:04 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,5 @@ void			validator(t_file *file)
 	vd->label = save_labels(cur, vd);
 	vd->row = row;
 	validate_instructions(cur, vd);
-	// free cur and vd (label, name, comment)
-	// free_all(cur, vd)
-	free(vd);
+	free_validator(cur, vd);
 }

@@ -3,17 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: elindber <elindber@student.42.fr>          +#+  +:+       +#+         #
+#    By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/04/10 19:26:38 by sadawi            #+#    #+#              #
-#    Updated: 2020/09/15 16:31:41 by elindber         ###   ########.fr        #
+#    Updated: 2020/09/17 10:28:07 by mlindhol         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME_ASM = asm
 NAME_CW = corewar
 
-CFILES_ASM = main.c \
+CFILES_ASM = main.c free_all.c \
 			validator.c validator_args.c validator_args_utils.c \
 			validator_header.c validator_instructions.c validator_label.c \
 			validator_utils.c

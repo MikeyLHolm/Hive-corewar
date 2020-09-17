@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/16 16:56:17 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/17 10:52:32 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -669,7 +669,9 @@ int		main(int argc, char **argv)
 	//ft_printf("BYTE: %hx\n", byte);
 	//ft_printf("%02hx\n", 15);
 	handle_writing(assm, argv[1]);
-	//system("leaks asm");
+	system("leaks asm");
+	free_assm(assm);
+	system("leaks asm");
 	exit(0);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/17 12:41:59 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/16 17:07:27 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/17 10:50:15 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,5 +99,12 @@ void		remove_file_comments(t_file *file);
 void		display_list(t_label *head);
 void		display_filelist(t_file *head);
 int			ft_isspace(int c);
+
+/*
+**	Free memory
+*/
+
+void		free_assm(t_asm *assm);
+void		free_validator(t_file *cur, t_validator *vd);
 
 #endif
