@@ -985,7 +985,7 @@ void	battle_loop(t_vm *vm)
 		}
 		if (!check_carriages_alive(vm))
 			break;
-		if (!(vm->flags & (VISUALIZER | DUMP))) //tmp debug
+		if (vm->flags & ADV_VISUALIZER) //tmp debug
 		{
 			clear();
 			printw("Saving cycle: %d\n", vm->cycles);
