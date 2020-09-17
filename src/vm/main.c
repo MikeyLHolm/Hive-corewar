@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/14 17:37:08 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/15 16:39:41 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,13 @@ t_vm		*init_vm(void)
 	vm->cycles_to_die = CYCLE_TO_DIE;
 	if (!(vm->changed_mem = (int*)ft_memalloc(sizeof(int) * MEM_SIZE)))
 		handle_error("Malloc failed");
-	vm->cursor_mem = NULL;
+	vm->color_mem = NULL;
 	vm->dump_cycle = -1;
 	if (!(vm->updated_color_mem = (int*)ft_memalloc(sizeof(int) * MEM_SIZE)))
 		handle_error("Malloc failed");
 	if (!(vm->updated_changed_mem = (int*)ft_memalloc(sizeof(int) * MEM_SIZE)))
+		handle_error("Malloc failed");
+	if (!(vm->cursor_mem = (int*)ft_memalloc(sizeof(int) * MEM_SIZE)))
 		handle_error("Malloc failed");
 	init_controls(vm);
 	return (vm);
@@ -159,6 +161,7 @@ void	get_player_info(t_player *player)
 	player->size = get_player_size(fd);
 	player->comment = get_player_comment(fd);
 	player->code = get_player_code(player, fd);
+	validate_player(player);
 }
 
 void		validate_filename(char *filename, char *extension)
@@ -179,7 +182,7 @@ t_player	*save_player(t_vm *vm, char *filename, char *n)
 	//ft_printf("Name is: [%s]\n", filename);
 	validate_filename(filename, ".cor");
 	player->filename = filename;
-	player->n = n ? ft_atoi(n) : 0;
+	player->player_nbr = n ? ft_atoi(n) : 0;
 	get_player_info(player);
 	return (player);
 }
@@ -512,22 +515,22 @@ void	move_carriage_next_statement(t_carriage *cur)
 
 void	execute_statement(t_vm *vm, t_carriage *cur)
 {
-	cur->statement == 1 ? op_live(vm, cur) : 0;
-	cur->statement == 2 ? op_ld(vm, cur) : 0;
-	cur->statement == 3 ? op_st(vm, cur) : 0;
-	cur->statement == 4 ? op_add(vm, cur) : 0;
-	cur->statement == 5 ? op_sub(vm, cur) : 0;
-	cur->statement == 6 ? op_and(vm, cur) : 0;
-	cur->statement == 7 ? op_or(vm, cur) : 0;
-	cur->statement == 8 ? op_xor(vm, cur) : 0;
-	cur->statement == 9 ? op_zjmp(vm, cur) : 0;
-	cur->statement == 10 ? op_ldi(vm, cur) : 0;
-	cur->statement == 11 ? op_sti(vm, cur) : 0;
-	cur->statement == 12 ? op_fork(vm, cur) : 0;
-	cur->statement == 13 ? op_lld(vm, cur) : 0;
-	cur->statement == 14 ? op_lldi(vm, cur) : 0;
-	cur->statement == 15 ? op_lfork(vm, cur) : 0;
-	cur->statement == 16 ? op_aff(vm, cur) : 0;
+	cur->statement == LIVE ? op_live(vm, cur) : 0;
+	cur->statement == LD ? op_ld(vm, cur) : 0;
+	cur->statement == ST ? op_st(vm, cur) : 0;
+	cur->statement == ADD ? op_add(vm, cur) : 0;
+	cur->statement == SUB ? op_sub(vm, cur) : 0;
+	cur->statement == AND ? op_and(vm, cur) : 0;
+	cur->statement == OR ? op_or(vm, cur) : 0;
+	cur->statement == XOR ? op_xor(vm, cur) : 0;
+	cur->statement == ZJMP ? op_zjmp(vm, cur) : 0;
+	cur->statement == LDI ? op_ldi(vm, cur) : 0;
+	cur->statement == STI ? op_sti(vm, cur) : 0;
+	cur->statement == FORK ? op_fork(vm, cur) : 0;
+	cur->statement == LLD ? op_lld(vm, cur) : 0;
+	cur->statement == LLDI ? op_lldi(vm, cur) : 0;
+	cur->statement == LFORK ? op_lfork(vm, cur) : 0;
+	cur->statement == AFF ? op_aff(vm, cur) : 0;
 }
 
 void	handle_statement(t_vm *vm, t_carriage *cur)
@@ -583,38 +586,51 @@ void	load_player_colors(t_vm *vm, int *cursor_mem)
 	}
 }
 
-int		*get_cursor_mem_old(t_vm *vm, int *prev_mem)
+int		*get_color_mem_old(t_vm *vm, int *prev_mem)
 {
 	t_carriage	*cur;
-	int			*cursor_mem;
+	int			*color_mem;
 	int			i;
 
-	cursor_mem = (int*)ft_memalloc(sizeof(int) * MEM_SIZE);
+	if (!(color_mem = (int*)ft_memalloc(sizeof(int) * MEM_SIZE)))
+		handle_error("Malloc failed");
 	cur = vm->carriages;
 	if (!prev_mem)
-		load_player_colors(vm, cursor_mem);
+		load_player_colors(vm, color_mem);
 	else
 	{
 		i = 0;
 		while (i < MEM_SIZE)
 		{
-			if (prev_mem[i] > vm->player_amount && prev_mem[i] != 9)
-				cursor_mem[i] = prev_mem[i];
-			else if (prev_mem[i] < 0)
-				cursor_mem[i] = -prev_mem[i] + 4;
+			if (vm->updated_color_mem[i])
+			{
+				color_mem[i] = vm->updated_color_mem[i];
+			}
+			else if (prev_mem[i] > vm->player_amount && prev_mem[i] != 9)
+				color_mem[i] = prev_mem[i];
 			i++;
 		}
 	}
+	ft_bzero(vm->updated_color_mem, MEM_SIZE * sizeof(int));
+	free(prev_mem);
+	return (color_mem);
+}
+
+int		*get_cursor_mem_old(t_vm *vm, int *prev)
+{
+	t_carriage	*cur;
+	int			*cursor_mem;
+
+	if (!(cursor_mem = (int*)ft_memalloc(sizeof(int) * MEM_SIZE)))
+		handle_error("Malloc failed");
+	cur = vm->carriages;
+	(void)prev;
 	while (cur)
 	{
-		if (cursor_mem[cur->position % MEM_SIZE] || cursor_mem[cur->position % MEM_SIZE] == 9)
-			(void)cursor_mem;
-		else if (cursor_mem[cur->position % MEM_SIZE])
-			cursor_mem[cur->position % MEM_SIZE] = (cursor_mem[cur->position % MEM_SIZE] - 4) * -1;
-		else
-			cursor_mem[cur->position % MEM_SIZE] = 9;
+		cursor_mem[cur->position] = 1;
 		cur = cur->next;
 	}
+	free(prev);
 	return (cursor_mem);
 }
 
@@ -644,16 +660,6 @@ int		*get_color_mem(t_vm *vm, t_state *prev)
 		}
 	}
 	ft_bzero(vm->updated_color_mem, MEM_SIZE * sizeof(int));
-	// while (cur)
-	// {
-	// 	if (color_mem[cur->position % MEM_SIZE] < 0 || color_mem[cur->position % MEM_SIZE] == 9)
-	// 		(void)color_mem;
-	// 	else if (color_mem[cur->position % MEM_SIZE])
-	// 		color_mem[cur->position % MEM_SIZE] = (color_mem[cur->position % MEM_SIZE] - 4) * -1;
-	// 	else
-	// 		color_mem[cur->position % MEM_SIZE] = 9;
-	// 	cur = cur->next;
-	// }
 	return (color_mem);
 }
 
@@ -712,14 +718,16 @@ void	visualize(t_vm *vm)
 	while (i < MEM_SIZE)
 	{
 		if (cursor_mem[i])
-		{
-			if (cursor_mem[i] < 0)
-				attron(COLOR_PAIR((unsigned char)ft_abs(cursor_mem[i])));
+				attron(COLOR_PAIR((unsigned char)ft_abs(vm->color_mem[i] ? vm->color_mem[i] - 4 : 9)));
+			else if (vm->color_mem[i])
+			{
+				attron(COLOR_PAIR((unsigned char)ft_abs(vm->color_mem[i] + (vm->changed_mem[i] ? 5 : 0))));
+			}
+			printw("%02x", (unsigned char)vm->arena[i]);
+			if (cursor_mem[i])
+				attroff(COLOR_PAIR((unsigned char)ft_abs(vm->color_mem[i] - 4)));
 			else
-				attron(COLOR_PAIR((unsigned char)ft_abs(cursor_mem[i] + (vm->changed_mem[i] && vm->changed_mem[i] < 50 ? 5 : 0))));
-		}
-		printw("%02x", (unsigned char)vm->arena[i]);
-		attroff(COLOR_PAIR((unsigned char)ft_abs(cursor_mem[i] + (vm->changed_mem[i] && vm->changed_mem[i] < 50 ? 5 : 0))));
+				attroff(COLOR_PAIR((unsigned char)ft_abs(vm->color_mem[i] + (vm->changed_mem[i] ? 5 : 0))));
 		printw(" ");
 		i++;
 		if (!(i % 64))
@@ -735,8 +743,9 @@ void	visualize(t_vm *vm)
 	}
 	printw("CARRIAGES AMOUNT: %d\n", j);
 	printw("AUTOPLAY: %s\n", vm->controls.autoplay ? "ON" : "OFF");
+	//printw("STEP SIZE: %d", vm->controls.step_size);
 	key = getch();
-	if (key == 'a')
+	if (key == ' ')
 	{
 		vm->controls.autoplay = !vm->controls.autoplay;
 		timeout(vm->controls.autoplay ? 1 : -1);
@@ -815,7 +824,7 @@ void	visualize_states(t_vm *vm)
 			vm->controls.step_size > 1 ? vm->controls.step_size-- : (void)vm;
 		if (key == 'q')
 			break ;
-		if (key == 'a')
+		if (key == ' ')
 		{
 			vm->controls.autoplay = !vm->controls.autoplay;
 			timeout(vm->controls.autoplay ? 1 : -1);
@@ -918,6 +927,7 @@ void	battle_loop(t_vm *vm)
 	{
 		if (vm->flags & VISUALIZER)
 		{
+			vm->color_mem = get_color_mem_old(vm, vm->color_mem);
 			vm->cursor_mem = get_cursor_mem_old(vm, vm->cursor_mem);
 			update_changed_memory(vm);
 		}
@@ -933,8 +943,8 @@ void	battle_loop(t_vm *vm)
 		}
 		if (!check_carriages_alive(vm))
 			break;
-		if (!(vm->flags & (VISUALIZER | DUMP))) //tmp debug
-			ft_printf("CYCLE: %d\n", vm->cycles);
+		//if (!(vm->flags & (VISUALIZER | DUMP))) //tmp debug
+			//ft_printf("CYCLE: %d\n", vm->cycles);
 		cur = vm->carriages;
 		while (cur)
 		{
@@ -1001,7 +1011,7 @@ int			main(int argc, char **argv)
 	(void)argv;
 	parse_input(vm, argc, argv);
 	//read_input();
-	//validate();
+	//validate(vm);
 	//manually_create_players(vm); //used to create players before argument parsing is functional
 	init_arena(vm);
 	introduce_contestants(vm);

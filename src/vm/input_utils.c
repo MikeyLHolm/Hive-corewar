@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 09:48:01 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/15 09:48:30 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/15 16:29:22 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,9 @@ void		check_duplicate_n(t_player *head, t_vm *vm)
 		tmp = head->next;
 		while (tmp)
 		{
-			if (head->n == tmp->n && head->n != 0)
+			if (head->player_nbr == tmp->player_nbr && head->player_nbr != 0)
 				handle_error("duplicate -n value");
-			if (head->n > vm->player_amount || tmp->n > vm->player_amount)
+			if (head->player_nbr > vm->player_amount || tmp->player_nbr > vm->player_amount)
 				handle_error("-n value > players_amount");
 			tmp = tmp->next;
 		}

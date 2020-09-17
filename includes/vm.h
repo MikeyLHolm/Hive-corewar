@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/15 09:56:06 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/15 16:39:48 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include "op.h"
 # include "asm_op.h"
 # include <ncurses.h>
+# include "limits.h"
 
 /*
 **	Define flags
@@ -40,8 +41,9 @@ typedef struct			s_player
 	char				*comment;
 	char				*name;
 	int					id;
-	int					n;
+	int					player_nbr;
 	int					size;
+	int					arg_types[3];
 	struct s_player		*next;
 }						t_player;
 
@@ -105,6 +107,7 @@ typedef struct			s_vm
 	t_controls			controls;
 	int					*cursor_mem;
 	int					*changed_mem;
+	int					*color_mem;
 	int					start;
 	int					dump_cycle;
 	int					*updated_color_mem;
@@ -182,6 +185,8 @@ void					check_duplicate_n(t_player *head, t_vm *vm);
 void					parse_input(t_vm *vm, int argc, char **argv);
 void					sort_players(t_vm *vm);
 void					validate_n_flag(char **argv, int i);
+void					check_duplicate_n(t_player *head, t_vm *vm);
+void					validate_player(t_player *player);
 
 /*
 **	remove these!

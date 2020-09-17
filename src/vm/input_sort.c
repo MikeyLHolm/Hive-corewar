@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input_sort.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 09:45:26 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/15 09:49:46 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/15 16:29:26 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,10 +98,10 @@ void		add_to_tab(t_vm *vm, int count)
 	head = vm->players;
 	while (head)
 	{
-		if (head->n != 0)
+		if (head->player_nbr != 0)
 		{
 			//ft_printf("Head id [%d] || Head n-1 [%d]\n", head->id, (head->n - 1));
-			tab[(head->n - 1)] = head->id;
+			tab[(head->player_nbr - 1)] = head->id;
 		}
 		head = head->next;
 	}
@@ -111,7 +111,7 @@ void		add_to_tab(t_vm *vm, int count)
 	{
 		while (tab[i] != 0)
 			i++;
-		if (head->n == 0)
+		if (head->player_nbr == 0)
 			tab[i] = head->id;
 		head = head->next;
 	}
