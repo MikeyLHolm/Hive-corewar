@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input_sort.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 09:45:26 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/15 16:29:26 by elindber         ###   ########.fr       */
+/*   Updated: 2020/09/17 10:59:02 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,14 +126,6 @@ void		sort_players(t_vm *vm)
 {
 	t_player		*cur;
 
-	cur = vm->players;
-	while (cur)
-	{
-		//ft_printf("\nSTATS START:: id = %d || n = %d\n", cur->id, cur->n);
-		cur = cur->next;
-		vm->player_amount++;
-	}
-	//ft_printf("\nNR of players: %d\n", vm->player_amount);
 	cur = vm->players;
 	check_duplicate_n(cur, vm);
 	if (vm->players && vm->players->next && vm->flags & N)

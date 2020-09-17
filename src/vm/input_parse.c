@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 12:13:13 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/15 17:06:56 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/17 10:59:42 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,21 @@ void		parse_player(t_vm *vm, char *filename, char *n)
 		vm->tail->next = save_player(vm, filename, n);
 		vm->tail = vm->tail->next;
 	}
+}
+
+int		count_players(t_vm *vm)
+{
+	t_player	*cur;
+	int			i;
+
+	cur = vm->players;
+	i = 0;
+	while (cur)
+	{
+		i++;
+		cur = cur->next;
+	}
+	return (i);
 }
 
 /*
@@ -86,8 +101,11 @@ void		parse_input(t_vm *vm, int argc, char **argv)
 			parse_player(vm, argv[i], 0);
 		}
 	}
+	vm->player_amount = count_players(vm);
 	if (!vm->players)
 		handle_error("No valid players specified");
+	if (vm->player_amount > 4)
+		handle_error("Too many players, maximum of 4 players allowed");
 	sort_players(vm);
 	vm->player_last_alive = vm->player_amount;
 }
