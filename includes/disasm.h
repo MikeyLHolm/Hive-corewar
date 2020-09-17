@@ -6,7 +6,7 @@
 /*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 13:02:27 by elindber          #+#    #+#             */
-/*   Updated: 2020/09/16 16:10:10 by elindber         ###   ########.fr       */
+/*   Updated: 2020/09/17 12:24:56 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@
 
 typedef struct	s_command
 {
-	int			size_told;
 	int			bytes_read;
 	int			statement;
 	int			arg_types[3];
