@@ -818,7 +818,7 @@ void	visualize_states(t_vm *vm)
 		cur_state = cur_state->next;
 	while (1)
 	{
-		clear();
+		erase();
 		i = 0;
 		while (i < MEM_SIZE)
 		{
@@ -992,6 +992,7 @@ void	battle_loop(t_vm *vm)
 			clear();
 			printw("Saving cycle: %d\n", vm->cycles);
 			refresh();
+			clear();
 		}
 		cur = vm->carriages;
 		while (cur)
