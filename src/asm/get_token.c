@@ -6,49 +6,45 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/17 13:45:03 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 13:54:56 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/17 15:36:26 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asm.h"
 
-int			get_token_size(t_token *token)
+static int		get_arg_size(t_token *token, int type)
 {
-	int 		type;
-	int 		size;
+	if (type == REG_CODE)
+		return (1);
+	else if (type == IND_CODE)
+		return (2);
+	else if (type == DIR_CODE)
+		return (g_op_tab[token->instruction_index].size_t_dir ? 2 : 4);
+	return (0);
+}
+
+int				get_token_size(t_token *token)
+{
+	int				type;
+	int				size;
 
 	size = 1;
 	if (g_op_tab[token->instruction_index].args_type_code)
 		size += 1;
 	type = get_arg_type(token->arg1);
-	if (type == REG_CODE)
-		size += 1;
-	else if (type == IND_CODE)
-		size += 2;
-	else if (type == DIR_CODE)
-		size += (g_op_tab[token->instruction_index].size_t_dir ? 2 : 4);
+	size += get_arg_size(token, type);
 	type = get_arg_type(token->arg2);
-	if (type == REG_CODE)
-		size += 1;
-	else if (type == IND_CODE)
-		size += 2;
-	else if (type == DIR_CODE)
-		size += (g_op_tab[token->instruction_index].size_t_dir ? 2 : 4);
+	size += get_arg_size(token, type);
 	type = get_arg_type(token->arg3);
-	if (type == REG_CODE)
-		size += 1;
-	else if (type == IND_CODE)
-		size += 2;
-	else if (type == DIR_CODE)
-		size += (g_op_tab[token->instruction_index].size_t_dir ? 2 : 4);
+	size += get_arg_size(token, type);
 	return (size);
 }
 
-void		get_token_arguments(t_asm *assm, t_token *token)
+void			get_token_arguments(t_asm *assm, t_token *token)
 {
-	int			i;
-	char		*line;
-	char		**args;
+	int				i;
+	char			*line;
+	char			**args;
 
 	i = 0;
 	line = assm->cur->line;
@@ -72,11 +68,11 @@ void		get_token_arguments(t_asm *assm, t_token *token)
 	free(args);
 }
 
-char		*get_token_instruction(t_asm *assm)
+char			*get_token_instruction(t_asm *assm)
 {
-	int 		i;
-	int 		j;
-	int 		len;
+	int				i;
+	int				j;
+	int				len;
 
 	i = 0;
 	while (ft_strchr(LABEL_CHARS, assm->cur->line[i]))
@@ -108,7 +104,7 @@ char		*get_token_instruction(t_asm *assm)
 
 char		*get_token_label(char *line)
 {
-	int 		i;
+	int			i;
 
 	i = 0;
 	while (line[i] && line[i] != LABEL_CHAR)
