@@ -6,15 +6,15 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/17 13:12:26 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/17 14:03:01 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asm.h"
 
-t_file	*new_file_link(char *line)
+t_file		*new_file_link(char *line)
 {
-	t_file *new;
+	t_file 		*new;
 
 	if (!(new = (t_file*)ft_memalloc(sizeof(t_file))))
 		handle_error("Malloc failed");
@@ -22,12 +22,12 @@ t_file	*new_file_link(char *line)
 	return (new);
 }
 
-t_file	*read_file(char *filename)
+t_file		*read_file(char *filename)
 {
-	char	*line;
-	t_file	*head;
-	t_file	*cur;
-	int		fd;
+	char		*line;
+	t_file		*head;
+	t_file		*cur;
+	int			fd;
 
 	head = NULL;
 	if (((fd = open(filename, O_RDONLY)) == -1))
@@ -48,327 +48,13 @@ t_file	*read_file(char *filename)
 	return (head);
 }
 
-char	*get_output_filename(char *input_filename)
+t_asm		*init_assm(void)
 {
-	*ft_strrchr(input_filename, '.') = '\0';
-	return (ft_strjoin(input_filename, ".cor"));
-}
-
-int			get_arg_type(char *arg)
-{
-	if (!arg)
-		return (0);
-	if (ft_strchr(arg, '%'))
-		return (DIR_CODE);
-	if (ft_strchr(arg, 'r') && !ft_strchr(arg, LABEL_CHAR))
-		return (REG_CODE);
-	return (IND_CODE);
-}
-
-t_asm	*init_assm(void)
-{
-	t_asm *assm;
+	t_asm 		*assm;
 
 	if (!(assm = (t_asm*)ft_memalloc(sizeof(t_asm))))
 		handle_error("Malloc failed");
 	return (assm);
-}
-
-char	*get_champion_name(t_file *cur)
-{
-	char	*name;
-
-	name = NULL;
-	name = ft_strjoin(name, ft_strchr(cur->line, '"') + 1);
-	if (!name)
-		handle_error("Champion name invalid");
-	cur = cur->next;
-	while (!ft_strchr(name, '"') && cur)
-	{
-		name = ft_strjoinfree(name, ft_strdup("\n"));
-		name = ft_strjoinfree(name, ft_strdup(cur->line));
-		if (ft_strchr(name, '"'))
-			break ;
-		cur = cur->next;
-	}
-	*ft_strrchr(name, '"') = '\0';
-	if (ft_strlen(name) > PROG_NAME_LENGTH)
-		handle_error("Champion name too long");
-	return (name);
-}
-
-char	*get_champion_comment(t_file *cur)
-{
-	char	*comment;
-
-	comment = NULL;
-	comment = ft_strjoin(comment, ft_strchr(cur->line, '"') + 1);
-	if (!comment)
-		handle_error("Champion comment invalid");
-	cur = cur->next;
-	while (!ft_strchr(comment, '"') && cur)
-	{
-		comment = ft_strjoinfree(comment, ft_strdup("\n"));
-		comment = ft_strjoinfree(comment, ft_strdup(cur->line));
-		if (ft_strchr(comment, '"'))
-			break ;
-		cur = cur->next;
-	}
-	*ft_strrchr(comment, '"') = '\0';
-	if (ft_strlen(comment) > COMMENT_LENGTH)
-		handle_error("Champion comment too long");
-	return (comment);
-}
-
-void	get_name_and_comment(t_asm *assm)
-{
-	t_file *cur;
-
-	cur = assm->file;
-	while (cur)
-	{
-		if (ft_strnequ(cur->line, NAME_CMD_STRING, ft_strlen(NAME_CMD_STRING)))
-		{
-			if (assm->name)
-				handle_error("Name already exists");
-			assm->name = get_champion_name(cur);
-		}
-		if (ft_strnequ(cur->line, COMMENT_CMD_STRING, ft_strlen(COMMENT_CMD_STRING)))
-		{
-			if (assm->comment)
-				handle_error("Comment already exists");
-			assm->comment = get_champion_comment(cur);
-		}
-		if (assm->name && assm->comment)
-			break ;
-		cur = cur->next;
-	}
-}
-
-char	*get_token_label(char *line)
-{
-	int i;
-
-	i = 0;
-	while (line[i] && line[i] != LABEL_CHAR)
-	{
-		if (!ft_strchr(LABEL_CHARS, line[i++]))
-			return (NULL);
-	}
-	// i = 0;
-	// while (line[i] != LABEL_CHAR)
-	// 	i++;
-	return (ft_strsub(line, 0, i));
-}
-
-char	*get_token_instruction(t_asm *assm)
-{
-	int i;
-	int j;
-	int len;
-
-	i = 0;
-	while (ft_strchr(LABEL_CHARS, assm->cur->line[i]))
-		i++;
-	if (assm->cur->line[i] == LABEL_CHAR)
-		i++;
-	len = 0;
-	while (!len)
-	{
-		while (assm->cur->line[i] && ft_isspace(assm->cur->line[i]))
-			i++;
-		j = i;
-		while (assm->cur->line[j])
-		{
-			if (ft_isalpha(assm->cur->line[j++]))
-				len++;
-			else
-				break ;
-		}
-		if (len)
-			return (ft_strsub(assm->cur->line, i, len));
-		assm->cur = assm->cur->next;
-		i = 0;
-		while (!ft_isalpha(assm->cur->line[i]))
-			i++;
-	}
-	return (NULL);
-}
-
-int		get_instruction_index(char *instruction)
-{
-	int i;
-
-	i = 0;
-	while (i < OP_CODE_AMOUNT)
-	{
-		if (ft_strequ(instruction, g_op_tab[i].op_name))
-			return (i);
-		i++;
-	}
-	return (-1);
-}
-
-int		get_first_arg_index(char *line, char *instruction)
-{
-	int		i;
-
-	i = 0;
-	while (ft_strchr(LABEL_CHARS, line[i]))
-		i++;
-	i = line[i] == LABEL_CHAR ? i + 1 : 0;
-	while (ft_isspace(line[i]))
-		i++;
-	i += ft_strlen(instruction);
-	while (ft_isspace(line[i]))
-		i++;
-	return (i);
-}
-
-void	get_token_arguments(t_asm *assm, t_token *token)
-{
-	int		i;
-	char	*line;
-	char	**args;
-
-	i = 0;
-	line = assm->cur->line;
-	i = get_first_arg_index(line, token->instruction);
-	args = ft_strsplit(&line[i], SEPARATOR_CHAR);
-	if (args[0] && args[1] && args[2])
-	{
-		token->arg3 = ft_strtrim(args[2]);
-		free(args[2]);
-	}
-	if (args[0] && args[1])
-	{
-		token->arg2 = ft_strtrim(args[1]);
-		free(args[1]);
-	}
-	if (args[0])
-	{
-		token->arg1 = ft_strtrim(args[0]);
-		free(args[0]);
-	}
-	free(args);
-}
-
-char	get_argument_type_code(t_token *token)
-{
-	int				type;
-	unsigned char	byte;
-
-	byte = 0;
-	type = get_arg_type(token->arg1);
-	if (type == DIR_CODE || type == IND_CODE)
-		byte |= 1UL << 7;
-	if (type == REG_CODE || type == IND_CODE)
-		byte |= 1UL << 6;
-	type = get_arg_type(token->arg2);
-	if (type == DIR_CODE || type == IND_CODE)
-		byte |= 1UL << 5;
-	if (type == REG_CODE || type == IND_CODE)
-		byte |= 1UL << 4;
-	type = get_arg_type(token->arg3);
-	if (type == DIR_CODE || type == IND_CODE)
-		byte |= 1UL << 3;
-	if (type == REG_CODE || type == IND_CODE)
-		byte |= 1UL << 2;
-	return (byte);
-}
-
-int		get_token_size(t_token *token)
-{
-	int type;
-	int size;
-
-	size = 1;
-	if (g_op_tab[token->instruction_index].args_type_code)
-		size += 1;
-	type = get_arg_type(token->arg1);
-	if (type == REG_CODE)
-		size += 1;
-	else if (type == IND_CODE)
-		size += 2;
-	else if (type == DIR_CODE)
-		size += (g_op_tab[token->instruction_index].size_t_dir ? 2 : 4);
-	type = get_arg_type(token->arg2);
-	if (type == REG_CODE)
-		size += 1;
-	else if (type == IND_CODE)
-		size += 2;
-	else if (type == DIR_CODE)
-		size += (g_op_tab[token->instruction_index].size_t_dir ? 2 : 4);
-	type = get_arg_type(token->arg3);
-	if (type == REG_CODE)
-		size += 1;
-	else if (type == IND_CODE)
-		size += 2;
-	else if (type == DIR_CODE)
-		size += (g_op_tab[token->instruction_index].size_t_dir ? 2 : 4);
-	return (size);
-}
-
-t_token	*new_token(t_asm *assm)
-{
-	t_token *token;
-
-	if (!(token = (t_token*)ft_memalloc(sizeof(t_token))))
-		handle_error("Malloc failed");
-	token->label = get_token_label(assm->cur->line);
-	token->instruction = get_token_instruction(assm);
-	token->instruction_index = get_instruction_index(token->instruction);
-	get_token_arguments(assm, token);
-	token->argument_type_code = get_argument_type_code(token);
-	token->size = get_token_size(token);
-	assm->champion_size += token->size;
-	//print_token_info(token);
-	return (token);
-}
-
-int		line_contains_instruction(t_file *cur)
-{
-	int i;
-
-	i = 0;
-	if (!cur->line)
-		return (0);
-	while (cur->line[i])
-	{
-		if (cur->line[i] == '.' || cur->line[i] == COMMENT_CHAR || cur->line[i] == ALT_COMMENT_CHAR)
-			return (0);
-		if (!ft_isspace(cur->line[i++]))
-			return (1);
-	}
-	return (0);
-}
-
-void	tokenize_file(t_asm *assm)
-{
-	t_token	*cur_token;
-
-	get_name_and_comment(assm);
-	assm->cur = assm->file;
-	while (assm->cur->line && assm->cur->line[0] == '.')
-		assm->cur = assm->cur->next;
-	assm->cur = assm->cur->next;
-	while (assm->cur)
-	{
-		if (line_contains_instruction(assm->cur))
-		{
-			if (!assm->token)
-			{
-				cur_token = new_token(assm);
-				assm->token = cur_token;
-			}
-			else
-			{
-				cur_token->next = new_token(assm);
-				cur_token = cur_token->next;
-			}
-		}
-		assm->cur = assm->cur->next;
-	}
 }
 
 void	convert_argument_label(t_asm *assm, char **arg, int arg_position)
@@ -416,24 +102,6 @@ void	convert_labels(t_asm *assm)
 	}
 }
 
-void	remove_file_comments(t_file *file)
-{
-	t_file *cur;
-
-	cur = file;
-	while (cur)
-	{
-		if (line_contains_instruction(cur))
-		{
-			if (ft_strchr(cur->line, COMMENT_CHAR))
-				*ft_strchr(cur->line, COMMENT_CHAR) = '\0';
-			if (ft_strchr(cur->line, ALT_COMMENT_CHAR))
-				*ft_strchr(cur->line, ALT_COMMENT_CHAR) = '\0';
-		}
-		cur = cur->next;
-	}
-}
-
 int		main(int argc, char **argv)
 {
 	t_asm	*assm;
@@ -442,13 +110,9 @@ int		main(int argc, char **argv)
 		handle_error("./asm [filename.s]");
 	assm = init_assm();
 	assm->file = read_file(argv[1]);
-	//remove_file_comments(assm->file);
 	validator(assm->file);
-	//check_file(assm->file);
 	tokenize_file(assm);
 	convert_labels(assm);
-	//print_tokens(assm->token);
-	//print_file(assm->file);
 	handle_writing(assm, argv[1]);
 	free_assm(assm);
 	exit(0);

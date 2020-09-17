@@ -6,7 +6,7 @@
 #    By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/04/10 19:26:38 by sadawi            #+#    #+#              #
-#    Updated: 2020/09/17 13:13:40 by mlindhol         ###   ########.fr        #
+#    Updated: 2020/09/17 14:06:49 by mlindhol         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,6 +14,7 @@ NAME_ASM = asm
 NAME_CW = corewar
 
 CFILES_ASM = main.c free_all.c print_utils.c utils.c write_binary.c	\
+			get.c get_champion.c get_token.c tokenizer.c \
 			validator.c validator_args.c validator_args_utils.c \
 			validator_header.c validator_instructions.c validator_label.c \
 			validator_utils.c
