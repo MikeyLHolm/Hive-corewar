@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/15 08:54:04 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/16 16:56:17 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -340,11 +340,13 @@ char	*get_token_label(char *line)
 
 	i = 0;
 	while (line[i] && line[i] != LABEL_CHAR)
+	{
 		if (!ft_strchr(LABEL_CHARS, line[i++]))
 			return (NULL);
-	i = 0;
-	while (line[i] != LABEL_CHAR)
-		i++;
+	}
+	// i = 0;
+	// while (line[i] != LABEL_CHAR)
+	// 	i++;
 	return (ft_strsub(line, 0, i));
 }
 
@@ -403,8 +405,7 @@ int		get_first_arg_index(char *line, char *instruction)
 	i = 0;
 	while (ft_strchr(LABEL_CHARS, line[i]))
 		i++;
-	if (line[i] == LABEL_CHAR)
-		i++;
+	i = line[i] == LABEL_CHAR ? i + 1 : 0;
 	while (ft_isspace(line[i]))
 		i++;
 	i += ft_strlen(instruction);

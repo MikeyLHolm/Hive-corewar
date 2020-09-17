@@ -6,7 +6,7 @@
 /*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 14:53:42 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/16 12:25:45 by elindber         ###   ########.fr       */
+/*   Updated: 2020/09/17 12:49:08 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ void			validate_reg_value(char *line, t_validator *vd)
 		len += arg_traverse_value(line, i, vd->row, REG_CODE);
 	if (len > 0)
 		r = ft_atoilong(ft_strsub(line, 1, len));
-	if (len < 1 || r < 0 || r > 2147483647)
-		validation_error("Registry not an int", vd->row);
+	if (len < 1 || r < 0 || r > INT_MAX)
+		validation_error("Registry not 0 <= value <= INT_MAX", vd->row);
 }
 
 /*
@@ -106,7 +106,7 @@ void			validate_ind_value(char *line, t_validator *vd)
 		r = ft_atoilong(ft_strsub(line, 0, len));
 	else if (len > 0)
 		validate_label(ft_strsub(line, 1, len), vd->row, vd->label);
-	if (len < 1 || (line[0] != LABEL_CHAR && (r < 0 || r > 2147483647)))
+	if (len < 1 || (line[0] != LABEL_CHAR && (r < INT_MIN || r > INT_MAX)))
 		validation_error("Indirect value not an int or label", vd->row);
 }
 

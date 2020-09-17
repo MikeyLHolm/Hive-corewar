@@ -6,7 +6,7 @@
 /*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 12:42:42 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/16 12:17:36 by elindber         ###   ########.fr       */
+/*   Updated: 2020/09/17 12:49:34 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,8 @@ void		trailing_comma(char *line, int row)
 
 int			arg_traverse_value(char *line, int i, int row, int type)
 {
-	if (ft_isdigit(line[i]) || (line[i] == '-'
-	&& ft_isdigit(line[i + 1]) && !(ft_isdigit(line[i - 1]))))
+	if (ft_isdigit(line[i]) ||
+	(line[i] == '-' && ft_isdigit(line[i + 1]) && !(ft_isdigit(line[i - 1]))))
 		return (1);
 	else if (!ft_isspace(line[i]) ||
 			(ft_isspace(line[i]) && line[i + 1] && !ft_isspace(line[i + 1])))

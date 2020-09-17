@@ -6,7 +6,7 @@
 /*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 14:51:13 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/16 13:03:18 by elindber         ###   ########.fr       */
+/*   Updated: 2020/09/17 12:49:01 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,7 @@ char		*get_statement(char *line, int row)
 	i = 0;
 	while (ft_strchr(LABEL_CHARS, line[i]))
 		i++;
-	if (line[i] == LABEL_CHAR)
-		i++;
+	i = line[i] == LABEL_CHAR ? i + 1 : 0;
 	len = 0;
 	while (line[i] && ft_isspace(line[i]))
 		i++;
@@ -102,11 +101,14 @@ void		validate_args(char *line, char *statement, t_validator *vd)
 
 	trailing_comma(line, vd->row);
 	i = get_first_arg_index(line, statement);
-	//ft_printf("whole line [%s]\n", line);
+	ft_printf("whole line [%s]\n", line);
 	args = ft_strsplit(&line[i], SEPARATOR_CHAR);
 	i = 0;
 	while (args[i])
+	{
+		ft_printf("Arg nbr [%d] is [%s]\n", i, args[i]);
 		i++;
+	}
 	right_n_args(statement, i--, vd->row);
 	args[i] = remove_comment(args[i], vd->row);
 	while (i >= 0 && args[i])
@@ -136,16 +138,16 @@ void		validate_instructions(t_file *cur, t_validator *vd)
 		{
 			not_empty = 1;
 			statement = get_statement(cur->line, vd->row);
-			//ft_printf("statement [%s]\n", statement);
 			if (statement)
 			{
 				validate_statement(statement, vd);
 				validate_args(cur->line, statement, vd);
+				free(statement);
 			}
 		}
-		statement = NULL;
 		cur = increment_validator(cur, vd);
 	}
 	if (not_empty == 0)
 		validation_error("No instructions!", vd->row);
+	system("leaks asm");
 }

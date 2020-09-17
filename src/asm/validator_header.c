@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 14:47:54 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/15 09:38:44 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/16 13:49:33 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ t_file		*validate_name(t_file *cur, t_validator *vd)
 	char	*name;
 
 	if (vd->data & HEADER_NAME)
-		validation_error(ft_strjoin("Duplicate ", NAME_CMD_STRING), vd->row);
+		validation_error("Duplicate name", vd->row);
 	vd->data = vd->data | HEADER_NAME;
 	name = NULL;
 	name = ft_strjoin(name, ft_strchr(cur->line, '"') + 1);
@@ -85,11 +85,9 @@ t_file		*validate_header(t_file *cur, t_validator *vd)
 {
 	while (cur)
 	{
-		if (!ft_strncmp(cur->line, ft_strjoin(NAME_CMD_STRING, " "),
-			ft_strlen(NAME_CMD_STRING) + 1))
+		if (!ft_strncmp(cur->line, vd->name, ft_strlen(vd->name)))
 			cur = validate_name(cur, vd);
-		else if (!ft_strncmp(cur->line, ft_strjoin(COMMENT_CMD_STRING, " "),
-			ft_strlen(COMMENT_CMD_STRING) + 1))
+		else if (!ft_strncmp(cur->line, vd->comment, ft_strlen(vd->comment)))
 			cur = validate_comment(cur, vd);
 		else if (cur->line[0] == '.')
 			validation_error("Str not NAME/COMMENT_CMD_STRING", vd->row);
