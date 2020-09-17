@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/17 12:41:59 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 16:24:27 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/17 16:44:07 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,5 +140,10 @@ int				skip_label(char *line);
 */
 
 void			handle_writing(t_asm *assm, char *input_filename);
+void			write_argument_type_code(t_token *token, int fd);
+void			write_arguments(t_token *token, int fd);
+void			write_comment(t_asm *assm, int fd);
+void			write_header(int fd);
+void			write_name(t_asm *assm, int fd);
 
 #endif
