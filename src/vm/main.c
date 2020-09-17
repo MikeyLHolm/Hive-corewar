@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 12:50:03 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/17 17:53:04 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -709,6 +709,82 @@ int		ft_abs(int n)
 	return (n > 0 ? n : -n);
 }
 
+void	print_player_last_alive(t_vm *vm, int player_num)
+{
+	t_player *cur;
+
+	printw("\n");
+	cur = vm->players;
+	while (cur)
+	{
+		if (cur->id == player_num)
+			break ;
+		cur = cur->next;
+	}
+	attron(COLOR_PAIR((unsigned char)cur->id + 4));
+	printw("PLAYER WITH LAST LIVE: %d (%s)\n\n\n\n", player_num, cur->name);
+	attroff(COLOR_PAIR((unsigned char)cur->id + 4));
+}
+
+void	print_player_lives(t_vm *vm)
+{
+	t_player *cur;
+
+	cur = vm->players;
+	while (cur)
+	{
+		attron(COLOR_PAIR((unsigned char)cur->id + 4));
+		printw("PLAYER %d (%s) last live: %d\t\t", cur->id, cur->name, cur->last_live_cycle);
+		attroff(COLOR_PAIR((unsigned char)cur->id + 4));
+		cur = cur->next;
+	}
+}
+
+void	print_border(void)
+{
+	int i;
+	int size;
+
+	i = 0;
+	size = 64 * 3;
+	printw("\n");
+	while (i < size)
+	{
+		printw("-");
+		i++;
+	}
+	printw("\n");
+}
+
+void	print_visualizer_info(t_vm *vm)
+{
+	char		*str;
+	int			i;
+	t_carriage *cur;
+
+	printw("\n");
+	str = ft_sprintf("CYCLE: %d", vm->cycles);
+	printw("%-128s", str);
+	free(str);
+	printw("AUTOPLAY: %s\n\n", vm->controls.autoplay ? "ON" : "OFF");
+	str = ft_sprintf("CYCLES_TO_DIE: %d", vm->cycles_to_die);
+	printw("%s\n\n", str);
+	free(str);
+	i = 0;
+	cur = vm->carriages;
+	while (cur)
+	{
+		i++;
+		cur = cur->next;
+	}
+	str = ft_sprintf("CARRIAGES AMOUNT: %d", i);
+	printw("%s\n", str);
+	free(str);
+	print_border();
+	print_player_last_alive(vm, vm->player_last_alive);
+	print_player_lives(vm);
+}
+
 void	visualize(t_vm *vm)
 {
 	int	*cursor_mem;
@@ -737,17 +813,8 @@ void	visualize(t_vm *vm)
 		if (!(i % 64))
 			printw("\n");
 	}
-	printw("\n");
-	printw("CYCLE: %d\n", vm->cycles);
-	printw("CYCLES_TO_DIE: %d\n", vm->cycles_to_die);
-	int j = 0;
-	for (t_carriage *cur = vm->carriages; cur; cur = cur->next)
-	{
-		j++;
-	}
-	printw("CARRIAGES AMOUNT: %d\n", j);
-	printw("AUTOPLAY: %s\n", vm->controls.autoplay ? "ON" : "OFF");
-	//printw("STEP SIZE: %d", vm->controls.step_size);
+	print_border();
+	print_visualizer_info(vm);
 	key = getch();
 	if (key == ' ')
 	{
@@ -762,47 +829,23 @@ void	visualize(t_vm *vm)
 	refresh();
 }
 
-void	print_player_last_alive(t_vm *vm, int player_num)
-{
-	t_player *cur;
-
-	cur = vm->players;
-	while (cur)
-	{
-		if (cur->id == player_num)
-			break ;
-		cur = cur->next;
-	}
-	printw("PLAYER WITH LAST LIVE: %d (%s)\n\n", player_num, cur->name);
-}
-
-void	print_player_lives(t_vm *vm)
-{
-	t_player *cur;
-
-	cur = vm->players;
-	while (cur)
-	{
-		printw("PLAYER %d (%s) last live: %d\t\t", cur->id, cur->name, cur->last_live_cycle);
-		cur = cur->next;
-	}
-}
-
-void	print_visualizer_info(t_vm *vm, t_state *cur_state)
+void	print_visualizer_state_info(t_vm *vm, t_state *cur_state)
 {
 	char *str;
+
 	printw("\n");
 	str = ft_sprintf("CYCLE: %d", cur_state->cycle);
-	printw("%-30s", str);
+	printw("%-128s", str);
 	free(str);
 	printw("AUTOPLAY: %s\n\n", vm->controls.autoplay ? "ON" : "OFF");
 	str = ft_sprintf("CYCLES_TO_DIE: %d", cur_state->cycles_to_die);
-	printw("%-30s", str);
+	printw("%-128s", str);
 	free(str);
 	printw("STEP SIZE: %d\n\n", vm->controls.step_size);
 	str = ft_sprintf("CARRIAGES AMOUNT: %d", cur_state->carriage_amount);
-	printw("%-30s", str);
+	printw("%-128s\n", str);
 	free(str);
+	print_border();
 	print_player_last_alive(vm, vm->player_last_alive);
 	print_player_lives(vm);
 }
@@ -846,7 +889,8 @@ void	visualize_states(t_vm *vm)
 			if (!(i % 64))
 				printw("\n");
 		}
-		print_visualizer_info(vm, cur_state);
+		print_border();
+		print_visualizer_state_info(vm, cur_state);
 		refresh();
 		key = getch();
 		if (vm->controls.autoplay && key == ERR)
@@ -1029,6 +1073,7 @@ void	init_visualizer(t_vm *vm)
 	(void)vm;
 	initscr();
 	noecho();
+	curs_set(0);
 	keypad(stdscr, true);
 	if (has_colors())
 	{
