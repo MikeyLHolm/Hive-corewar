@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/17 13:53:49 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 14:02:40 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/17 16:14:46 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ char		get_argument_type_code(t_token *token)
 
 int			get_instruction_index(char *instruction)
 {
-	int 		i;
+	int			i;
 
 	i = 0;
 	while (i < OP_CODE_AMOUNT)

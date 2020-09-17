@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/17 14:00:46 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 14:01:46 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/17 16:16:03 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,9 @@ static char		*get_champion_comment(t_file *cur)
 **	Used in tokenize_file.
 */
 
-void		get_name_and_comment(t_asm *assm)
+void			get_name_and_comment(t_asm *assm)
 {
-	t_file 		*cur;
+	t_file		*cur;
 
 	cur = assm->file;
 	while (cur)
@@ -75,7 +75,8 @@ void		get_name_and_comment(t_asm *assm)
 				handle_error("Name already exists");
 			assm->name = get_champion_name(cur);
 		}
-		if (ft_strnequ(cur->line, COMMENT_CMD_STRING, ft_strlen(COMMENT_CMD_STRING)))
+		if (ft_strnequ(cur->line, COMMENT_CMD_STRING,
+			ft_strlen(COMMENT_CMD_STRING)))
 		{
 			if (assm->comment)
 				handle_error("Comment already exists");

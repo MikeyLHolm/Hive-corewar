@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/17 15:49:09 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/17 16:17:40 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 t_file		*new_file_link(char *line)
 {
-	t_file 		*new;
+	t_file		*new;
 
 	if (!(new = (t_file*)ft_memalloc(sizeof(t_file))))
 		handle_error("Malloc failed");
@@ -50,7 +50,7 @@ t_file		*read_file(char *filename)
 
 t_asm		*init_assm(void)
 {
-	t_asm 		*assm;
+	t_asm		*assm;
 
 	if (!(assm = (t_asm*)ft_memalloc(sizeof(t_asm))))
 		handle_error("Malloc failed");
@@ -70,7 +70,8 @@ void	convert_argument_label(t_asm *assm, char **arg, int arg_position)
 		if (ft_strequ(cur_token->label, ft_strchr(*arg, ':') + 1))
 		{
 			if ((*arg)[0] == '%')
-				converted_arg = ft_strjoinfree(ft_strdup("%"), ft_itoa(label_position - arg_position));
+				converted_arg = ft_strjoinfree(ft_strdup("%"),
+				ft_itoa(label_position - arg_position));
 			else
 				converted_arg = ft_itoa(label_position - arg_position);
 			free(*arg);

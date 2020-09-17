@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/17 12:41:59 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 14:05:53 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/17 16:10:36 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ void			get_name_and_comment(t_asm *assm);
 char			*get_output_filename(char *input_filename);
 
 void			get_token_arguments(t_asm *assm, t_token *token);
-char			*get_token_instruction(t_asm *assm);
+char			*get_token_instruction(t_asm *assm, int len);
 char			*get_token_label(char *line);
 int				get_token_size(t_token *token);
 
@@ -129,6 +129,7 @@ int				ft_isspace(int c);
 void			handle_error(char *message);
 int				line_contains_instruction(t_file *cur);
 void			remove_file_comments(t_file *file);
+int				skip_label(char *line);
 
 /*
 **	Tokenizing madness

@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/17 13:45:03 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 15:36:26 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/17 16:12:11 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,18 +68,12 @@ void			get_token_arguments(t_asm *assm, t_token *token)
 	free(args);
 }
 
-char			*get_token_instruction(t_asm *assm)
+char			*get_token_instruction(t_asm *assm, int len)
 {
 	int				i;
 	int				j;
-	int				len;
 
-	i = 0;
-	while (ft_strchr(LABEL_CHARS, assm->cur->line[i]))
-		i++;
-	if (assm->cur->line[i] == LABEL_CHAR)
-		i++;
-	len = 0;
+	i = skip_label(assm->cur->line);
 	while (!len)
 	{
 		while (assm->cur->line[i] && ft_isspace(assm->cur->line[i]))

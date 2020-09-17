@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/17 13:40:07 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 13:54:50 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/17 16:16:21 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ t_token		*new_token(t_asm *assm)
 	if (!(token = (t_token*)ft_memalloc(sizeof(t_token))))
 		handle_error("Malloc failed");
 	token->label = get_token_label(assm->cur->line);
-	token->instruction = get_token_instruction(assm);
+	token->instruction = get_token_instruction(assm, 0);
 	token->instruction_index = get_instruction_index(token->instruction);
 	get_token_arguments(assm, token);
 	token->argument_type_code = get_argument_type_code(token);

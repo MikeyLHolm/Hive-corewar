@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 14:51:13 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 12:43:47 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/17 16:16:50 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,6 @@ void		validate_instructions(t_file *cur, t_validator *vd)
 		{
 			not_empty = 1;
 			statement = get_statement(cur->line, vd->row);
-
 			if (statement)
 			{
 				validate_statement(statement, vd);

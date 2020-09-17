@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/17 12:55:39 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 13:48:20 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/17 16:14:22 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 **	Is char space/tab
 */
 
-int		ft_isspace(int c)
+int			ft_isspace(int c)
 {
 	return (c == ' ' || c == '\t');
 }
@@ -25,26 +25,27 @@ int		ft_isspace(int c)
 **	Prints error message before exiting
 */
 
-void	handle_error(char *message)
+void		handle_error(char *message)
 {
 	ft_printf("%s.\n", message);
 	exit(1);
 }
 
 /*
-**
+**	Boolean to check if line has an instruction
 */
 
 int			line_contains_instruction(t_file *cur)
 {
-	int 		i;
+	int			i;
 
 	i = 0;
 	if (!cur->line)
 		return (0);
 	while (cur->line[i])
 	{
-		if (cur->line[i] == '.' || cur->line[i] == COMMENT_CHAR || cur->line[i] == ALT_COMMENT_CHAR)
+		if (cur->line[i] == '.' || cur->line[i] == COMMENT_CHAR ||
+			cur->line[i] == ALT_COMMENT_CHAR)
 			return (0);
 		if (!ft_isspace(cur->line[i++]))
 			return (1);
@@ -56,9 +57,9 @@ int			line_contains_instruction(t_file *cur)
 **	Inserts null to the comment position
 */
 
-void	remove_file_comments(t_file *file)
+void		remove_file_comments(t_file *file)
 {
-	t_file *cur;
+	t_file		*cur;
 
 	cur = file;
 	while (cur)
@@ -72,4 +73,16 @@ void	remove_file_comments(t_file *file)
 		}
 		cur = cur->next;
 	}
+}
+
+int			skip_label(char *line)
+{
+	int			i;
+
+	i = 0;
+	while (ft_strchr(LABEL_CHARS, line[i]))
+		i++;
+	if (line[i] == LABEL_CHAR)
+		i++;
+	return (i);
 }
