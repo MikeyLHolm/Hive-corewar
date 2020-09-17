@@ -312,11 +312,13 @@ void	disable_dead_carriages(t_vm *vm) //memory is not freed
 {
 	t_carriage *cur_carriage;
 	t_carriage *prev_carriage;
+	t_carriage *next_carriage;
 
 	cur_carriage = vm->carriages;
 	prev_carriage = NULL;
 	while (cur_carriage)
 	{
+		next_carriage = cur_carriage->next;
 		if (cur_carriage->last_live_cycle < vm->cycles - vm->cycles_to_die)
 		{
 			cur_carriage->alive = 0;
@@ -324,11 +326,12 @@ void	disable_dead_carriages(t_vm *vm) //memory is not freed
 				prev_carriage->next = cur_carriage->next;
 			else
 				vm->carriages = cur_carriage->next;
+			free(cur_carriage);
 		}
 		else
 			prev_carriage = cur_carriage;
 		//}
-		cur_carriage = cur_carriage->next;
+		cur_carriage = next_carriage;
 	}
 }
 
