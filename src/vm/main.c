@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 10:54:22 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/17 11:03:21 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 void	handle_error(char *message)
 {
 	ft_printf("%s.\n", message);
+	system("leaks corewar");
 	exit(1);
 }
 
