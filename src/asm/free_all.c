@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/17 10:27:42 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 10:51:06 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/17 12:29:37 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,8 @@ void		free_file(t_file *head)
 	}
 }
 
-void		free_validator(t_file *head, t_validator *vd)
+void		free_validator(t_validator *vd)
 {
-	(void)head;
 	free(vd->comment);
 	free(vd->name);
 	free_label(vd->label);
@@ -53,9 +52,7 @@ void		free_validator(t_file *head, t_validator *vd)
 
 void		free_assm(t_asm *assm)
 {
-	//free(assm->comment);
-	//free(assm->name);
+	free(assm->comment);
+	free(assm->name);
 	free_file(assm->file);
-
-
 }

@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 14:51:13 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 10:52:20 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/17 12:43:47 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,16 +101,12 @@ void		validate_args(char *line, char *statement, t_validator *vd)
 
 	trailing_comma(line, vd->row);
 	i = get_first_arg_index(line, statement);
-	ft_printf("whole line [%s]\n", line);
+	//ft_printf("whole line [%s]\n", line);
 	args = ft_strsplit(&line[i], SEPARATOR_CHAR);
 	i = 0;
 	while (args[i])
-	{
-		ft_printf("Arg nbr [%d] is [%s]\n", i, args[i]);
 		i++;
-	}
 	right_n_args(statement, i--, vd->row);
-	args[i] = remove_comment(args[i], vd->row);
 	while (i >= 0 && args[i])
 	{
 		validate_arg(ft_strtrim(args[i]), statement, vd, i);
@@ -138,6 +134,7 @@ void		validate_instructions(t_file *cur, t_validator *vd)
 		{
 			not_empty = 1;
 			statement = get_statement(cur->line, vd->row);
+
 			if (statement)
 			{
 				validate_statement(statement, vd);

@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 14:48:17 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/16 16:17:39 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/17 12:48:32 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,19 +35,25 @@ void				validate_label(char *label, int row, t_label *head)
 	int			i;
 	t_label		*cur;
 
-	ft_printf("LABEL [%s]\n", label);
+	//ft_printf("LABEL [%s]\n", label);
 	cur = head;
 	while (cur)
 	{
 		if (ft_strequ(label, cur->label_name))
+		{
+			free(label);
 			return ;
+		}
 		cur = cur->next;
 	}
 	i = -1;
 	while (++i < OP_CODE_AMOUNT)
 	{
 		if (ft_strequ(label, g_op_tab[i].op_name))
+		{
+			free(label);
 			return ;
+		}
 	}
 	validation_error("Not a real label/statement", row);
 }

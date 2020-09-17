@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/17 10:52:32 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/17 12:25:23 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -664,14 +664,8 @@ int		main(int argc, char **argv)
 	convert_labels(assm);
 	//print_tokens(assm->token);
 	//print_file(assm->file);
-	//int byte;
-	//byte = -19;
-	//ft_printf("BYTE: %hx\n", byte);
-	//ft_printf("%02hx\n", 15);
 	handle_writing(assm, argv[1]);
-	system("leaks asm");
 	free_assm(assm);
-	system("leaks asm");
 	exit(0);
 	return (0);
 }

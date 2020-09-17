@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoilong.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/17 12:32:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/01/14 17:26:01 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/17 12:23:29 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-long	ft_atoilong(const char *str)
+long	ft_atoilong(char *str)
 {
 	long	result;
 	int		i;
@@ -34,9 +34,7 @@ long	ft_atoilong(const char *str)
 	while (ft_isdigit(str[i]))
 		i++;
 	while (i > j && ft_isdigit(str[j]))
-	{
-		result = result * 10 + str[j] - '0';
-		j++;
-	}
+		result = result * 10 + str[j++] - '0';
+	free(str);
 	return (result * flag);
 }
