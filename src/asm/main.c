@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/17 14:03:01 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/17 15:49:09 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,7 @@ int		main(int argc, char **argv)
 	convert_labels(assm);
 	handle_writing(assm, argv[1]);
 	free_assm(assm);
+	//system("leaks asm");
 	exit(0);
 	return (0);
 }

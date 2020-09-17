@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/17 10:27:42 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 12:50:47 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/17 15:48:32 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,25 @@ void		free_file(t_file *head)
 	}
 }
 
+void		free_tokens(t_asm *assm)
+{
+	t_token		*cur;
+	t_token		*tmp;
+
+	cur = assm->token;
+	while (cur)
+	{
+		tmp = cur;
+		cur = cur->next;
+		free(tmp->arg1);
+		free(tmp->arg2);
+		free(tmp->arg3);
+		free(tmp->instruction);
+		free(tmp->label);
+		free(tmp);
+	}
+}
+
 void		free_validator(t_validator *vd)
 {
 	free(vd->comment);
@@ -55,4 +74,7 @@ void		free_assm(t_asm *assm)
 	free(assm->comment);
 	free(assm->name);
 	free_file(assm->file);
+	// Free tokens too? (label, instruction)
+	free_tokens(assm);
+	free(assm);
 }
