@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 11:03:21 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/17 12:50:03 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -585,7 +585,7 @@ void	load_player_colors(t_vm *vm, int *cursor_mem)
 	offset = MEM_SIZE / vm->player_amount;
 	while (i < vm->player_amount)
 	{
-		ft_memset(&cursor_mem[i++ * offset], vm->player_amount - cur_player->id + 5, cur_player->size * 4);
+		ft_memset(&cursor_mem[i++ * offset], cur_player->id + 4, cur_player->size * 4);
 		cur_player = cur_player->next;
 	}
 }
