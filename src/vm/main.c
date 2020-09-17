@@ -1073,5 +1073,6 @@ int			main(int argc, char **argv)
 	endwin();
 	if (vm->flags & LEAKS)
 		system("leaks corewar");
+	exit(0);
 	return (0);
 }
