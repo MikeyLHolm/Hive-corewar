@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 10:42:18 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/17 10:54:22 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -801,6 +801,7 @@ void	print_visualizer_info(t_vm *vm, t_state *cur_state)
 	printw("STEP SIZE: %d\n\n", vm->controls.step_size);
 	str = ft_sprintf("CARRIAGES AMOUNT: %d", cur_state->carriage_amount);
 	printw("%-30s", str);
+	free(str);
 	print_player_last_alive(vm, vm->player_last_alive);
 	print_player_lives(vm);
 }
