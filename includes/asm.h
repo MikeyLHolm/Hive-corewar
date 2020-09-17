@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/17 12:41:59 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 16:10:36 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/17 16:24:27 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,6 @@ typedef struct		s_asm
 	int				champion_size;
 }					t_asm;
 
-
-
-
-
 /*
 **	Validation and error handling.
 */
@@ -77,7 +73,6 @@ typedef struct		s_asm
 void			handle_error(char *message);
 t_file			*increment_validator(t_file *cur, t_validator *vd);
 void			validation_error(char *message, int row);
-void			validator(t_file *file);
 void			validate_arg(char *line, char *statement, t_validator *vd, int arg_i);
 t_file			*validate_header(t_file *cur, t_validator *vd);
 void			validate_instructions(t_file *cur, t_validator *vd);
@@ -122,6 +117,15 @@ void			print_tokens(t_token *token);
 void			print_token_info(t_token *token);
 
 /*
+**	Prototypes for main
+*/
+
+void			convert_labels(t_asm *assm);
+t_file			*read_file(char *filename);
+void			tokenize_file(t_asm *assm);
+void			validator(t_file *file);
+
+/*
 **	Utils
 */
 
@@ -130,12 +134,6 @@ void			handle_error(char *message);
 int				line_contains_instruction(t_file *cur);
 void			remove_file_comments(t_file *file);
 int				skip_label(char *line);
-
-/*
-**	Tokenizing madness
-*/
-
-void			tokenize_file(t_asm *assm);
 
 /*
 **	Writers

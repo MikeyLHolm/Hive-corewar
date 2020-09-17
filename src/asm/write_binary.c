@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/17 12:58:57 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 13:01:10 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/17 16:31:22 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	write_comment(t_asm *assm, int fd)
 	write(fd, "\0\0\0\0", 4);
 }
 
-void	write_exec_code_size_placeholder(t_asm *assm, int fd)
+void	write_exec_code_size(t_asm *assm, int fd)
 {
 	write(fd, &((unsigned char*)&assm->champion_size)[3], 1);
 	write(fd, &((unsigned char*)&assm->champion_size)[2], 1);
@@ -173,7 +173,7 @@ void	handle_writing(t_asm *assm, char *input_filename)
 	free(output_filename);
 	write_header(fd);
 	write_name(assm, fd);
-	write_exec_code_size_placeholder(assm, fd);
+	write_exec_code_size(assm, fd);
 	write_comment(assm, fd);
 	write_instructions(assm, fd);
 }

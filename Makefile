@@ -6,18 +6,19 @@
 #    By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/04/10 19:26:38 by sadawi            #+#    #+#              #
-#    Updated: 2020/09/17 14:06:49 by mlindhol         ###   ########.fr        #
+#    Updated: 2020/09/17 16:31:53 by mlindhol         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME_ASM = asm
 NAME_CW = corewar
 
-CFILES_ASM = main.c free_all.c print_utils.c utils.c write_binary.c	\
-			get.c get_champion.c get_token.c tokenizer.c \
+CFILES_ASM = main.c convert_labels.c free_all.c \
+			get_rest.c get_champion.c get_token.c \
+			print_utils.c read_file.c tokenizer.c utils.c \
 			validator.c validator_args.c validator_args_utils.c \
 			validator_header.c validator_instructions.c validator_label.c \
-			validator_utils.c
+			validator_utils.c write_binary.c
 
 SRCS_ASM = $(addprefix src/asm/, $(CFILES_ASM))
 OBJS_ASM = $(addprefix objs/, $(notdir $(SRCS_ASM:.c=.o)))

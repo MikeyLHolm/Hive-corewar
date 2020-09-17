@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/17 13:45:03 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 16:12:11 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/17 16:29:39 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,9 +96,9 @@ char			*get_token_instruction(t_asm *assm, int len)
 	return (NULL);
 }
 
-char		*get_token_label(char *line)
+char			*get_token_label(char *line)
 {
-	int			i;
+	int				i;
 
 	i = 0;
 	while (line[i] && line[i] != LABEL_CHAR)
