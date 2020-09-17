@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/16 17:36:28 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/17 10:42:18 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1065,7 +1065,7 @@ int			main(int argc, char **argv)
 	if (vm->flags & ADV_VISUALIZER)
 		visualize_states(vm);
 	endwin();
-	// if (vm->flags & LEAKS)
-	//system("leaks corewar");
+	if (vm->flags & LEAKS)
+		system("leaks corewar");
 	return (0);
 }
