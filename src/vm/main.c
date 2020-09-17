@@ -773,7 +773,7 @@ void	print_player_last_alive(t_vm *vm, int player_num)
 			break ;
 		cur = cur->next;
 	}
-	printw("PLAYER WITH LAST LIVE: %d (%s)\t\t", player_num, cur->name);
+	printw("PLAYER WITH LAST LIVE: %d (%s)\n\n", player_num, cur->name);
 }
 
 void	print_player_lives(t_vm *vm)
@@ -783,7 +783,7 @@ void	print_player_lives(t_vm *vm)
 	cur = vm->players;
 	while (cur)
 	{
-		printw("PLAYER %d (%s) last live: %d\n\n", cur->id, cur->name, cur->last_live_cycle);
+		printw("PLAYER %d (%s) last live: %d\t\t", cur->id, cur->name, cur->last_live_cycle);
 		cur = cur->next;
 	}
 }
