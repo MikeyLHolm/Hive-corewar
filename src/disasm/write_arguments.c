@@ -6,7 +6,7 @@
 /*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/10 15:47:50 by elindber          #+#    #+#             */
-/*   Updated: 2020/09/10 15:49:07 by elindber         ###   ########.fr       */
+/*   Updated: 2020/09/16 12:47:23 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,6 @@ void	write_arguments(int input, int output, t_command *cmnd)
 {
 	int				i;
 	int				size;
-	char			*str;
 
 	i = 0;
 	while (i < 3)

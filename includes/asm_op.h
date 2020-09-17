@@ -6,7 +6,7 @@
 /*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/25 14:29:20 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/11 14:28:35 by elindber         ###   ########.fr       */
+/*   Updated: 2020/09/16 12:25:20 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define ASM_OP_H
 
 # include "op.h"
+# include "limits.h"
 
 # define LIVE 1
 # define LD 2

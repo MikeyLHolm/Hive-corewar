@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validator_args_utils.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 12:42:42 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/16 17:23:08 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/17 12:49:34 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
