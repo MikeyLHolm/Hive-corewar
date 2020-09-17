@@ -6,7 +6,7 @@
 /*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/10 15:37:52 by elindber          #+#    #+#             */
-/*   Updated: 2020/09/16 16:43:51 by elindber         ###   ########.fr       */
+/*   Updated: 2020/09/17 15:23:47 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,10 @@ int		validate_file(int input, t_command *cmnd)
 	comment_len = validate_comment(input);
 	while (read(input, &byte, 1))
 		i++;
-	cmnd->champion_size = i - 4;
+	cmnd->champion_size = i - 1;
 	close(input);
 	return (name_len <= PROG_NAME_LENGTH
-	&& comment_len <= COMMENT_LENGTH && i - 4 <= CHAMP_MAX_SIZE);
+	&& comment_len <= COMMENT_LENGTH && i - 1 <= CHAMP_MAX_SIZE);
 }
 
 /*
@@ -103,6 +103,6 @@ int		check_header_and_file_name(int fd, char *name)
 	value += byte * 256;
 	read(fd, &byte, 1);
 	value += byte;
-	cmp = ft_strchr(name, '.');
-	return value == COREWAR_EXEC_MAGIC && (ft_strequ(cmp, ".cor"));
+	cmp = ft_strrchr(name, '.');
+	return (value == COREWAR_EXEC_MAGIC && (ft_strequ(cmp, ".cor")));
 }

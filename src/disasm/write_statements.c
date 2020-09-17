@@ -6,7 +6,7 @@
 /*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/10 15:37:49 by elindber          #+#    #+#             */
-/*   Updated: 2020/09/16 14:54:07 by elindber         ###   ########.fr       */
+/*   Updated: 2020/09/17 15:32:03 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	write_statement(int input, int output, t_command *cmnd)
 	}
 	cmnd->statement = tab;
 	tab--;
-	if (tab >= 0 && tab <= 15)
+	if (tab >= 0 && tab < OP_CODE_AMOUNT)
 	{
 		write(output, g_op_tab[tab].op_name, ft_strlen(g_op_tab[tab].op_name));
 		write(output, " ", 1);
@@ -62,9 +62,6 @@ void	write_statement(int input, int output, t_command *cmnd)
 
 void	write_instructions(int input, int output, t_command *cmnd)
 {
-	int				i;
-
-	i = 0;
 	cmnd->bytes_read = 0;
 	while (cmnd->bytes_read < cmnd->champion_size)
 	{
@@ -80,7 +77,6 @@ void	write_instructions(int input, int output, t_command *cmnd)
 		}
 		write_arguments(input, output, cmnd);
 		write(output, "\n", 1);
-		i++;
 	}
 	close(output);
 	close(input);

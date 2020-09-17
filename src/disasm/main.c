@@ -6,7 +6,7 @@
 /*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/07 15:15:41 by elindber          #+#    #+#             */
-/*   Updated: 2020/09/17 12:22:45 by elindber         ###   ########.fr       */
+/*   Updated: 2020/09/17 15:18:13 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ int		main(int ac, char **av)
 		|| !(validate_file(input, cmnd)))
 			handle_error("Invalid file.");
 		input = open(av[i], O_RDONLY);
-		*ft_strchr(av[i], '.') = '\0';
+		*ft_strrchr(av[i], '.') = '\0';
 		name = ft_strjoin(av[i], ".s");
 		output = open(name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		free(name);

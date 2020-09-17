@@ -6,7 +6,7 @@
 /*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 14:51:13 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 12:49:01 by elindber         ###   ########.fr       */
+/*   Updated: 2020/09/17 15:06:42 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,5 +149,4 @@ void		validate_instructions(t_file *cur, t_validator *vd)
 	}
 	if (not_empty == 0)
 		validation_error("No instructions!", vd->row);
-	system("leaks asm");
 }
