@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 12:13:13 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 11:02:22 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/18 14:16:13 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,16 @@ int		count_players(t_vm *vm)
 		cur = cur->next;
 	}
 	return (i);
+}
+
+void	check_flags_valid(t_vm *vm)
+{
+	if (vm->flags & VISUALIZER && vm->flags & ADV_VISUALIZER)
+		handle_error("Only one visualizer allowed at once");
+	if (vm->flags & DUMP && vm->flags & (VISUALIZER | ADV_VISUALIZER))
+		handle_error("Memory dumping not possible with visualizer");
+	if (vm->flags & START && (!(vm->flags & ADV_VISUALIZER)))
+		handle_error("Start flag only valid with advanced visualizer");
 }
 
 /*
@@ -108,4 +118,5 @@ void		parse_input(t_vm *vm, int argc, char **argv)
 		handle_error(ft_sprintf("Too many players, maximum of %d players allowed", MAX_PLAYERS));
 	sort_players(vm);
 	vm->player_last_alive = vm->player_amount;
+	check_flags_valid(vm);
 }
