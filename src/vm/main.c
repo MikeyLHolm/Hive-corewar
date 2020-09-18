@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/18 15:31:01 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/18 18:57:23 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -743,7 +743,8 @@ void	print_player_last_alive(t_vm *vm, int player_num)
 {
 	t_player *cur;
 
-	print_if_valid(vm, ft_sprintf("\n"));
+	move_if_valid(vm, 18, 64 * 3 + 18);
+	print_if_valid(vm, ft_sprintf("PLAYER WITH LAST LIVE"));
 	cur = vm->players;
 	while (cur)
 	{
@@ -751,24 +752,31 @@ void	print_player_last_alive(t_vm *vm, int player_num)
 			break ;
 		cur = cur->next;
 	}
-	move_if_valid(vm, 77, 80);
+	move_if_valid(vm, 20, 64 * 3 + 20);
 	attron(COLOR_PAIR((unsigned char)cur->id + 4));
-	print_if_valid(vm, ft_sprintf("PLAYER WITH LAST LIVE: %d (%s)\n\n", player_num, cur->name));
+	print_if_valid(vm, ft_sprintf("PLAYER %d (%s)", player_num, cur->name));
 	attroff(COLOR_PAIR((unsigned char)cur->id + 4));
 }
 
 void	print_player_lives(t_vm *vm)
 {
-	t_player *cur;
+	t_player	*cur;
+	int			offset;
 
 	cur = vm->players;
-	move_if_valid(vm, 79, 4);
+	move_if_valid(vm, 25, 64 * 3 + 21);
+	print_if_valid(vm, ft_sprintf("LAST LIVE CYCLES"));
+	offset = 27;
 	while (cur)
 	{
+		move_if_valid(vm, offset, 64 * 3 + 7);
 		attron(COLOR_PAIR((unsigned char)cur->id + 4));
-		print_if_valid(vm, ft_sprintf("PLAYER %d (%s) last live: %d\t\t", cur->id, cur->name, cur->last_live_cycle));
+		print_if_valid(vm, ft_sprintf("PLAYER %d (%s):", cur->id, cur->name));
 		attroff(COLOR_PAIR((unsigned char)cur->id + 4));
+		move_if_valid(vm, offset, 64 * 3 + 47);
+		print_if_valid(vm, ft_sprintf("%d", cur->last_live_cycle));
 		cur = cur->next;
+		offset += 2;
 	}
 }
 
@@ -790,19 +798,22 @@ void	print_border(t_vm *vm)
 
 void	print_visualizer_info(t_vm *vm)
 {
-	char		*str;
 	int			i;
 	t_carriage *cur;
 
-	move_if_valid(vm, 69, 4);
-	str = ft_sprintf("CYCLE: %d", vm->cycles);
-	print_if_valid(vm, ft_sprintf("%-64s", str));
-	free(str);
-	print_if_valid(vm, ft_sprintf("AUTOPLAY: %s", vm->controls.autoplay ? "ON" : "OFF"));
-	str = ft_sprintf("CYCLES_TO_DIE: %d", vm->cycles_to_die);
+	move_if_valid(vm, 2, 64 * 3 + 20);
+	print_if_valid(vm, ft_sprintf("BATTLE INFORMATION"));
+	move_if_valid(vm, 6, 64 * 3 + 7);
+	print_if_valid(vm, ft_sprintf("CYCLE:"));
+	move_if_valid(vm, 6, 64 * 3 + 45);
+	print_if_valid(vm, ft_sprintf("%d", vm->cycles));
+	// move_if_valid(vm, 6, 64 * 3 + 20);
+	// print_if_valid(vm, ft_sprintf("AUTOPLAY: %s", vm->controls.autoplay ? "ON" : "OFF"));
+	move_if_valid(vm, 8, 64 * 3 + 7);
+	print_if_valid(vm, ft_sprintf("CYCLES_TO_DIE:"));
+	move_if_valid(vm, 8, 64 * 3 + 45);
+	print_if_valid(vm, ft_sprintf("%d", vm->cycles_to_die));
 	move_if_valid(vm, 71, 4);
-	print_if_valid(vm, ft_sprintf("%s", str));
-	free(str);
 	i = 0;
 	cur = vm->carriages;
 	while (cur)
@@ -810,12 +821,10 @@ void	print_visualizer_info(t_vm *vm)
 		i++;
 		cur = cur->next;
 	}
-	str = ft_sprintf("CARRIAGES AMOUNT: %d", i);
-	move_if_valid(vm, 73, 4);
-	print_if_valid(vm, ft_sprintf("%s\n", str));
-	free(str);
-	//print_border(vm);
-	print_if_valid(vm, ft_sprintf("\n\n"));
+	move_if_valid(vm, 10, 64 * 3 + 7);
+	print_if_valid(vm, ft_sprintf("CARRIAGES AMOUNT:"));
+	move_if_valid(vm, 10, 64 * 3 + 45);
+	print_if_valid(vm, ft_sprintf("%d", i));
 	print_player_last_alive(vm, vm->player_last_alive);
 	print_player_lives(vm);
 }
@@ -824,16 +833,24 @@ void	print_controls(t_vm *vm)
 {
 	(void)vm;
 
-	move_if_valid(vm, 69, 140);
-	print_if_valid(vm, ft_sprintf("Controls:"));
-	move_if_valid(vm, 70, 140);
-	print_if_valid(vm, ft_sprintf("Space - toggle autoplay"));
-	move_if_valid(vm, 71, 140);
-	print_if_valid(vm, ft_sprintf("Left/Right - Move backwards/forwards"));
-	move_if_valid(vm, 72, 140);
-	print_if_valid(vm, ft_sprintf("Up/Down - Increace/Decrease step size"));
-	move_if_valid(vm, 73, 140);
-	print_if_valid(vm, ft_sprintf("Q - Quit"));
+	move_if_valid(vm, 42, 64 * 3 + 24);
+	print_if_valid(vm, ft_sprintf("CONTROLS:"));
+	move_if_valid(vm, 46, 64 * 3 + 7);
+	print_if_valid(vm, ft_sprintf("Space:"));
+	move_if_valid(vm, 46, 64 * 3 + 35);
+	print_if_valid(vm, ft_sprintf("Toggle autoplay"));
+	move_if_valid(vm, 48, 64 * 3 + 7);
+	print_if_valid(vm, ft_sprintf("Left/Right:"));
+	move_if_valid(vm, 48, 64 * 3 + 27);
+	print_if_valid(vm, ft_sprintf("Move backwards/forwards"));
+	move_if_valid(vm, 50, 64 * 3 + 7);
+	print_if_valid(vm, ft_sprintf("Up/Down:"));
+	move_if_valid(vm, 50, 64 * 3 + 23);
+	print_if_valid(vm, ft_sprintf("Increace/Decrease step size"));
+	move_if_valid(vm, 52, 64 * 3 + 7);
+	print_if_valid(vm, ft_sprintf("Q:"));
+	move_if_valid(vm, 52, 64 * 3 + 46);
+	print_if_valid(vm, ft_sprintf("Quit"));
 }
 
 void	draw_borders(t_vm *vm)
@@ -845,7 +862,7 @@ void	draw_borders(t_vm *vm)
 	attron(COLOR_PAIR(9));
 	move_if_valid(vm, 0, 0);
 	i = 0;
-	size = 64 * 3 + 2;
+	size = 64 * 3 + 2 + 50;
 	while (i < size + 1)
 	{
 		print_if_valid(vm, ft_sprintf("."));
@@ -854,6 +871,20 @@ void	draw_borders(t_vm *vm)
 	move_if_valid(vm, 64 + 3, 0);
 	i = 0;
 	while (i < size + 1)
+	{
+		print_if_valid(vm, ft_sprintf("."));
+		i++;
+	}
+	move_if_valid(vm, 40, size - 49);
+	i = 0;
+	while (i < 50)
+	{
+		print_if_valid(vm, ft_sprintf("."));
+		i++;
+	}
+	move_if_valid(vm, 60, size - 49);
+	i = 0;
+	while (i < 50)
 	{
 		print_if_valid(vm, ft_sprintf("."));
 		i++;
@@ -868,6 +899,12 @@ void	draw_borders(t_vm *vm)
 	while (i < 68)
 	{
 		move_if_valid(vm, i++, size + 1);
+		print_if_valid(vm, ft_sprintf(".."));
+	}
+	i = 0;
+	while (i < 68)
+	{
+		move_if_valid(vm, i++, size - 49);
 		print_if_valid(vm, ft_sprintf(".."));
 	}
 	attroff((COLOR_PAIR(9)));
@@ -910,6 +947,25 @@ void	draw_gui_boxes(t_vm *vm)
 	attroff((COLOR_PAIR(9)));
 }
 
+void	print_footer(t_vm *vm)
+{
+	move_if_valid(vm, 62, 64 * 3 + 25);
+	print_if_valid(vm, ft_sprintf("Made by: "));
+	move_if_valid(vm, 65, 64 * 3 + 15);
+	attron(COLOR_PAIR(5));
+	print_if_valid(vm, ft_sprintf("Elindber"));
+	attroff((COLOR_PAIR(5)));
+	print_if_valid(vm, ft_sprintf(", "));
+	attron(COLOR_PAIR(6));
+	print_if_valid(vm, ft_sprintf("Mlindhol "));
+	attroff((COLOR_PAIR(6)));
+	print_if_valid(vm, ft_sprintf("and "));
+	attron(COLOR_PAIR(7));
+	print_if_valid(vm, ft_sprintf("Sadawi"));
+	attroff((COLOR_PAIR(7)));
+	print_if_valid(vm, ft_sprintf("."));
+}
+
 void	visualize(t_vm *vm)
 {
 	int	*cursor_mem;
@@ -946,6 +1002,8 @@ void	visualize(t_vm *vm)
 	move_if_valid(vm, 68, 0);
 	print_visualizer_info(vm);
 	print_controls(vm);
+	print_footer(vm);
+	//draw_gui_boxes(vm);
 	key = getch();
 	if (key == ' ')
 	{
