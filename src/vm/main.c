@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/18 14:53:25 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/18 15:31:01 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -751,8 +751,9 @@ void	print_player_last_alive(t_vm *vm, int player_num)
 			break ;
 		cur = cur->next;
 	}
+	move_if_valid(vm, 77, 80);
 	attron(COLOR_PAIR((unsigned char)cur->id + 4));
-	print_if_valid(vm, ft_sprintf("PLAYER WITH LAST LIVE: %d (%s)\n\n\n\n", player_num, cur->name));
+	print_if_valid(vm, ft_sprintf("PLAYER WITH LAST LIVE: %d (%s)\n\n", player_num, cur->name));
 	attroff(COLOR_PAIR((unsigned char)cur->id + 4));
 }
 
@@ -761,6 +762,7 @@ void	print_player_lives(t_vm *vm)
 	t_player *cur;
 
 	cur = vm->players;
+	move_if_valid(vm, 79, 4);
 	while (cur)
 	{
 		attron(COLOR_PAIR((unsigned char)cur->id + 4));
@@ -792,13 +794,14 @@ void	print_visualizer_info(t_vm *vm)
 	int			i;
 	t_carriage *cur;
 
-	print_if_valid(vm, ft_sprintf("\n"));
+	move_if_valid(vm, 69, 4);
 	str = ft_sprintf("CYCLE: %d", vm->cycles);
 	print_if_valid(vm, ft_sprintf("%-64s", str));
 	free(str);
-	print_if_valid(vm, ft_sprintf("AUTOPLAY: %s\n\n", vm->controls.autoplay ? "ON" : "OFF"));
+	print_if_valid(vm, ft_sprintf("AUTOPLAY: %s", vm->controls.autoplay ? "ON" : "OFF"));
 	str = ft_sprintf("CYCLES_TO_DIE: %d", vm->cycles_to_die);
-	print_if_valid(vm, ft_sprintf("%s\n\n", str));
+	move_if_valid(vm, 71, 4);
+	print_if_valid(vm, ft_sprintf("%s", str));
 	free(str);
 	i = 0;
 	cur = vm->carriages;
@@ -808,9 +811,11 @@ void	print_visualizer_info(t_vm *vm)
 		cur = cur->next;
 	}
 	str = ft_sprintf("CARRIAGES AMOUNT: %d", i);
+	move_if_valid(vm, 73, 4);
 	print_if_valid(vm, ft_sprintf("%s\n", str));
 	free(str);
-	print_border(vm);
+	//print_border(vm);
+	print_if_valid(vm, ft_sprintf("\n\n"));
 	print_player_last_alive(vm, vm->player_last_alive);
 	print_player_lives(vm);
 }
@@ -865,6 +870,44 @@ void	draw_borders(t_vm *vm)
 		move_if_valid(vm, i++, size + 1);
 		print_if_valid(vm, ft_sprintf(".."));
 	}
+	attroff((COLOR_PAIR(9)));
+}
+
+void	draw_gui_boxes(t_vm *vm)
+{
+	int i;
+	int size;
+
+	(void)vm;
+	attron(COLOR_PAIR(9));
+	move_if_valid(vm, 75, 0);
+	i = 0;
+	size = 64 * 3 + 2;
+	while (i < size + 1)
+	{
+		print_if_valid(vm, ft_sprintf("."));
+		i++;
+	}
+	move_if_valid(vm, 81, 0);
+	i = 0;
+	while (i < size + 1)
+	{
+		print_if_valid(vm, ft_sprintf("."));
+		i++;
+	}
+	i = 68;
+	while (i < 82)
+	{
+		move_if_valid(vm, i++, 0);
+		print_if_valid(vm, ft_sprintf(".."));
+	}
+	i = 68;
+	while (i < 82)
+	{
+		move_if_valid(vm, i++, size + 1);
+		print_if_valid(vm, ft_sprintf(".."));
+	}
+	attroff((COLOR_PAIR(9)));
 }
 
 void	visualize(t_vm *vm)
@@ -921,19 +964,20 @@ void	print_visualizer_state_info(t_vm *vm, t_state *cur_state)
 {
 	char *str;
 
-	print_if_valid(vm, ft_sprintf("\n"));
+	move_if_valid(vm, 69, 4);
 	str = ft_sprintf("CYCLE: %d", cur_state->cycle);
 	print_if_valid(vm, ft_sprintf("%-64s", str));
 	free(str);
-	print_if_valid(vm, ft_sprintf("AUTOPLAY: %s\n\n", vm->controls.autoplay ? "ON" : "OFF"));
-	str = ft_sprintf("CYCLES_TO_DIE: %d", cur_state->cycles_to_die);
-	print_if_valid(vm, ft_sprintf("%s\n\n", str));
+	print_if_valid(vm, ft_sprintf("AUTOPLAY: %s", vm->controls.autoplay ? "ON" : "OFF"));
+	str = ft_sprintf("CYCLES_TO_DIE: %-49d", cur_state->cycles_to_die);
+	move_if_valid(vm, 71, 4);
+	print_if_valid(vm, ft_sprintf("%s", str));
 	free(str);
-	print_if_valid(vm, ft_sprintf("STEP SIZE: %d\n\n", vm->controls.step_size));
+	print_if_valid(vm, ft_sprintf("STEP SIZE: %d", vm->controls.step_size));
+	move_if_valid(vm, 73, 4);
 	str = ft_sprintf("CARRIAGES AMOUNT: %d", cur_state->carriage_amount);
-	print_if_valid(vm, ft_sprintf("%s\n", str));
+	print_if_valid(vm, ft_sprintf("%s", str));
 	free(str);
-	print_border(vm);
 	print_player_last_alive(vm, vm->player_last_alive);
 	print_player_lives(vm);
 }
@@ -982,9 +1026,9 @@ void	visualize_states(t_vm *vm)
 				move_if_valid(vm, row++, 3);//print_if_valid(vm, ft_sprintf("\n");
 		}
 		move_if_valid(vm, 68, 0);
-		print_border(vm);
 		print_visualizer_state_info(vm, cur_state);
 		print_controls(vm);
+		draw_gui_boxes(vm);
 		refresh();
 		key = getch();
 		if (vm->controls.autoplay && key == ERR)
