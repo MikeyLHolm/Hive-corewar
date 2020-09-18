@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/18 18:57:23 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/18 19:12:15 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -972,17 +972,19 @@ void	visualize(t_vm *vm)
 	int	key;
 	int i;
 
-	erase();
-
-	i = 0;
-	cursor_mem = vm->cursor_mem;
-	draw_borders(vm);
-	int row;
-	row = 2;
-	move_if_valid(vm, row++, 3);
-	while (i < MEM_SIZE)
+	while (1)
 	{
-		if (cursor_mem[i])
+		erase();
+
+		i = 0;
+		cursor_mem = vm->cursor_mem;
+		draw_borders(vm);
+		int row;
+		row = 2;
+		move_if_valid(vm, row++, 3);
+		while (i < MEM_SIZE)
+		{
+			if (cursor_mem[i])
 				attron(COLOR_PAIR((unsigned char)ft_abs(vm->color_mem[i] ? vm->color_mem[i] - 4 : 9)));
 			else if (vm->color_mem[i])
 			{
@@ -993,29 +995,35 @@ void	visualize(t_vm *vm)
 				attroff(COLOR_PAIR((unsigned char)ft_abs(vm->color_mem[i] - 4)));
 			else
 				attroff(COLOR_PAIR((unsigned char)ft_abs(vm->color_mem[i] + (vm->changed_mem[i] ? 5 : 0))));
-		print_if_valid(vm, ft_sprintf(" "));
-		i++;
-		if (!(i % 64))
-			move_if_valid(vm, row++, 3);//print_if_valid(vm, ft_sprintf("\n");
+			print_if_valid(vm, ft_sprintf(" "));
+			i++;
+			if (!(i % 64))
+				move_if_valid(vm, row++, 3); //print_if_valid(vm, ft_sprintf("\n");
+		}
+		//print_border(vm);
+		move_if_valid(vm, 68, 0);
+		print_visualizer_info(vm);
+		print_controls(vm);
+		print_footer(vm);
+		//draw_gui_boxes(vm);
+		key = getch();
+		if (key == ' ')
+		{
+			vm->controls.autoplay = !vm->controls.autoplay;
+			timeout(vm->controls.autoplay ? 1 : -1);
+			break;
+		}
+		if (key == 'q')
+		{
+			endwin();
+			exit(0);
+		}
+		if (key == KEY_RIGHT)
+			break;
+		if (vm->controls.autoplay)
+			break;
+		refresh();
 	}
-	//print_border(vm);
-	move_if_valid(vm, 68, 0);
-	print_visualizer_info(vm);
-	print_controls(vm);
-	print_footer(vm);
-	//draw_gui_boxes(vm);
-	key = getch();
-	if (key == ' ')
-	{
-		vm->controls.autoplay = !vm->controls.autoplay;
-		timeout(vm->controls.autoplay ? 1 : -1);
-	}
-	if (key == 'q')
-	{
-		endwin();
-		exit(0);
-	}
-	refresh();
 }
 
 void	print_visualizer_state_info(t_vm *vm, t_state *cur_state)
