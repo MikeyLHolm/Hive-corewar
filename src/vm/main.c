@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/18 13:33:43 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/18 14:02:35 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -922,11 +922,11 @@ void	print_visualizer_state_info(t_vm *vm, t_state *cur_state)
 	char *str;
 
 	print_if_valid(vm, ft_sprintf("\n"));
-	str = ft_sprintf("CYCLE: %d", vm->cycles);
+	str = ft_sprintf("CYCLE: %d", cur_state->cycle);
 	print_if_valid(vm, ft_sprintf("%-64s", str));
 	free(str);
 	print_if_valid(vm, ft_sprintf("AUTOPLAY: %s\n\n", vm->controls.autoplay ? "ON" : "OFF"));
-	str = ft_sprintf("CYCLES_TO_DIE: %d", vm->cycles_to_die);
+	str = ft_sprintf("CYCLES_TO_DIE: %d", cur_state->cycles_to_die);
 	print_if_valid(vm, ft_sprintf("%s\n\n", str));
 	free(str);
 	print_if_valid(vm, ft_sprintf("STEP SIZE: %d\n\n", vm->controls.step_size));
