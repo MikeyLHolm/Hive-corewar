@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 17:53:04 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/18 13:33:43 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -709,11 +709,41 @@ int		ft_abs(int n)
 	return (n > 0 ? n : -n);
 }
 
+void	move_if_valid(t_vm *vm, int y, int x)
+{
+	int max_x;
+	int max_y;
+
+	getmaxyx(stdscr, max_y, max_x);
+	//if (y <= max_y && x <= max_x)
+	move(y, x);
+	vm->cursor_y = y;
+	vm->cursor_x = x;
+}
+
+void	print_if_valid(t_vm *vm, char *str)
+{
+	int max_x;
+	int max_y;
+
+	getmaxyx(stdscr, max_y, max_x);
+	if (vm->cursor_y < max_y && vm->cursor_x < max_x)
+	{
+		if ((int)ft_strlen(str) > max_x - vm->cursor_x)
+			str[max_x - vm->cursor_x] = '\0';
+		printw(str);
+		vm->cursor_x += ft_strlen(str);
+		if (ft_strchr(str, '\n'))
+			vm->cursor_x = 0;
+	}
+	free(str);
+}
+
 void	print_player_last_alive(t_vm *vm, int player_num)
 {
 	t_player *cur;
 
-	printw("\n");
+	print_if_valid(vm, ft_sprintf("\n"));
 	cur = vm->players;
 	while (cur)
 	{
@@ -722,7 +752,7 @@ void	print_player_last_alive(t_vm *vm, int player_num)
 		cur = cur->next;
 	}
 	attron(COLOR_PAIR((unsigned char)cur->id + 4));
-	printw("PLAYER WITH LAST LIVE: %d (%s)\n\n\n\n", player_num, cur->name);
+	print_if_valid(vm, ft_sprintf("PLAYER WITH LAST LIVE: %d (%s)\n\n\n\n", player_num, cur->name));
 	attroff(COLOR_PAIR((unsigned char)cur->id + 4));
 }
 
@@ -734,26 +764,26 @@ void	print_player_lives(t_vm *vm)
 	while (cur)
 	{
 		attron(COLOR_PAIR((unsigned char)cur->id + 4));
-		printw("PLAYER %d (%s) last live: %d\t\t", cur->id, cur->name, cur->last_live_cycle);
+		print_if_valid(vm, ft_sprintf("PLAYER %d (%s) last live: %d\t\t", cur->id, cur->name, cur->last_live_cycle));
 		attroff(COLOR_PAIR((unsigned char)cur->id + 4));
 		cur = cur->next;
 	}
 }
 
-void	print_border(void)
+void	print_border(t_vm *vm)
 {
 	int i;
 	int size;
 
 	i = 0;
 	size = 64 * 3;
-	printw("\n");
+	print_if_valid(vm, ft_sprintf("\n"));
 	while (i < size)
 	{
-		printw("-");
+		print_if_valid(vm, ft_sprintf("-"));
 		i++;
 	}
-	printw("\n");
+	print_if_valid(vm, ft_sprintf("\n"));
 }
 
 void	print_visualizer_info(t_vm *vm)
@@ -762,13 +792,13 @@ void	print_visualizer_info(t_vm *vm)
 	int			i;
 	t_carriage *cur;
 
-	printw("\n");
+	print_if_valid(vm, ft_sprintf("\n"));
 	str = ft_sprintf("CYCLE: %d", vm->cycles);
-	printw("%-128s", str);
+	print_if_valid(vm, ft_sprintf("%-64s", str));
 	free(str);
-	printw("AUTOPLAY: %s\n\n", vm->controls.autoplay ? "ON" : "OFF");
+	print_if_valid(vm, ft_sprintf("AUTOPLAY: %s\n\n", vm->controls.autoplay ? "ON" : "OFF"));
 	str = ft_sprintf("CYCLES_TO_DIE: %d", vm->cycles_to_die);
-	printw("%s\n\n", str);
+	print_if_valid(vm, ft_sprintf("%s\n\n", str));
 	free(str);
 	i = 0;
 	cur = vm->carriages;
@@ -778,11 +808,63 @@ void	print_visualizer_info(t_vm *vm)
 		cur = cur->next;
 	}
 	str = ft_sprintf("CARRIAGES AMOUNT: %d", i);
-	printw("%s\n", str);
+	print_if_valid(vm, ft_sprintf("%s\n", str));
 	free(str);
-	print_border();
+	print_border(vm);
 	print_player_last_alive(vm, vm->player_last_alive);
 	print_player_lives(vm);
+}
+
+void	print_controls(t_vm *vm)
+{
+	(void)vm;
+
+	move_if_valid(vm, 69, 140);
+	print_if_valid(vm, ft_sprintf("Controls:"));
+	move_if_valid(vm, 70, 140);
+	print_if_valid(vm, ft_sprintf("Space - toggle autoplay"));
+	move_if_valid(vm, 71, 140);
+	print_if_valid(vm, ft_sprintf("Left/Right - Move backwards/forwards"));
+	move_if_valid(vm, 72, 140);
+	print_if_valid(vm, ft_sprintf("Up/Down - Increace/Decrease step size"));
+	move_if_valid(vm, 73, 140);
+	print_if_valid(vm, ft_sprintf("Q - Quit"));
+}
+
+void	draw_borders(t_vm *vm)
+{
+	int i;
+	int size;
+
+	(void)vm;
+	attron(COLOR_PAIR(9));
+	move_if_valid(vm, 0, 0);
+	i = 0;
+	size = 64 * 3 + 2;
+	while (i < size + 1)
+	{
+		print_if_valid(vm, ft_sprintf("."));
+		i++;
+	}
+	move_if_valid(vm, 64 + 3, 0);
+	i = 0;
+	while (i < size + 1)
+	{
+		print_if_valid(vm, ft_sprintf("."));
+		i++;
+	}
+	i = 0;
+	while (i < 68)
+	{
+		move_if_valid(vm, i++, 0);
+		print_if_valid(vm, ft_sprintf(".."));
+	}
+	i = 0;
+	while (i < 68)
+	{
+		move_if_valid(vm, i++, size + 1);
+		print_if_valid(vm, ft_sprintf(".."));
+	}
 }
 
 void	visualize(t_vm *vm)
@@ -795,6 +877,10 @@ void	visualize(t_vm *vm)
 
 	i = 0;
 	cursor_mem = vm->cursor_mem;
+	draw_borders(vm);
+	int row;
+	row = 2;
+	move_if_valid(vm, row++, 3);
 	while (i < MEM_SIZE)
 	{
 		if (cursor_mem[i])
@@ -803,18 +889,20 @@ void	visualize(t_vm *vm)
 			{
 				attron(COLOR_PAIR((unsigned char)ft_abs(vm->color_mem[i] + (vm->changed_mem[i] ? 5 : 0))));
 			}
-			printw("%02x", (unsigned char)vm->arena[i]);
+			print_if_valid(vm, ft_sprintf("%02x", (unsigned char)vm->arena[i]));
 			if (cursor_mem[i])
 				attroff(COLOR_PAIR((unsigned char)ft_abs(vm->color_mem[i] - 4)));
 			else
 				attroff(COLOR_PAIR((unsigned char)ft_abs(vm->color_mem[i] + (vm->changed_mem[i] ? 5 : 0))));
-		printw(" ");
+		print_if_valid(vm, ft_sprintf(" "));
 		i++;
 		if (!(i % 64))
-			printw("\n");
+			move_if_valid(vm, row++, 3);//print_if_valid(vm, ft_sprintf("\n");
 	}
-	print_border();
+	//print_border(vm);
+	move_if_valid(vm, 68, 0);
 	print_visualizer_info(vm);
+	print_controls(vm);
 	key = getch();
 	if (key == ' ')
 	{
@@ -833,19 +921,19 @@ void	print_visualizer_state_info(t_vm *vm, t_state *cur_state)
 {
 	char *str;
 
-	printw("\n");
-	str = ft_sprintf("CYCLE: %d", cur_state->cycle);
-	printw("%-128s", str);
+	print_if_valid(vm, ft_sprintf("\n"));
+	str = ft_sprintf("CYCLE: %d", vm->cycles);
+	print_if_valid(vm, ft_sprintf("%-64s", str));
 	free(str);
-	printw("AUTOPLAY: %s\n\n", vm->controls.autoplay ? "ON" : "OFF");
-	str = ft_sprintf("CYCLES_TO_DIE: %d", cur_state->cycles_to_die);
-	printw("%-128s", str);
+	print_if_valid(vm, ft_sprintf("AUTOPLAY: %s\n\n", vm->controls.autoplay ? "ON" : "OFF"));
+	str = ft_sprintf("CYCLES_TO_DIE: %d", vm->cycles_to_die);
+	print_if_valid(vm, ft_sprintf("%s\n\n", str));
 	free(str);
-	printw("STEP SIZE: %d\n\n", vm->controls.step_size);
+	print_if_valid(vm, ft_sprintf("STEP SIZE: %d\n\n", vm->controls.step_size));
 	str = ft_sprintf("CARRIAGES AMOUNT: %d", cur_state->carriage_amount);
-	printw("%-128s\n", str);
+	print_if_valid(vm, ft_sprintf("%s\n", str));
 	free(str);
-	print_border();
+	print_border(vm);
 	print_player_last_alive(vm, vm->player_last_alive);
 	print_player_lives(vm);
 }
@@ -862,6 +950,10 @@ void	visualize_states(t_vm *vm)
 	while (1)
 	{
 		erase();
+		draw_borders(vm);
+		int row;
+		row = 2;
+		move_if_valid(vm, row++, 3);
 		i = 0;
 		while (i < MEM_SIZE)
 		{
@@ -875,7 +967,7 @@ void	visualize_states(t_vm *vm)
 				// 	attron(COLOR_PAIR((unsigned char)ft_abs(cur_state->cursor_mem[i] + (cur_state->changed_mem[i] && cur_state->changed_mem[i] < 50 ? 5 : 0))));
 				attron(COLOR_PAIR((unsigned char)ft_abs(cur_state->color_mem[i] + (cur_state->changed_mem[i] ? 5 : 0))));
 			}
-			printw("%02x", (unsigned char)cur_state->arena[i]);
+			print_if_valid(vm, ft_sprintf("%02x", (unsigned char)cur_state->arena[i]));
 			// if (cur_state->cursor_mem[i] < 0)
 			// 	attroff(COLOR_PAIR((unsigned char)ft_abs(cur_state->cursor_mem[i])));
 			// else
@@ -884,13 +976,15 @@ void	visualize_states(t_vm *vm)
 				attroff(COLOR_PAIR((unsigned char)ft_abs(cur_state->color_mem[i] - 4)));
 			else
 				attroff(COLOR_PAIR((unsigned char)ft_abs(cur_state->color_mem[i] + (cur_state->changed_mem[i] ? 5 : 0))));
-			printw(" ");
+			print_if_valid(vm, ft_sprintf(" "));
 			i++;
 			if (!(i % 64))
-				printw("\n");
+				move_if_valid(vm, row++, 3);//print_if_valid(vm, ft_sprintf("\n");
 		}
-		print_border();
+		move_if_valid(vm, 68, 0);
+		print_border(vm);
 		print_visualizer_state_info(vm, cur_state);
+		print_controls(vm);
 		refresh();
 		key = getch();
 		if (vm->controls.autoplay && key == ERR)
@@ -1034,7 +1128,7 @@ void	battle_loop(t_vm *vm)
 		if (vm->flags & ADV_VISUALIZER) //tmp debug
 		{
 			clear();
-			printw("Saving cycle: %d\n", vm->cycles);
+			print_if_valid(vm, ft_sprintf("Saving cycle: %d\n", vm->cycles));
 			refresh();
 			clear();
 		}

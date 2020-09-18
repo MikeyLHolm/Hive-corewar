@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/16 17:07:57 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/18 13:00:38 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,8 @@ typedef struct			s_vm
 	int					dump_cycle;
 	int					*updated_color_mem;
 	int					*updated_changed_mem;
+	int					cursor_x;
+	int					cursor_y;
 }						t_vm;
 
 int						get_direct(t_vm *vm, t_carriage *cur, int offset);
