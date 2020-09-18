@@ -6,4 +6,5 @@
 *.a
 /asm
 /corewar
+/disasm
 notes

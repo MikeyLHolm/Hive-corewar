@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 12:44:33 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 12:49:00 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/18 13:34:48 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@ void			validator(t_file *file)
 	vd = init_validator();
 	cur = file;
 	//display_filelist(cur);
-	remove_file_comments(file);
+	remove_file_comments(cur);
+	//display_filelist(cur);
 	cur = validate_header(cur, vd);
 	cur = increment_validator(cur, vd);
 	row = vd->row;

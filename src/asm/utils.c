@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/17 12:55:39 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 16:14:22 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/18 14:11:21 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@
 
 int			ft_isspace(int c)
 {
-	return (c == ' ' || c == '\t');
+	return (c == ' ' || (8 < c && c < 14));
+	// return (c == ' ' || c == '\t');
 }
 
 /*
@@ -54,6 +55,23 @@ int			line_contains_instruction(t_file *cur)
 }
 
 /*
+**	If line has only spaces/tabs before comment return 1
+*/
+
+int			empty_till_comment(char *line)
+{
+	int			i;
+
+	i = 0;
+	while (ft_isspace(line[i]))
+		i++;
+	if (line[i] == COMMENT_CHAR || line[i] == ALT_COMMENT_CHAR)
+		return (1);
+	else
+		return (0);
+}
+
+/*
 **	Inserts null to the comment position
 */
 
@@ -64,7 +82,7 @@ void		remove_file_comments(t_file *file)
 	cur = file;
 	while (cur)
 	{
-		if (line_contains_instruction(cur))
+		if (line_contains_instruction(cur) || empty_till_comment(cur->line))
 		{
 			if (ft_strchr(cur->line, COMMENT_CHAR))
 				*ft_strchr(cur->line, COMMENT_CHAR) = '\0';
@@ -74,6 +92,10 @@ void		remove_file_comments(t_file *file)
 		cur = cur->next;
 	}
 }
+
+/*
+**	skips label and following :
+*/
 
 int			skip_label(char *line)
 {

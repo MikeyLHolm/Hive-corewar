@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 14:51:13 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 16:53:35 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/18 13:36:45 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ char		*get_statement(char *line, int row)
 	int len;
 
 	i = 0;
+	//ft_printf("[%s]\n", line);
 	while (ft_strchr(LABEL_CHARS, line[i]))
 		i++;
 	i = line[i] == LABEL_CHAR ? i + 1 : 0;

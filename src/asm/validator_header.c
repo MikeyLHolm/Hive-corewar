@@ -6,19 +6,49 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 14:47:54 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/16 13:49:33 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/18 14:10:50 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asm.h"
 
+static int			empty_line(char *line)
+{
+	int				i;
+
+	i = 0;
+	if (!line)
+		return (1);
+	while (ft_isspace(line[i]))
+		i++;
+	if (line[i])
+		return (0);
+	else
+		return (1);
+}
+
+static int			validate_to_quote(char *line, char *str)
+{
+	int				i;
+
+	i = 0;
+	while (line[i] == str[i])
+		i++;
+	while (ft_isspace(line[i]))
+		i++;
+	if (line[i] == '"')
+		return (1);
+	else
+		return (0);
+}
+
 /*
-**	Comment validation
+**	Name validation
 */
 
-t_file		*validate_name(t_file *cur, t_validator *vd)
+static t_file		*validate_name(t_file *cur, t_validator *vd)
 {
-	char	*name;
+	char			*name;
 
 	if (vd->data & HEADER_NAME)
 		validation_error("Duplicate name", vd->row);
@@ -49,9 +79,9 @@ t_file		*validate_name(t_file *cur, t_validator *vd)
 **		[] no quotes
 */
 
-t_file		*validate_comment(t_file *cur, t_validator *vd)
+static t_file		*validate_comment(t_file *cur, t_validator *vd)
 {
-	char		*comment;
+	char			*comment;
 
 	if (vd->data & HEADER_COMMENT)
 		validation_error("Duplicate comment", vd->row);
@@ -81,19 +111,23 @@ t_file		*validate_comment(t_file *cur, t_validator *vd)
 **	[] exit validate_header after first found nl after .name & .comment =found.
 */
 
-t_file		*validate_header(t_file *cur, t_validator *vd)
+t_file				*validate_header(t_file *cur, t_validator *vd)
 {
 	while (cur)
 	{
-		if (!ft_strncmp(cur->line, vd->name, ft_strlen(vd->name)))
+		// if (!ft_strncmp(cur->line, vd->name, ft_strlen(vd->name)))
+		// 	cur = validate_name(cur, vd);
+		// else if (!ft_strncmp(cur->line, vd->comment, ft_strlen(vd->comment)))
+		// 	cur = validate_comment(cur, vd);
+		if (validate_to_quote(cur->line, NAME_CMD_STRING))
 			cur = validate_name(cur, vd);
-		else if (!ft_strncmp(cur->line, vd->comment, ft_strlen(vd->comment)))
+		else if (validate_to_quote(cur->line, COMMENT_CMD_STRING))
 			cur = validate_comment(cur, vd);
 		else if (cur->line[0] == '.')
 			validation_error("Str not NAME/COMMENT_CMD_STRING", vd->row);
 		if (!cur)
 			validation_error("Header incomplete, !cur", vd->row);
-		if (cur->line[0] == '\0' && vd->data == 3)
+		if (vd->data == 3 && empty_line(cur->line))
 			return (cur);
 		else if (cur->line[0] != '\0' && cur->line[0] != '.' &&
 			cur->line[0] != ALT_COMMENT_CHAR && cur->line[0] != COMMENT_CHAR)
