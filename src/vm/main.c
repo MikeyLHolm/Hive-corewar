@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/18 14:02:35 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/18 14:53:25 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1173,14 +1173,14 @@ void	init_visualizer(t_vm *vm)
 	{
 		use_default_colors();
 		start_color();
-		init_pair(1, COLOR_BLACK, COLOR_BLUE);
-		init_pair(2, COLOR_BLACK, COLOR_GREEN);
-		init_pair(3, COLOR_BLACK, COLOR_RED);
-		init_pair(4, COLOR_BLACK, COLOR_YELLOW);
-		init_pair(5, COLOR_BLUE, COLOR_BLACK);
-		init_pair(6, COLOR_GREEN, COLOR_BLACK);
-		init_pair(7, COLOR_RED, COLOR_BLACK);
-		init_pair(8, COLOR_YELLOW, COLOR_BLACK);
+		init_pair(1, -1, COLOR_BLUE);
+		init_pair(2, -1, COLOR_GREEN);
+		init_pair(3, -1, COLOR_RED);
+		init_pair(4, -1, COLOR_YELLOW);
+		init_pair(5, COLOR_BLUE, -1);
+		init_pair(6, COLOR_GREEN, -1);
+		init_pair(7, COLOR_RED, -1);
+		init_pair(8, COLOR_YELLOW, -1);
 		init_pair(9, COLOR_WHITE, COLOR_WHITE);
 		init_pair(10, COLOR_BLUE, COLOR_WHITE);
 		init_pair(11, COLOR_GREEN, COLOR_WHITE);
