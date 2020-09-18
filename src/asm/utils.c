@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/17 12:55:39 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/18 14:11:21 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/18 15:19:33 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,20 +91,4 @@ void		remove_file_comments(t_file *file)
 		}
 		cur = cur->next;
 	}
-}
-
-/*
-**	skips label and following :
-*/
-
-int			skip_label(char *line)
-{
-	int			i;
-
-	i = 0;
-	while (ft_strchr(LABEL_CHARS, line[i]))
-		i++;
-	if (line[i] == LABEL_CHAR)
-		i++;
-	return (i);
 }

@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/17 12:41:59 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 16:44:07 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/18 15:22:23 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,18 +70,17 @@ typedef struct		s_asm
 **	Validation and error handling.
 */
 
+int				arg_traverse_label(char *line, int i, int row, int type);
+int				arg_traverse_value(char *line, int i, int row, int type);
 void			handle_error(char *message);
 t_file			*increment_validator(t_file *cur, t_validator *vd);
-void			validation_error(char *message, int row);
+void			right_n_args(char *statement, int args, int row);
+void			trailing_comma(char *line, int row);
 void			validate_arg(char *line, char *statement, t_validator *vd, int arg_i);
 t_file			*validate_header(t_file *cur, t_validator *vd);
 void			validate_instructions(t_file *cur, t_validator *vd);
 void			validate_label(char *label, int row, t_label *head);
-t_label			*save_labels(t_file *head, t_validator *vd);
-void			right_n_args(char *statement, int args, int row);
-void			trailing_comma(char *line, int row);
-int				arg_traverse_label(char *line, int i, int row, int type);
-int				arg_traverse_value(char *line, int i, int row, int type);
+void			validation_error(char *message, int row);
 
 /*
 **	Free memory
@@ -110,8 +109,8 @@ int				get_token_size(t_token *token);
 **	Printers
 */
 
-void			display_list(t_label *head);
-void			display_filelist(t_file *head);
+void			print_list(t_label *head);
+void			print_filelist(t_file *head);
 void			print_file(t_file *head);
 void			print_tokens(t_token *token);
 void			print_token_info(t_token *token);
@@ -133,6 +132,7 @@ int				ft_isspace(int c);
 void			handle_error(char *message);
 int				line_contains_instruction(t_file *cur);
 void			remove_file_comments(t_file *file);
+t_label			*save_labels(t_file *head, t_validator *vd);
 int				skip_label(char *line);
 
 /*

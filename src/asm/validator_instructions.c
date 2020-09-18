@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 14:51:13 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/18 13:36:45 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/18 15:17:29 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,9 +118,6 @@ void		validate_args(char *line, char *statement, t_validator *vd)
 
 /*
 **	Dispatcher for instruction validation.
-**
-**	after statement must be space
-**	no space between r%- and number
 */
 
 void		validate_instructions(t_file *cur, t_validator *vd)

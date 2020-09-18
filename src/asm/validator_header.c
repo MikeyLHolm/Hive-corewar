@@ -6,11 +6,15 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 14:47:54 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/18 14:10:50 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/18 15:24:32 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asm.h"
+
+/*
+**	Return 1 if there is only whitespace and '\0' in the line. AKA empty line
+*/
 
 static int			empty_line(char *line)
 {
@@ -26,6 +30,10 @@ static int			empty_line(char *line)
 	else
 		return (1);
 }
+
+/*
+**	Validates input from line[0] until the first "
+*/
 
 static int			validate_to_quote(char *line, char *str)
 {
@@ -71,12 +79,7 @@ static t_file		*validate_name(t_file *cur, t_validator *vd)
 }
 
 /*
-**	Comment validation:
-**		[x] double comment
-**		[x] length > COMMENT_LENGTH
-**		[] bad characters
-**		[] multi-line comment
-**		[] no quotes
+**	Comment validation
 */
 
 static t_file		*validate_comment(t_file *cur, t_validator *vd)
@@ -104,21 +107,14 @@ static t_file		*validate_comment(t_file *cur, t_validator *vd)
 }
 
 /*
-**	[] strjoin newline if no closing ".
-**	[] if starts with . and not ".name" ".comment"
-**	[] if line starts with anything but .#;\n = instruction time
-**	[] check for other whitespaces?
-**	[] exit validate_header after first found nl after .name & .comment =found.
+**	Main validation tool for header. Moves forward when
+**	both name and comment have been found.
 */
 
 t_file				*validate_header(t_file *cur, t_validator *vd)
 {
 	while (cur)
 	{
-		// if (!ft_strncmp(cur->line, vd->name, ft_strlen(vd->name)))
-		// 	cur = validate_name(cur, vd);
-		// else if (!ft_strncmp(cur->line, vd->comment, ft_strlen(vd->comment)))
-		// 	cur = validate_comment(cur, vd);
 		if (validate_to_quote(cur->line, NAME_CMD_STRING))
 			cur = validate_name(cur, vd);
 		else if (validate_to_quote(cur->line, COMMENT_CMD_STRING))
