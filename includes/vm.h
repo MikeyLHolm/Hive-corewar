@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/18 13:00:38 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/21 11:21:21 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,11 @@ typedef	struct			s_state
 	int					cycles_to_die;
 	struct s_state		*prev;
 	struct s_state		*next;
+	int					player1_last_live;
+	int					player2_last_live;
+	int					player3_last_live;
+	int					player4_last_live;
+	int					last_live_player;
 }						t_state;
 
 typedef struct			s_controls

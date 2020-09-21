@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/18 19:12:15 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/21 11:51:09 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -743,7 +743,7 @@ void	print_player_last_alive(t_vm *vm, int player_num)
 {
 	t_player *cur;
 
-	move_if_valid(vm, 18, 64 * 3 + 18);
+	move_if_valid(vm, 25, 64 * 3 + 18);
 	print_if_valid(vm, ft_sprintf("PLAYER WITH LAST LIVE"));
 	cur = vm->players;
 	while (cur)
@@ -752,9 +752,9 @@ void	print_player_last_alive(t_vm *vm, int player_num)
 			break ;
 		cur = cur->next;
 	}
-	move_if_valid(vm, 20, 64 * 3 + 20);
+	move_if_valid(vm, 27, 64 * 3 + 7);
 	attron(COLOR_PAIR((unsigned char)cur->id + 4));
-	print_if_valid(vm, ft_sprintf("PLAYER %d (%s)", player_num, cur->name));
+	print_if_valid(vm, ft_sprintf("PLAYER %d %34s", player_num, cur->name));
 	attroff(COLOR_PAIR((unsigned char)cur->id + 4));
 }
 
@@ -764,9 +764,9 @@ void	print_player_lives(t_vm *vm)
 	int			offset;
 
 	cur = vm->players;
-	move_if_valid(vm, 25, 64 * 3 + 21);
+	move_if_valid(vm, 31, 64 * 3 + 21);
 	print_if_valid(vm, ft_sprintf("LAST LIVE CYCLES"));
-	offset = 27;
+	offset = 34;
 	while (cur)
 	{
 		move_if_valid(vm, offset, 64 * 3 + 7);
@@ -777,6 +777,31 @@ void	print_player_lives(t_vm *vm)
 		print_if_valid(vm, ft_sprintf("%d", cur->last_live_cycle));
 		cur = cur->next;
 		offset += 2;
+	}
+}
+
+void	print_state_player_lives(t_vm *vm, t_state *state)
+{
+	t_player	*cur;
+	int			offset;
+	int			pointer_offset;
+
+	cur = vm->players;
+	move_if_valid(vm, 31, 64 * 3 + 21);
+	print_if_valid(vm, ft_sprintf("LAST LIVE CYCLES"));
+	offset = 34;
+	pointer_offset = 0;
+	while (cur)
+	{
+		move_if_valid(vm, offset, 64 * 3 + 7);
+		attron(COLOR_PAIR((unsigned char)cur->id + 4));
+		print_if_valid(vm, ft_sprintf("PLAYER %d (%s):", cur->id, cur->name));
+		attroff(COLOR_PAIR((unsigned char)cur->id + 4));
+		move_if_valid(vm, offset, 64 * 3 + 47);
+		print_if_valid(vm, ft_sprintf("%d", *(&state->player1_last_live + pointer_offset)));
+		cur = cur->next;
+		offset += 2;
+		pointer_offset += 1;
 	}
 }
 
@@ -807,8 +832,6 @@ void	print_visualizer_info(t_vm *vm)
 	print_if_valid(vm, ft_sprintf("CYCLE:"));
 	move_if_valid(vm, 6, 64 * 3 + 45);
 	print_if_valid(vm, ft_sprintf("%d", vm->cycles));
-	// move_if_valid(vm, 6, 64 * 3 + 20);
-	// print_if_valid(vm, ft_sprintf("AUTOPLAY: %s", vm->controls.autoplay ? "ON" : "OFF"));
 	move_if_valid(vm, 8, 64 * 3 + 7);
 	print_if_valid(vm, ft_sprintf("CYCLES_TO_DIE:"));
 	move_if_valid(vm, 8, 64 * 3 + 45);
@@ -825,6 +848,14 @@ void	print_visualizer_info(t_vm *vm)
 	print_if_valid(vm, ft_sprintf("CARRIAGES AMOUNT:"));
 	move_if_valid(vm, 10, 64 * 3 + 45);
 	print_if_valid(vm, ft_sprintf("%d", i));
+	move_if_valid(vm, 18, 64 * 3 + 7);
+	print_if_valid(vm, ft_sprintf("AUTOPLAY:"));
+	move_if_valid(vm, 18, 64 * 3 + 45);
+	print_if_valid(vm, ft_sprintf("%s", vm->controls.autoplay ? "ON" : "OFF"));
+	move_if_valid(vm, 20, 64 * 3 + 7);
+	print_if_valid(vm, ft_sprintf("STEP SIZE:"));
+	move_if_valid(vm, 20, 64 * 3 + 45);
+	print_if_valid(vm, ft_sprintf("%d", vm->controls.step_size));
 	print_player_last_alive(vm, vm->player_last_alive);
 	print_player_lives(vm);
 }
@@ -833,23 +864,23 @@ void	print_controls(t_vm *vm)
 {
 	(void)vm;
 
-	move_if_valid(vm, 42, 64 * 3 + 24);
+	move_if_valid(vm, 46, 64 * 3 + 24);
 	print_if_valid(vm, ft_sprintf("CONTROLS:"));
-	move_if_valid(vm, 46, 64 * 3 + 7);
-	print_if_valid(vm, ft_sprintf("Space:"));
-	move_if_valid(vm, 46, 64 * 3 + 35);
-	print_if_valid(vm, ft_sprintf("Toggle autoplay"));
-	move_if_valid(vm, 48, 64 * 3 + 7);
-	print_if_valid(vm, ft_sprintf("Left/Right:"));
-	move_if_valid(vm, 48, 64 * 3 + 27);
-	print_if_valid(vm, ft_sprintf("Move backwards/forwards"));
 	move_if_valid(vm, 50, 64 * 3 + 7);
-	print_if_valid(vm, ft_sprintf("Up/Down:"));
-	move_if_valid(vm, 50, 64 * 3 + 23);
-	print_if_valid(vm, ft_sprintf("Increace/Decrease step size"));
+	print_if_valid(vm, ft_sprintf("Space:"));
+	move_if_valid(vm, 50, 64 * 3 + 35);
+	print_if_valid(vm, ft_sprintf("Toggle autoplay"));
 	move_if_valid(vm, 52, 64 * 3 + 7);
+	print_if_valid(vm, ft_sprintf("Left/Right:"));
+	move_if_valid(vm, 52, 64 * 3 + 27);
+	print_if_valid(vm, ft_sprintf("Move backwards/forwards"));
+	move_if_valid(vm, 54, 64 * 3 + 7);
+	print_if_valid(vm, ft_sprintf("Up/Down:"));
+	move_if_valid(vm, 54, 64 * 3 + 23);
+	print_if_valid(vm, ft_sprintf("Increace/Decrease step size"));
+	move_if_valid(vm, 56, 64 * 3 + 7);
 	print_if_valid(vm, ft_sprintf("Q:"));
-	move_if_valid(vm, 52, 64 * 3 + 46);
+	move_if_valid(vm, 56, 64 * 3 + 46);
 	print_if_valid(vm, ft_sprintf("Quit"));
 }
 
@@ -875,7 +906,21 @@ void	draw_borders(t_vm *vm)
 		print_if_valid(vm, ft_sprintf("."));
 		i++;
 	}
-	move_if_valid(vm, 40, size - 49);
+	move_if_valid(vm, 23, size - 49);
+	i = 0;
+	while (i < 50)
+	{
+		print_if_valid(vm, ft_sprintf("."));
+		i++;
+	}
+	move_if_valid(vm, 29, size - 49);
+	i = 0;
+	while (i < 50)
+	{
+		print_if_valid(vm, ft_sprintf("."));
+		i++;
+	}
+	move_if_valid(vm, 43, size - 49);
 	i = 0;
 	while (i < 50)
 	{
@@ -1028,24 +1073,32 @@ void	visualize(t_vm *vm)
 
 void	print_visualizer_state_info(t_vm *vm, t_state *cur_state)
 {
-	char *str;
 
-	move_if_valid(vm, 69, 4);
-	str = ft_sprintf("CYCLE: %d", cur_state->cycle);
-	print_if_valid(vm, ft_sprintf("%-64s", str));
-	free(str);
-	print_if_valid(vm, ft_sprintf("AUTOPLAY: %s", vm->controls.autoplay ? "ON" : "OFF"));
-	str = ft_sprintf("CYCLES_TO_DIE: %-49d", cur_state->cycles_to_die);
+	move_if_valid(vm, 2, 64 * 3 + 20);
+	print_if_valid(vm, ft_sprintf("BATTLE INFORMATION"));
+	move_if_valid(vm, 6, 64 * 3 + 7);
+	print_if_valid(vm, ft_sprintf("CYCLE:"));
+	move_if_valid(vm, 6, 64 * 3 + 45);
+	print_if_valid(vm, ft_sprintf("%d", cur_state->cycle));
+	move_if_valid(vm, 8, 64 * 3 + 7);
+	print_if_valid(vm, ft_sprintf("CYCLES_TO_DIE:"));
+	move_if_valid(vm, 8, 64 * 3 + 45);
+	print_if_valid(vm, ft_sprintf("%d", cur_state->cycles_to_die));
 	move_if_valid(vm, 71, 4);
-	print_if_valid(vm, ft_sprintf("%s", str));
-	free(str);
-	print_if_valid(vm, ft_sprintf("STEP SIZE: %d", vm->controls.step_size));
-	move_if_valid(vm, 73, 4);
-	str = ft_sprintf("CARRIAGES AMOUNT: %d", cur_state->carriage_amount);
-	print_if_valid(vm, ft_sprintf("%s", str));
-	free(str);
-	print_player_last_alive(vm, vm->player_last_alive);
-	print_player_lives(vm);
+	move_if_valid(vm, 10, 64 * 3 + 7);
+	print_if_valid(vm, ft_sprintf("CARRIAGES AMOUNT:"));
+	move_if_valid(vm, 10, 64 * 3 + 45);
+	print_if_valid(vm, ft_sprintf("%d", cur_state->carriage_amount));
+	move_if_valid(vm, 18, 64 * 3 + 7);
+	print_if_valid(vm, ft_sprintf("AUTOPLAY:"));
+	move_if_valid(vm, 18, 64 * 3 + 45);
+	print_if_valid(vm, ft_sprintf("%s", vm->controls.autoplay ? "ON" : "OFF"));
+	move_if_valid(vm, 20, 64 * 3 + 7);
+	print_if_valid(vm, ft_sprintf("STEP SIZE:"));
+	move_if_valid(vm, 20, 64 * 3 + 45);
+	print_if_valid(vm, ft_sprintf("%d", vm->controls.step_size));
+	print_player_last_alive(vm, cur_state->last_live_player);
+	print_state_player_lives(vm, cur_state);
 }
 
 void	visualize_states(t_vm *vm)
@@ -1094,7 +1147,8 @@ void	visualize_states(t_vm *vm)
 		move_if_valid(vm, 68, 0);
 		print_visualizer_state_info(vm, cur_state);
 		print_controls(vm);
-		draw_gui_boxes(vm);
+		print_footer(vm);
+		//draw_gui_boxes(vm);
 		refresh();
 		key = getch();
 		if (vm->controls.autoplay && key == ERR)
@@ -1124,6 +1178,22 @@ void	visualize_states(t_vm *vm)
 		if (!cur_state->next)
 			vm->controls.autoplay = 0;
 	}
+}
+
+void	state_get_lives(t_vm *vm, t_state *state)
+{
+	t_player *cur_player;
+
+	cur_player = vm->players;
+	state->player1_last_live = cur_player ? cur_player->last_live_cycle : 0;
+	cur_player = cur_player ? cur_player->next : cur_player;
+	state->player2_last_live = cur_player ? cur_player->last_live_cycle : 0;
+	cur_player = cur_player ? cur_player->next : cur_player;
+	state->player3_last_live = cur_player ? cur_player->last_live_cycle : 0;
+	cur_player = cur_player ? cur_player->next : cur_player;
+	state->player4_last_live = cur_player ? cur_player->last_live_cycle : 0;
+	cur_player = cur_player ? cur_player->next : cur_player;
+	state->last_live_player = vm->player_last_alive;
 }
 
 t_state	*new_state(t_vm *vm, t_state *prev)
@@ -1165,6 +1235,7 @@ t_state	*new_state(t_vm *vm, t_state *prev)
 	state->cycle = vm->cycles;
 	state->cycles_to_die = vm->cycles_to_die;
 	state->prev = prev;
+	state_get_lives(vm, state);
 	return (state);
 }
 
