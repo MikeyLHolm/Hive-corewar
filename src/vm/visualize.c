@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 12:02:24 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/22 11:22:44 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/22 11:51:54 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -532,7 +532,7 @@ void	handle_step_size_controls(t_vm *vm, int key)
 		vm->controls.step_size > 1 ? vm->controls.step_size-- : (void)vm;
 }
 
-int		visualizer_state_handle_controls(t_vm *vm, t_state *cur_state)
+int		visualizer_state_handle_controls(t_vm *vm, t_state **cur_state)
 {
 	int key;
 	int	i;
@@ -543,10 +543,10 @@ int		visualizer_state_handle_controls(t_vm *vm, t_state *cur_state)
 	i = 0;
 	if (key == KEY_LEFT)
 		while (i++ < vm->controls.step_size)
-			cur_state = cur_state->prev ? cur_state->prev : cur_state;
+			*cur_state = (*cur_state)->prev ? (*cur_state)->prev : *cur_state;
 	if (key == KEY_RIGHT)
 		while (i++ < vm->controls.step_size)
-			cur_state = cur_state->next ? cur_state->next : cur_state;
+			*cur_state = (*cur_state)->next ? (*cur_state)->next : *cur_state;
 	handle_step_size_controls(vm, key);
 	if (key == 'q')
 		return (0);
@@ -555,7 +555,7 @@ int		visualizer_state_handle_controls(t_vm *vm, t_state *cur_state)
 		vm->controls.autoplay = !vm->controls.autoplay;
 		timeout(vm->controls.autoplay ? 1 : -1);
 	}
-	if (!cur_state->next)
+	if (!(*cur_state)->next)
 		vm->controls.autoplay = 0;
 	return (1);
 }
@@ -572,7 +572,7 @@ void	visualize_states(t_vm *vm)
 		print_visualizer_state_info(vm, cur_state);
 		print_controls(vm);
 		print_footer(vm);
-		if (!(visualizer_state_handle_controls(vm, cur_state)))
+		if (!(visualizer_state_handle_controls(vm, &cur_state)))
 			break ;
 		refresh();
 	}

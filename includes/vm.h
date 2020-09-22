@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/22 11:33:14 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/22 11:52:31 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -400,7 +400,7 @@ void					visualizer_state_draw_map(t_vm *vm, t_state *cur_state);
 void					handle_step_size_controls(t_vm *vm, int key);
 
 int						visualizer_state_handle_controls(t_vm *vm,
-							t_state *cur_state);
+							t_state **cur_state);
 
 void					visualize_states(t_vm *vm);
 
