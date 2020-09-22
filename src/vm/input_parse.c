@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input_parse.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 12:13:13 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/15 09:48:46 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/22 13:41:56 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 ** Save player to linked list and parse player data.
 */
 
-void		parse_player(t_vm *vm, char *filename, char *n)
+void	parse_player(t_vm *vm, char *filename, char *n)
 {
 	if (!vm->players)
 	{
@@ -30,38 +30,95 @@ void		parse_player(t_vm *vm, char *filename, char *n)
 	}
 }
 
+int		count_players(t_vm *vm)
+{
+	t_player	*cur;
+	int			i;
+
+	cur = vm->players;
+	i = 0;
+	while (cur)
+	{
+		i++;
+		cur = cur->next;
+	}
+	if (!i)
+		handle_error("No valid players specified");
+	return (i);
+}
+
+void	check_flags_valid(t_vm *vm)
+{
+	if (vm->flags & VISUALIZER && vm->flags & ADV_VISUALIZER)
+		handle_error("Only one visualizer allowed at once");
+	if (vm->flags & DUMP && vm->flags & (VISUALIZER | ADV_VISUALIZER))
+		handle_error("Memory dumping not possible with visualizer");
+	if (vm->flags & START && (!(vm->flags & ADV_VISUALIZER)))
+		handle_error("Start flag only valid with advanced visualizer");
+}
+
 /*
 **	Parses arguments and saves flags to a int.
 **	Dispatches to player parsing.
 */
 
-void		parse_input(t_vm *vm, int argc, char **argv)
+int		parse_simple_flags(t_vm *vm, char **argv, int i)
+{
+	if (ft_strequ(argv[i], "-e"))
+		vm->flags = vm->flags | ERROR;
+	else if (ft_strequ(argv[i], "-x"))
+		vm->flags = vm->flags | LEAKS;
+	else if (ft_strequ(argv[i], "-v"))
+		vm->flags = vm->flags | VISUALIZER;
+	else if (ft_strequ(argv[i], "-a"))
+		vm->flags = vm->flags | ADV_VISUALIZER;
+	else if (ft_strequ(argv[i], "-f"))
+		vm->flags = vm->flags | LLD_FIX;
+	else if (ft_strequ(argv[i], "-z"))
+		vm->flags = vm->flags | AFF_PRINT;
+	else if (ft_strequ(argv[i], "-l"))
+		vm->flags = vm->flags | LIVE_PRINT;
+	else
+		return (0);
+	return (1);
+}
+
+int		parse_digit_flags(t_vm *vm, int argc, char **argv, int *i)
+{
+	if (ft_strequ(argv[*i], "-dump"))
+	{
+		vm->flags = vm->flags | DUMP;
+		*i += 1;
+		if (*i < argc)
+			vm->dump_cycle = ft_atoi(argv[*i]);
+		else
+			handle_error("Dump flag not followed with digit");
+	}
+	else if (ft_strequ(argv[*i], "-s"))
+	{
+		vm->flags = vm->flags | START;
+		*i += 1;
+		if (*i < argc)
+			vm->start = ft_atoi(argv[*i]);
+		else
+			handle_error("Start flag not followed with digit");
+	}
+	else
+		return (0);
+	return (1);
+}
+
+void	parse_input(t_vm *vm, int argc, char **argv)
 {
 	int			i;
 
 	i = 0;
 	while (++i < argc)
 	{
-		if (ft_strequ(argv[i], "-dump"))
-		{
-			vm->flags = vm->flags | DUMP;
-			vm->dump_cycle = ft_atoi(argv[i + 1]); //add error handling
-			i++;
-		}
-		else if (ft_strequ(argv[i], "-e"))
-			vm->flags = vm->flags | ERROR;
-		else if (ft_strequ(argv[i], "-x"))
-			vm->flags = vm->flags | LEAKS;
-		else if (ft_strequ(argv[i], "-v"))
-			vm->flags = vm->flags | VISUALIZER;
-		else if (ft_strequ(argv[i], "-a"))
-			vm->flags = vm->flags | ADV_VISUALIZER;
-		else if (ft_strequ(argv[i], "-s"))
-		{
-			vm->flags = vm->flags | START;
-			vm->start = ft_atoi(argv[i + 1]); //add error handling
-			i++;
-		}
+		if (parse_simple_flags(vm, argv, i))
+			;
+		else if (parse_digit_flags(vm, argc, argv, &i))
+			;
 		else if (ft_strequ(argv[i], "-n"))
 		{
 			vm->flags = vm->flags | N;
@@ -70,10 +127,12 @@ void		parse_input(t_vm *vm, int argc, char **argv)
 			i += 2;
 		}
 		else
-		{
 			parse_player(vm, argv[i], 0);
-		}
 	}
+	vm->player_amount = count_players(vm);
+	if (vm->player_amount > MAX_PLAYERS)
+		handle_error(ft_sprintf(
+			"Too many players, maximum of %d players allowed", MAX_PLAYERS));
 	sort_players(vm);
-	vm->player_last_alive = vm->player_amount;
+	check_flags_valid(vm);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input_sort.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 09:45:26 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/15 16:29:26 by elindber         ###   ########.fr       */
+/*   Updated: 2020/09/22 11:30:39 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,10 +99,7 @@ void		add_to_tab(t_vm *vm, int count)
 	while (head)
 	{
 		if (head->player_nbr != 0)
-		{
-			//ft_printf("Head id [%d] || Head n-1 [%d]\n", head->id, (head->n - 1));
 			tab[(head->player_nbr - 1)] = head->id;
-		}
 		head = head->next;
 	}
 	i = 0;
@@ -127,19 +124,11 @@ void		sort_players(t_vm *vm)
 	t_player		*cur;
 
 	cur = vm->players;
-	while (cur)
-	{
-		//ft_printf("\nSTATS START:: id = %d || n = %d\n", cur->id, cur->n);
-		cur = cur->next;
-		vm->player_amount++;
-	}
-	//ft_printf("\nNR of players: %d\n", vm->player_amount);
-	cur = vm->players;
 	check_duplicate_n(cur, vm);
 	if (vm->players && vm->players->next && vm->flags & N)
 	{
 		add_to_tab(vm, vm->player_amount);
 		bubble_sort(&vm->players, vm->player_amount, 0, -1);
 	}
-	display_list(vm->players);
+	vm->player_last_alive = vm->player_amount;
 }

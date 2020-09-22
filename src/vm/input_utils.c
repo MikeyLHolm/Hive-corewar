@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 09:48:01 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/15 16:29:22 by elindber         ###   ########.fr       */
+/*   Updated: 2020/09/21 17:39:26 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,8 @@ void		check_duplicate_n(t_player *head, t_vm *vm)
 		{
 			if (head->player_nbr == tmp->player_nbr && head->player_nbr != 0)
 				handle_error("duplicate -n value");
-			if (head->player_nbr > vm->player_amount || tmp->player_nbr > vm->player_amount)
+			if (head->player_nbr > vm->player_amount
+				|| tmp->player_nbr > vm->player_amount)
 				handle_error("-n value > players_amount");
 			tmp = tmp->next;
 		}
@@ -55,8 +56,5 @@ void		check_duplicate_n(t_player *head, t_vm *vm)
 void		display_list(t_player *head)
 {
 	if (head != NULL)
-	{
-		//ft_printf("\nSTATS START:: id = %d || n = %d\n", head->id, head->n);
 		display_list(head->next);
-	}
 }
