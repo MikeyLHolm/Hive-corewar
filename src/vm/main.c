@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/21 11:51:09 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/21 16:14:22 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,23 +45,9 @@ t_vm		*init_vm(void)
 	return (vm);
 }
 
-// void		save_flag(t_vm *vm, char flag)
-// {
-// 	if (flag == 'd')
-// 		vm->flags = vm->flags | DUMP;
-// 	else if (flag == 'e')
-// 		vm->flags = vm->flags | ERROR;
-// 	else if (flag == 'l')
-// 		vm->flags = vm->flags | LEAKS;
-// 	else if (flag == 'n')
-// 		vm->flags = vm->flags | N;
-// 	else if (flag == 'v')
-// 		vm->flags = vm->flags | VISUALIZER;
-// }
-
 void	check_magic_header(int fd)
 {
-	unsigned char			buf[4];
+	unsigned char	buf[4];
 	int				magic_num;
 
 	if (read(fd, buf, 4) != 4)
@@ -86,7 +72,7 @@ char	*get_player_name(int fd)
 int		get_player_size(int fd)
 {
 	unsigned char	buf[4];
-	int		size;
+	int				size;
 
 	if (read(fd, buf, 4) != 4)
 		handle_error("File ended too soon");
@@ -108,7 +94,8 @@ char	*get_player_comment(int fd)
 	return (ft_strdup(buf));
 }
 
-unsigned char	*resize_memory(unsigned char *player_code, int size, int size_to_add)
+unsigned char	*resize_memory(unsigned char *player_code, int size,
+	int size_to_add)
 {
 	unsigned char *tmp;
 
@@ -119,15 +106,12 @@ unsigned char	*resize_memory(unsigned char *player_code, int size, int size_to_a
 	return (tmp);
 }
 
-unsigned char	*get_player_code(t_player *player, int fd)
+unsigned char	*get_player_code(t_player *player, int fd, int amount_read,
+int total_read)
 {
-	char	buf[BUFFER_SIZE];
+	char			buf[BUFFER_SIZE];
 	unsigned char	*player_code;
-	int		amount_read;
-	int		total_read;
 
-	amount_read = 0;
-	total_read = 0;
 	player_code = NULL;
 	while ((amount_read = read(fd, buf, BUFFER_SIZE)) > 0)
 	{
@@ -161,7 +145,7 @@ void	get_player_info(t_player *player)
 	player->name = get_player_name(fd);
 	player->size = get_player_size(fd);
 	player->comment = get_player_comment(fd);
-	player->code = get_player_code(player, fd);
+	player->code = get_player_code(player, fd, 0, 0);
 	validate_player(player);
 }
 
@@ -180,14 +164,12 @@ t_player	*save_player(t_vm *vm, char *filename, char *n)
 	if (!(player = (t_player*)ft_memalloc(sizeof(t_player))))
 		handle_error("Malloc failed at save_player.");
 	player->id = ++id;
-	//ft_printf("Name is: [%s]\n", filename);
 	validate_filename(filename, ".cor");
 	player->filename = filename;
 	player->player_nbr = n ? ft_atoi(n) : 0;
 	get_player_info(player);
 	return (player);
 }
-
 
 void	print_player_code(t_player *player)
 {
@@ -211,7 +193,6 @@ void	print_player(t_player *player)
 	ft_printf("PLAYER NAME: %s\n", player->name);
 	ft_printf("PLAYER COMMENT: %s\n", player->comment);
 	ft_printf("PLAYER SIZE: %d\n", player->size);
-	// ft_printf("PLAYER CODE: \n", player->code);
 	print_player_code(player);
 }
 
@@ -228,9 +209,9 @@ void	manually_create_players(t_vm *vm)
 
 void	load_players(t_vm *vm)
 {
-	t_player *cur_player;
-	int offset;
-	int i;
+	t_player	*cur_player;
+	int			offset;
+	int			i;
 
 	i = 0;
 	cur_player = vm->players;
@@ -309,7 +290,7 @@ void	introduce_contestants(t_vm *vm)
 	}
 }
 
-void	disable_dead_carriages(t_vm *vm) //memory is not freed
+void	disable_dead_carriages(t_vm *vm)
 {
 	t_carriage *cur_carriage;
 	t_carriage *prev_carriage;
@@ -331,7 +312,6 @@ void	disable_dead_carriages(t_vm *vm) //memory is not freed
 		}
 		else
 			prev_carriage = cur_carriage;
-		//}
 		cur_carriage = next_carriage;
 	}
 }
@@ -382,10 +362,6 @@ void	get_statement(t_vm *vm, t_carriage *cur)
 	cur->statement = vm->arena[cur->position];
 	if (cur->statement > 0 && cur->statement <= OP_CODE_AMOUNT)
 		cur->cycles_left = g_op_tab[cur->statement - 1].cycles;
-	// if (vm->flags & ADV_VISUALIZER)
-	// 	cur->statement_owner = vm->cur_state->cursor_mem[cur->position];
-	// if (vm->flags & VISUALIZER)
-	// 	cur->statement_owner = vm->cursor_mem[cur->position];
 }
 
 void	set_statement_codes(t_vm *vm, t_carriage *cur)
@@ -433,33 +409,25 @@ int		check_argument_direct(t_carriage *cur, int *offset, int n)
 
 int		check_argument_type_code(t_vm *vm, t_carriage *cur)
 {
-	unsigned char	act;
 	int				offset;
 	int				n;
 	int				bit;
+	int				return_value;
 
-	act = (vm->arena[(cur->position + 1) % MEM_SIZE]);
 	offset = 2;
 	n = 0;
 	bit = 7;
 	while (n < g_op_tab[cur->statement - 1].args_n)
 	{
-		if (((act >> bit) & 0x01) && ((act >> (bit - 1)) & 0x01))
-		{
-			if (!check_argument_indirect(cur, &offset, n))
-				return (0);
-		}
-		else if (!((act >> bit) & 0x01) && ((act >> (bit - 1)) & 0x01))
-		{
-			if (!check_argument_registry(vm, cur, &offset, n))
-				return (0);
-		}
-		else if (((act >> bit) & 0x01) && !((act >> (bit - 1)) & 0x01))
-		{
-			if (!check_argument_direct(cur, &offset, n))
-				return (0);
-		}
+		if (((cur->act >> bit) & 0x01) && ((cur->act >> (bit - 1)) & 0x01))
+			return_value = check_argument_indirect(cur, &offset, n);
+		else if (!((cur->act >> bit) & 1) && ((cur->act >> (bit - 1)) & 0x01))
+			return_value = check_argument_registry(vm, cur, &offset, n);
+		else if (((cur->act >> bit) & 1) && !((cur->act >> (bit - 1)) & 0x01))
+			return_value = check_argument_direct(cur, &offset, n);
 		else
+			return (0);
+		if (!return_value)
 			return (0);
 		bit -= 2;
 		n++;
@@ -475,13 +443,20 @@ int		check_arguments_valid(t_vm *vm, t_carriage *cur)
 	return (1);
 }
 
-void	count_bytes_to_skip(t_vm *vm, t_carriage *cur)
+int		skip_direct_bytes(t_carriage *cur)
+{
+	if (g_op_tab[cur->statement - 1].size_t_dir)
+		return (2);
+	else
+		return (4);
+}
+
+void	count_bytes_to_skip(t_carriage *cur)
 {
 	unsigned char	act;
 	int				n;
 	int				bit;
 
-	(void)vm;
 	act = cur->act;
 	n = 0;
 	bit = 7;
@@ -495,12 +470,7 @@ void	count_bytes_to_skip(t_vm *vm, t_carriage *cur)
 	while (n < g_op_tab[cur->statement - 1].args_n)
 	{
 		if (((act >> bit) & 0x01) && !((act >> (bit - 1)) & 0x01))
-		{
-			if (g_op_tab[cur->statement - 1].size_t_dir)
-				cur->bytes_to_jump += 2;
-			else
-				cur->bytes_to_jump += 4;
-		}
+			cur->bytes_to_jump += skip_direct_bytes(cur);
 		else if (!((act >> bit) & 0x01) && ((act >> (bit - 1)) & 0x01))
 			cur->bytes_to_jump += 1;
 		else if (((act >> bit) & 0x01) && ((act >> (bit - 1)) & 0x01))
@@ -541,10 +511,10 @@ void	handle_statement(t_vm *vm, t_carriage *cur)
 {
 	if (cur->statement > 0 && cur->statement <= OP_CODE_AMOUNT)
 	{
-		cur->act = (vm->arena[(cur->position + 1) % MEM_SIZE]); //quick fix for act getting overwritten before bytes to skip is calculated
+		cur->act = (vm->arena[(cur->position + 1) % MEM_SIZE]);
 		if (check_arguments_valid(vm, cur))
 			execute_statement(vm, cur);
-		count_bytes_to_skip(vm, cur);
+		count_bytes_to_skip(cur);
 		move_carriage_next_statement(cur);
 	}
 	else
@@ -568,616 +538,11 @@ void	get_winner(t_vm *vm)
 	while (cur_player)
 	{
 		if (cur_player->id == vm->player_last_alive)
-			break;
+			break ;
 		cur_player = cur_player->next;
 	}
-	ft_printf("Contestant %d, \"%s\", has won !\n", cur_player->id, cur_player->name);
-}
-
-void	load_player_colors(t_vm *vm, int *cursor_mem)
-{
-	t_player *cur_player;
-	int offset;
-	int i;
-
-	i = 0;
-	cur_player = vm->players;
-	offset = MEM_SIZE / vm->player_amount;
-	while (i < vm->player_amount)
-	{
-		ft_memset(&cursor_mem[i++ * offset], cur_player->id + 4, cur_player->size * 4);
-		cur_player = cur_player->next;
-	}
-}
-
-int		*get_color_mem_old(t_vm *vm, int *prev_mem)
-{
-	t_carriage	*cur;
-	int			*color_mem;
-	int			i;
-
-	if (!(color_mem = (int*)ft_memalloc(sizeof(int) * MEM_SIZE)))
-		handle_error("Malloc failed");
-	cur = vm->carriages;
-	if (!prev_mem)
-		load_player_colors(vm, color_mem);
-	else
-	{
-		i = 0;
-		while (i < MEM_SIZE)
-		{
-			if (vm->updated_color_mem[i])
-			{
-				color_mem[i] = vm->updated_color_mem[i];
-			}
-			else if (prev_mem[i] > vm->player_amount && prev_mem[i] != 9)
-				color_mem[i] = prev_mem[i];
-			i++;
-		}
-	}
-	ft_bzero(vm->updated_color_mem, MEM_SIZE * sizeof(int));
-	free(prev_mem);
-	return (color_mem);
-}
-
-int		*get_cursor_mem_old(t_vm *vm, int *prev)
-{
-	t_carriage	*cur;
-	int			*cursor_mem;
-
-	if (!(cursor_mem = (int*)ft_memalloc(sizeof(int) * MEM_SIZE)))
-		handle_error("Malloc failed");
-	cur = vm->carriages;
-	(void)prev;
-	while (cur)
-	{
-		cursor_mem[cur->position] = 1;
-		cur = cur->next;
-	}
-	free(prev);
-	return (cursor_mem);
-}
-
-int		*get_color_mem(t_vm *vm, t_state *prev)
-{
-	t_carriage	*cur;
-	int			*color_mem;
-	int			i;
-
-	if (!(color_mem = (int*)ft_memalloc(sizeof(int) * MEM_SIZE)))
-		handle_error("Malloc failed");
-	cur = vm->carriages;
-	if (!prev)
-		load_player_colors(vm, color_mem);
-	else
-	{
-		i = 0;
-		while (i < MEM_SIZE)
-		{
-			if (vm->updated_color_mem[i])
-			{
-				color_mem[i] = vm->updated_color_mem[i];
-			}
-			else if (prev->color_mem[i] > vm->player_amount && prev->color_mem[i] != 9)
-				color_mem[i] = prev->color_mem[i];
-			i++;
-		}
-	}
-	ft_bzero(vm->updated_color_mem, MEM_SIZE * sizeof(int));
-	return (color_mem);
-}
-
-int		*get_cursor_mem(t_vm *vm, t_state *prev)
-{
-	t_carriage	*cur;
-	int			*cursor_mem;
-
-	if (!(cursor_mem = (int*)ft_memalloc(sizeof(int) * MEM_SIZE)))
-		handle_error("Malloc failed");
-	cur = vm->carriages;
-	(void)prev;
-	// if (!prev)
-	// 	load_player_colors(vm, cursor_mem);
-	// else
-	// {
-	// 	i = 0;
-	// 	while (i < MEM_SIZE)
-	// 	{
-	// 		if (prev->cursor_mem[i] > vm->player_amount && prev->cursor_mem[i] != 9)
-	// 			cursor_mem[i] = prev->cursor_mem[i];
-	// 		else if (prev->cursor_mem[i] < 0)
-	// 			cursor_mem[i] = -prev->cursor_mem[i] + 4;
-	// 		i++;
-	// 	}
-	// }
-	while (cur)
-	{
-		cursor_mem[cur->position] = 1;
-		// if (cursor_mem[cur->position % MEM_SIZE] < 0 || cursor_mem[cur->position % MEM_SIZE] == 9)
-		// 	(void)cursor_mem;
-		// else if (cursor_mem[cur->position % MEM_SIZE])
-		// 	cursor_mem[cur->position % MEM_SIZE] = (cursor_mem[cur->position % MEM_SIZE] - 4) * -1;
-		// else
-		// 	cursor_mem[cur->position % MEM_SIZE] = 9;
-		cur = cur->next;
-	}
-	return (cursor_mem);
-}
-
-int		ft_abs(int n)
-{
-	return (n > 0 ? n : -n);
-}
-
-void	move_if_valid(t_vm *vm, int y, int x)
-{
-	int max_x;
-	int max_y;
-
-	getmaxyx(stdscr, max_y, max_x);
-	//if (y <= max_y && x <= max_x)
-	move(y, x);
-	vm->cursor_y = y;
-	vm->cursor_x = x;
-}
-
-void	print_if_valid(t_vm *vm, char *str)
-{
-	int max_x;
-	int max_y;
-
-	getmaxyx(stdscr, max_y, max_x);
-	if (vm->cursor_y < max_y && vm->cursor_x < max_x)
-	{
-		if ((int)ft_strlen(str) > max_x - vm->cursor_x)
-			str[max_x - vm->cursor_x] = '\0';
-		printw(str);
-		vm->cursor_x += ft_strlen(str);
-		if (ft_strchr(str, '\n'))
-			vm->cursor_x = 0;
-	}
-	free(str);
-}
-
-void	print_player_last_alive(t_vm *vm, int player_num)
-{
-	t_player *cur;
-
-	move_if_valid(vm, 25, 64 * 3 + 18);
-	print_if_valid(vm, ft_sprintf("PLAYER WITH LAST LIVE"));
-	cur = vm->players;
-	while (cur)
-	{
-		if (cur->id == player_num)
-			break ;
-		cur = cur->next;
-	}
-	move_if_valid(vm, 27, 64 * 3 + 7);
-	attron(COLOR_PAIR((unsigned char)cur->id + 4));
-	print_if_valid(vm, ft_sprintf("PLAYER %d %34s", player_num, cur->name));
-	attroff(COLOR_PAIR((unsigned char)cur->id + 4));
-}
-
-void	print_player_lives(t_vm *vm)
-{
-	t_player	*cur;
-	int			offset;
-
-	cur = vm->players;
-	move_if_valid(vm, 31, 64 * 3 + 21);
-	print_if_valid(vm, ft_sprintf("LAST LIVE CYCLES"));
-	offset = 34;
-	while (cur)
-	{
-		move_if_valid(vm, offset, 64 * 3 + 7);
-		attron(COLOR_PAIR((unsigned char)cur->id + 4));
-		print_if_valid(vm, ft_sprintf("PLAYER %d (%s):", cur->id, cur->name));
-		attroff(COLOR_PAIR((unsigned char)cur->id + 4));
-		move_if_valid(vm, offset, 64 * 3 + 47);
-		print_if_valid(vm, ft_sprintf("%d", cur->last_live_cycle));
-		cur = cur->next;
-		offset += 2;
-	}
-}
-
-void	print_state_player_lives(t_vm *vm, t_state *state)
-{
-	t_player	*cur;
-	int			offset;
-	int			pointer_offset;
-
-	cur = vm->players;
-	move_if_valid(vm, 31, 64 * 3 + 21);
-	print_if_valid(vm, ft_sprintf("LAST LIVE CYCLES"));
-	offset = 34;
-	pointer_offset = 0;
-	while (cur)
-	{
-		move_if_valid(vm, offset, 64 * 3 + 7);
-		attron(COLOR_PAIR((unsigned char)cur->id + 4));
-		print_if_valid(vm, ft_sprintf("PLAYER %d (%s):", cur->id, cur->name));
-		attroff(COLOR_PAIR((unsigned char)cur->id + 4));
-		move_if_valid(vm, offset, 64 * 3 + 47);
-		print_if_valid(vm, ft_sprintf("%d", *(&state->player1_last_live + pointer_offset)));
-		cur = cur->next;
-		offset += 2;
-		pointer_offset += 1;
-	}
-}
-
-void	print_border(t_vm *vm)
-{
-	int i;
-	int size;
-
-	i = 0;
-	size = 64 * 3;
-	print_if_valid(vm, ft_sprintf("\n"));
-	while (i < size)
-	{
-		print_if_valid(vm, ft_sprintf("-"));
-		i++;
-	}
-	print_if_valid(vm, ft_sprintf("\n"));
-}
-
-void	print_visualizer_info(t_vm *vm)
-{
-	int			i;
-	t_carriage *cur;
-
-	move_if_valid(vm, 2, 64 * 3 + 20);
-	print_if_valid(vm, ft_sprintf("BATTLE INFORMATION"));
-	move_if_valid(vm, 6, 64 * 3 + 7);
-	print_if_valid(vm, ft_sprintf("CYCLE:"));
-	move_if_valid(vm, 6, 64 * 3 + 45);
-	print_if_valid(vm, ft_sprintf("%d", vm->cycles));
-	move_if_valid(vm, 8, 64 * 3 + 7);
-	print_if_valid(vm, ft_sprintf("CYCLES_TO_DIE:"));
-	move_if_valid(vm, 8, 64 * 3 + 45);
-	print_if_valid(vm, ft_sprintf("%d", vm->cycles_to_die));
-	move_if_valid(vm, 71, 4);
-	i = 0;
-	cur = vm->carriages;
-	while (cur)
-	{
-		i++;
-		cur = cur->next;
-	}
-	move_if_valid(vm, 10, 64 * 3 + 7);
-	print_if_valid(vm, ft_sprintf("CARRIAGES AMOUNT:"));
-	move_if_valid(vm, 10, 64 * 3 + 45);
-	print_if_valid(vm, ft_sprintf("%d", i));
-	move_if_valid(vm, 18, 64 * 3 + 7);
-	print_if_valid(vm, ft_sprintf("AUTOPLAY:"));
-	move_if_valid(vm, 18, 64 * 3 + 45);
-	print_if_valid(vm, ft_sprintf("%s", vm->controls.autoplay ? "ON" : "OFF"));
-	move_if_valid(vm, 20, 64 * 3 + 7);
-	print_if_valid(vm, ft_sprintf("STEP SIZE:"));
-	move_if_valid(vm, 20, 64 * 3 + 45);
-	print_if_valid(vm, ft_sprintf("%d", vm->controls.step_size));
-	print_player_last_alive(vm, vm->player_last_alive);
-	print_player_lives(vm);
-}
-
-void	print_controls(t_vm *vm)
-{
-	(void)vm;
-
-	move_if_valid(vm, 46, 64 * 3 + 24);
-	print_if_valid(vm, ft_sprintf("CONTROLS:"));
-	move_if_valid(vm, 50, 64 * 3 + 7);
-	print_if_valid(vm, ft_sprintf("Space:"));
-	move_if_valid(vm, 50, 64 * 3 + 35);
-	print_if_valid(vm, ft_sprintf("Toggle autoplay"));
-	move_if_valid(vm, 52, 64 * 3 + 7);
-	print_if_valid(vm, ft_sprintf("Left/Right:"));
-	move_if_valid(vm, 52, 64 * 3 + 27);
-	print_if_valid(vm, ft_sprintf("Move backwards/forwards"));
-	move_if_valid(vm, 54, 64 * 3 + 7);
-	print_if_valid(vm, ft_sprintf("Up/Down:"));
-	move_if_valid(vm, 54, 64 * 3 + 23);
-	print_if_valid(vm, ft_sprintf("Increace/Decrease step size"));
-	move_if_valid(vm, 56, 64 * 3 + 7);
-	print_if_valid(vm, ft_sprintf("Q:"));
-	move_if_valid(vm, 56, 64 * 3 + 46);
-	print_if_valid(vm, ft_sprintf("Quit"));
-}
-
-void	draw_borders(t_vm *vm)
-{
-	int i;
-	int size;
-
-	(void)vm;
-	attron(COLOR_PAIR(9));
-	move_if_valid(vm, 0, 0);
-	i = 0;
-	size = 64 * 3 + 2 + 50;
-	while (i < size + 1)
-	{
-		print_if_valid(vm, ft_sprintf("."));
-		i++;
-	}
-	move_if_valid(vm, 64 + 3, 0);
-	i = 0;
-	while (i < size + 1)
-	{
-		print_if_valid(vm, ft_sprintf("."));
-		i++;
-	}
-	move_if_valid(vm, 23, size - 49);
-	i = 0;
-	while (i < 50)
-	{
-		print_if_valid(vm, ft_sprintf("."));
-		i++;
-	}
-	move_if_valid(vm, 29, size - 49);
-	i = 0;
-	while (i < 50)
-	{
-		print_if_valid(vm, ft_sprintf("."));
-		i++;
-	}
-	move_if_valid(vm, 43, size - 49);
-	i = 0;
-	while (i < 50)
-	{
-		print_if_valid(vm, ft_sprintf("."));
-		i++;
-	}
-	move_if_valid(vm, 60, size - 49);
-	i = 0;
-	while (i < 50)
-	{
-		print_if_valid(vm, ft_sprintf("."));
-		i++;
-	}
-	i = 0;
-	while (i < 68)
-	{
-		move_if_valid(vm, i++, 0);
-		print_if_valid(vm, ft_sprintf(".."));
-	}
-	i = 0;
-	while (i < 68)
-	{
-		move_if_valid(vm, i++, size + 1);
-		print_if_valid(vm, ft_sprintf(".."));
-	}
-	i = 0;
-	while (i < 68)
-	{
-		move_if_valid(vm, i++, size - 49);
-		print_if_valid(vm, ft_sprintf(".."));
-	}
-	attroff((COLOR_PAIR(9)));
-}
-
-void	draw_gui_boxes(t_vm *vm)
-{
-	int i;
-	int size;
-
-	(void)vm;
-	attron(COLOR_PAIR(9));
-	move_if_valid(vm, 75, 0);
-	i = 0;
-	size = 64 * 3 + 2;
-	while (i < size + 1)
-	{
-		print_if_valid(vm, ft_sprintf("."));
-		i++;
-	}
-	move_if_valid(vm, 81, 0);
-	i = 0;
-	while (i < size + 1)
-	{
-		print_if_valid(vm, ft_sprintf("."));
-		i++;
-	}
-	i = 68;
-	while (i < 82)
-	{
-		move_if_valid(vm, i++, 0);
-		print_if_valid(vm, ft_sprintf(".."));
-	}
-	i = 68;
-	while (i < 82)
-	{
-		move_if_valid(vm, i++, size + 1);
-		print_if_valid(vm, ft_sprintf(".."));
-	}
-	attroff((COLOR_PAIR(9)));
-}
-
-void	print_footer(t_vm *vm)
-{
-	move_if_valid(vm, 62, 64 * 3 + 25);
-	print_if_valid(vm, ft_sprintf("Made by: "));
-	move_if_valid(vm, 65, 64 * 3 + 15);
-	attron(COLOR_PAIR(5));
-	print_if_valid(vm, ft_sprintf("Elindber"));
-	attroff((COLOR_PAIR(5)));
-	print_if_valid(vm, ft_sprintf(", "));
-	attron(COLOR_PAIR(6));
-	print_if_valid(vm, ft_sprintf("Mlindhol "));
-	attroff((COLOR_PAIR(6)));
-	print_if_valid(vm, ft_sprintf("and "));
-	attron(COLOR_PAIR(7));
-	print_if_valid(vm, ft_sprintf("Sadawi"));
-	attroff((COLOR_PAIR(7)));
-	print_if_valid(vm, ft_sprintf("."));
-}
-
-void	visualize(t_vm *vm)
-{
-	int	*cursor_mem;
-	int	key;
-	int i;
-
-	while (1)
-	{
-		erase();
-
-		i = 0;
-		cursor_mem = vm->cursor_mem;
-		draw_borders(vm);
-		int row;
-		row = 2;
-		move_if_valid(vm, row++, 3);
-		while (i < MEM_SIZE)
-		{
-			if (cursor_mem[i])
-				attron(COLOR_PAIR((unsigned char)ft_abs(vm->color_mem[i] ? vm->color_mem[i] - 4 : 9)));
-			else if (vm->color_mem[i])
-			{
-				attron(COLOR_PAIR((unsigned char)ft_abs(vm->color_mem[i] + (vm->changed_mem[i] ? 5 : 0))));
-			}
-			print_if_valid(vm, ft_sprintf("%02x", (unsigned char)vm->arena[i]));
-			if (cursor_mem[i])
-				attroff(COLOR_PAIR((unsigned char)ft_abs(vm->color_mem[i] - 4)));
-			else
-				attroff(COLOR_PAIR((unsigned char)ft_abs(vm->color_mem[i] + (vm->changed_mem[i] ? 5 : 0))));
-			print_if_valid(vm, ft_sprintf(" "));
-			i++;
-			if (!(i % 64))
-				move_if_valid(vm, row++, 3); //print_if_valid(vm, ft_sprintf("\n");
-		}
-		//print_border(vm);
-		move_if_valid(vm, 68, 0);
-		print_visualizer_info(vm);
-		print_controls(vm);
-		print_footer(vm);
-		//draw_gui_boxes(vm);
-		key = getch();
-		if (key == ' ')
-		{
-			vm->controls.autoplay = !vm->controls.autoplay;
-			timeout(vm->controls.autoplay ? 1 : -1);
-			break;
-		}
-		if (key == 'q')
-		{
-			endwin();
-			exit(0);
-		}
-		if (key == KEY_RIGHT)
-			break;
-		if (vm->controls.autoplay)
-			break;
-		refresh();
-	}
-}
-
-void	print_visualizer_state_info(t_vm *vm, t_state *cur_state)
-{
-
-	move_if_valid(vm, 2, 64 * 3 + 20);
-	print_if_valid(vm, ft_sprintf("BATTLE INFORMATION"));
-	move_if_valid(vm, 6, 64 * 3 + 7);
-	print_if_valid(vm, ft_sprintf("CYCLE:"));
-	move_if_valid(vm, 6, 64 * 3 + 45);
-	print_if_valid(vm, ft_sprintf("%d", cur_state->cycle));
-	move_if_valid(vm, 8, 64 * 3 + 7);
-	print_if_valid(vm, ft_sprintf("CYCLES_TO_DIE:"));
-	move_if_valid(vm, 8, 64 * 3 + 45);
-	print_if_valid(vm, ft_sprintf("%d", cur_state->cycles_to_die));
-	move_if_valid(vm, 71, 4);
-	move_if_valid(vm, 10, 64 * 3 + 7);
-	print_if_valid(vm, ft_sprintf("CARRIAGES AMOUNT:"));
-	move_if_valid(vm, 10, 64 * 3 + 45);
-	print_if_valid(vm, ft_sprintf("%d", cur_state->carriage_amount));
-	move_if_valid(vm, 18, 64 * 3 + 7);
-	print_if_valid(vm, ft_sprintf("AUTOPLAY:"));
-	move_if_valid(vm, 18, 64 * 3 + 45);
-	print_if_valid(vm, ft_sprintf("%s", vm->controls.autoplay ? "ON" : "OFF"));
-	move_if_valid(vm, 20, 64 * 3 + 7);
-	print_if_valid(vm, ft_sprintf("STEP SIZE:"));
-	move_if_valid(vm, 20, 64 * 3 + 45);
-	print_if_valid(vm, ft_sprintf("%d", vm->controls.step_size));
-	print_player_last_alive(vm, cur_state->last_live_player);
-	print_state_player_lives(vm, cur_state);
-}
-
-void	visualize_states(t_vm *vm)
-{
-	t_state	*cur_state;
-	int		i;
-	int		key;
-
-	cur_state = vm->arena_history_head;
-	for (int i = 0; i < vm->start; i++)
-		cur_state = cur_state->next;
-	while (1)
-	{
-		erase();
-		draw_borders(vm);
-		int row;
-		row = 2;
-		move_if_valid(vm, row++, 3);
-		i = 0;
-		while (i < MEM_SIZE)
-		{
-			if (cur_state->cursor_mem[i])
-				attron(COLOR_PAIR((unsigned char)ft_abs(cur_state->color_mem[i] ? cur_state->color_mem[i] - 4 : 9)));
-			else if (cur_state->color_mem[i])
-			{
-				// if (cur_state->cursor_mem[i] < 0)
-				// 	attron(COLOR_PAIR((unsigned char)ft_abs(cur_state->cursor_mem[i])));
-				// else
-				// 	attron(COLOR_PAIR((unsigned char)ft_abs(cur_state->cursor_mem[i] + (cur_state->changed_mem[i] && cur_state->changed_mem[i] < 50 ? 5 : 0))));
-				attron(COLOR_PAIR((unsigned char)ft_abs(cur_state->color_mem[i] + (cur_state->changed_mem[i] ? 5 : 0))));
-			}
-			print_if_valid(vm, ft_sprintf("%02x", (unsigned char)cur_state->arena[i]));
-			// if (cur_state->cursor_mem[i] < 0)
-			// 	attroff(COLOR_PAIR((unsigned char)ft_abs(cur_state->cursor_mem[i])));
-			// else
-			// 	attroff(COLOR_PAIR((unsigned char)ft_abs(cur_state->cursor_mem[i] + (cur_state->changed_mem[i] && cur_state->changed_mem[i] < 50 ? 5 : 0))));
-			if (cur_state->cursor_mem[i])
-				attroff(COLOR_PAIR((unsigned char)ft_abs(cur_state->color_mem[i] - 4)));
-			else
-				attroff(COLOR_PAIR((unsigned char)ft_abs(cur_state->color_mem[i] + (cur_state->changed_mem[i] ? 5 : 0))));
-			print_if_valid(vm, ft_sprintf(" "));
-			i++;
-			if (!(i % 64))
-				move_if_valid(vm, row++, 3);//print_if_valid(vm, ft_sprintf("\n");
-		}
-		move_if_valid(vm, 68, 0);
-		print_visualizer_state_info(vm, cur_state);
-		print_controls(vm);
-		print_footer(vm);
-		//draw_gui_boxes(vm);
-		refresh();
-		key = getch();
-		if (vm->controls.autoplay && key == ERR)
-			key = KEY_RIGHT;
-		i = 0;
-		if (key == KEY_LEFT)
-		{
-			while (i++ < vm->controls.step_size)
-				cur_state = cur_state->prev ? cur_state->prev : cur_state;
-		}
-		if (key == KEY_RIGHT)
-		{
-			while (i++ < vm->controls.step_size)
-				cur_state = cur_state->next ? cur_state->next : cur_state;
-		}
-		if (key == KEY_UP)
-			vm->controls.step_size++;
-		if (key == KEY_DOWN)
-			vm->controls.step_size > 1 ? vm->controls.step_size-- : (void)vm;
-		if (key == 'q')
-			break ;
-		if (key == ' ')
-		{
-			vm->controls.autoplay = !vm->controls.autoplay;
-			timeout(vm->controls.autoplay ? 1 : -1);
-		}
-		if (!cur_state->next)
-			vm->controls.autoplay = 0;
-	}
+	ft_printf("Contestant %d, \"%s\", has won !\n",
+		cur_player->id, cur_player->name);
 }
 
 void	state_get_lives(t_vm *vm, t_state *state)
@@ -1196,6 +561,46 @@ void	state_get_lives(t_vm *vm, t_state *state)
 	state->last_live_player = vm->player_last_alive;
 }
 
+int		count_carriages(t_vm *vm)
+{
+	t_carriage	*cur;
+	int			j;
+
+	j = 0;
+	cur = vm->carriages;
+	while (cur)
+	{
+		j++;
+		cur = cur->next;
+	}
+	return (j);
+}
+
+int		*get_changed_memory(t_vm *vm, t_state *prev)
+{
+	int	i;
+	int	*changed_mem;
+
+	if (!(changed_mem = (int*)ft_memalloc(sizeof(int) * MEM_SIZE)))
+		handle_error("Malloc failed");
+	i = 0;
+	if (prev)
+	{
+		i = 0;
+		while (i < MEM_SIZE)
+		{
+			if (vm->updated_changed_mem[i])
+				changed_mem[i] = vm->updated_changed_mem[i];
+			else
+				changed_mem[i] = prev->changed_mem[i] - 1 > 0 ?
+					prev->changed_mem[i] - 1 : 0;
+			i++;
+		}
+	}
+	ft_bzero(vm->updated_changed_mem, MEM_SIZE * sizeof(int));
+	return (changed_mem);
+}
+
 t_state	*new_state(t_vm *vm, t_state *prev)
 {
 	t_state	*state;
@@ -1211,27 +616,8 @@ t_state	*new_state(t_vm *vm, t_state *prev)
 	}
 	state->cursor_mem = get_cursor_mem(vm, prev);
 	state->color_mem = get_color_mem(vm, prev);
-	if (!(state->changed_mem = (int*)ft_memalloc(sizeof(int) * MEM_SIZE)))
-		handle_error("Malloc failed");
-	if (prev)
-	{
-		i = 0;
-		while (i < MEM_SIZE)
-		{
-			if (vm->updated_changed_mem[i])
-				state->changed_mem[i] = vm->updated_changed_mem[i];
-			else
-				state->changed_mem[i] = prev->changed_mem[i] - 1 > 0 ? prev->changed_mem[i] - 1 : 0;
-			i++;
-		}
-	}
-	ft_bzero(vm->updated_changed_mem, MEM_SIZE * sizeof(int));
-	int j = 0;
-	for (t_carriage *cur = vm->carriages; cur; cur = cur->next)
-	{
-		j++;
-	}
-	state->carriage_amount = j;
+	state->changed_mem = get_changed_memory(vm, prev);
+	state->carriage_amount = count_carriages(vm);
 	state->cycle = vm->cycles;
 	state->cycles_to_die = vm->cycles_to_die;
 	state->prev = prev;
@@ -1281,53 +667,71 @@ void	dump_memory(t_vm *vm)
 	}
 }
 
-void	battle_loop(t_vm *vm)
+void	handle_dump(t_vm *vm)
+{
+	if (!check_carriages_alive(vm))
+		get_winner(vm);
+	else
+		dump_memory(vm);
+	exit(0);
+}
+
+void	print_cycle_loading(t_vm *vm)
+{
+	clear();
+	print_if_valid(vm, ft_sprintf("Saving cycle: %d\n", vm->cycles));
+	refresh();
+	clear();
+}
+
+void	handle_visualization(t_vm *vm)
+{
+	if (vm->flags & VISUALIZER)
+		visualize(vm);
+	if (vm->flags & ADV_VISUALIZER)
+		save_state(vm);
+}
+
+void	save_visualizer_memory(t_vm *vm)
+{
+	vm->color_mem = get_color_mem_old(vm, vm->color_mem);
+	vm->cursor_mem = get_cursor_mem_old(vm, vm->cursor_mem);
+	update_changed_memory(vm);
+}
+
+void	handle_cycle_carriages(t_vm *vm)
 {
 	t_carriage *cur;
 
+	cur = vm->carriages;
+	while (cur)
+	{
+		set_statement_codes(vm, cur);
+		reduce_cycles(vm, cur);
+		perform_statements(vm, cur);
+		cur = cur->next;
+	}
+}
+
+void	battle_loop(t_vm *vm)
+{
 	save_state(vm);
 	while (1)
 	{
 		if (vm->flags & VISUALIZER)
-		{
-			vm->color_mem = get_color_mem_old(vm, vm->color_mem);
-			vm->cursor_mem = get_cursor_mem_old(vm, vm->cursor_mem);
-			update_changed_memory(vm);
-		}
+			save_visualizer_memory(vm);
 		vm->cycles++;
 		perform_check(vm);
 		if (vm->flags & DUMP && vm->cycles - 1 == vm->dump_cycle)
-		{
-			if (!check_carriages_alive(vm))
-				get_winner(vm);
-			else
-				dump_memory(vm);
-			exit(0);
-		}
+			handle_dump(vm);
 		if (!check_carriages_alive(vm))
-			break;
-		if (vm->flags & ADV_VISUALIZER) //tmp debug
-		{
-			clear();
-			print_if_valid(vm, ft_sprintf("Saving cycle: %d\n", vm->cycles));
-			refresh();
-			clear();
-		}
-		cur = vm->carriages;
-		while (cur)
-		{
-			set_statement_codes(vm, cur);
-			reduce_cycles(vm, cur);
-			perform_statements(vm, cur);
-			cur = cur->next;
-		}
-		if (vm->flags & VISUALIZER)
-			visualize(vm);
+			break ;
 		if (vm->flags & ADV_VISUALIZER)
-			save_state(vm);
+			print_cycle_loading(vm);
+		handle_cycle_carriages(vm);
+		handle_visualization(vm);
 	}
-	//if (!(vm->flags & DUMP))
-		get_winner(vm);
+	get_winner(vm);
 }
 
 void	print_arena(t_vm *vm)
@@ -1379,12 +783,8 @@ int			main(int argc, char **argv)
 	vm = init_vm();
 	(void)argv;
 	parse_input(vm, argc, argv);
-	//read_input();
-	//validate(vm);
-	//manually_create_players(vm); //used to create players before argument parsing is functional
 	init_arena(vm);
 	introduce_contestants(vm);
-	//print_arena(vm);
 	if (vm->flags & (ADV_VISUALIZER | VISUALIZER))
 		init_visualizer(vm);
 	battle_loop(vm);
