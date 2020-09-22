@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/22 11:52:31 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/22 13:41:32 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -238,7 +238,7 @@ void					check_flags_valid(t_vm *vm);
 int						parse_simple_flags(t_vm *vm, char **argv, int i);
 
 int						parse_digit_flags(t_vm *vm, int argc, char **argv,
-							int i);
+							int *i);
 
 t_player				*swap_nodes(t_player *cur, t_player *nxt);
 
