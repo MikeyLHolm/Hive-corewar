@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/21 16:14:22 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/22 14:20:29 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -774,12 +774,28 @@ void	init_visualizer(t_vm *vm)
 	}
 }
 
+void	print_usage(void)
+{
+	ft_printf("Usage: /vm [-a -f -l -v -z -x (-dump n) (-s n) (-n n)] ");
+	ft_printf("[filename.cor] ([filename.cor] [filename.cor])\n\n");
+	ft_printf("-a: Show advanced visualizer\n");
+	ft_printf("-f: Fix lld instruction bug\n");
+	ft_printf("-l: Print lives to standard output\n");
+	ft_printf("-v: Show visualizer\n");
+	ft_printf("-z: Print aff instructions to standard output\n");
+	ft_printf("-x: Show leaks after program terminates\n");
+	ft_printf("-dump n: Dump memory at cycle n\n");
+	ft_printf("-s n: Start advanced visualizer at cycle n\n");
+	ft_printf("-n n: Set player number\n");
+	exit(0);
+}
+
 int			main(int argc, char **argv)
 {
 	t_vm	*vm;
 
 	if (argc < 2)
-		handle_error("./vm [filename.cor] ([filename.cor] [filename.cor])");
+		print_usage();
 	vm = init_vm();
 	(void)argv;
 	parse_input(vm, argc, argv);
