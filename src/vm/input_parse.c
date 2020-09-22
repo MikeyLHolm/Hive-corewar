@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 12:13:13 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/22 13:03:24 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/22 13:41:56 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,23 +83,23 @@ int		parse_simple_flags(t_vm *vm, char **argv, int i)
 	return (1);
 }
 
-int		parse_digit_flags(t_vm *vm, int argc, char **argv, int i)
+int		parse_digit_flags(t_vm *vm, int argc, char **argv, int *i)
 {
-	if (ft_strequ(argv[i], "-dump"))
+	if (ft_strequ(argv[*i], "-dump"))
 	{
 		vm->flags = vm->flags | DUMP;
-		i++;
-		if (i < argc)
-			vm->dump_cycle = ft_atoi(argv[i]);
+		*i += 1;
+		if (*i < argc)
+			vm->dump_cycle = ft_atoi(argv[*i]);
 		else
 			handle_error("Dump flag not followed with digit");
 	}
-	else if (ft_strequ(argv[i], "-s"))
+	else if (ft_strequ(argv[*i], "-s"))
 	{
 		vm->flags = vm->flags | START;
-		i++;
-		if (i < argc)
-			vm->start = ft_atoi(argv[i]);
+		*i += 1;
+		if (*i < argc)
+			vm->start = ft_atoi(argv[*i]);
 		else
 			handle_error("Start flag not followed with digit");
 	}
@@ -117,7 +117,7 @@ void	parse_input(t_vm *vm, int argc, char **argv)
 	{
 		if (parse_simple_flags(vm, argv, i))
 			;
-		else if (parse_digit_flags(vm, argc, argv, i))
+		else if (parse_digit_flags(vm, argc, argv, &i))
 			;
 		else if (ft_strequ(argv[i], "-n"))
 		{
