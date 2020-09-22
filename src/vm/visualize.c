@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 12:02:24 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/22 11:51:54 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/22 13:57:19 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -482,7 +482,7 @@ t_state	*get_start_state(t_vm *vm)
 	i = 0;
 	while (i < vm->start)
 	{
-		if (!cur_state)
+		if (!cur_state->next)
 			break ;
 		cur_state = cur_state->next;
 	}
