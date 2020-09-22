@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 12:13:13 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/22 11:30:45 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/22 13:03:24 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,7 @@ void	parse_input(t_vm *vm, int argc, char **argv)
 	vm->player_amount = count_players(vm);
 	if (vm->player_amount > MAX_PLAYERS)
 		handle_error(ft_sprintf(
-			"Too many players,maximum of %d players allowed", MAX_PLAYERS));
+			"Too many players, maximum of %d players allowed", MAX_PLAYERS));
 	sort_players(vm);
 	check_flags_valid(vm);
 }
