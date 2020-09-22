@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 14:47:54 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/18 15:24:32 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/22 14:36:30 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ static t_file		*validate_name(t_file *cur, t_validator *vd)
 	while (!ft_strchr(name, '"') && cur)
 	{
 		cur = increment_validator(cur, vd);
+		if (!cur)
+			validation_error("EOF, closing quote not found", vd->row);
 		name = ft_strjoinfree(name, ft_strdup("\n"));
 		name = ft_strjoinfree(name, ft_strdup(cur->line));
 		if (ft_strchr(name, '"'))
@@ -94,6 +96,8 @@ static t_file		*validate_comment(t_file *cur, t_validator *vd)
 	while (!ft_strchr(comment, '"') && cur)
 	{
 		cur = increment_validator(cur, vd);
+		if (!cur)
+			validation_error("EOF, closing quote not found", vd->row);
 		comment = ft_strjoinfree(comment, ft_strdup("\n"));
 		comment = ft_strjoinfree(comment, ft_strdup(cur->line));
 		if (ft_strchr(comment, '"'))
