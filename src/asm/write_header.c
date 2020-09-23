@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   write_header.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/17 16:39:49 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 16:41:49 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/22 14:54:37 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ void	write_name(t_asm *assm, int fd)
 		i++;
 	}
 	i = 0;
-	write(fd, buf, PROG_NAME_LENGTH + 1);
-	write(fd, "\0\0\0\0", 3);
+	write(fd, buf, PROG_NAME_LENGTH);
+	write(fd, "\0\0\0\0", 4);
 }
 
 void	write_comment(t_asm *assm, int fd)
