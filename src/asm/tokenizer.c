@@ -18,14 +18,17 @@ t_token		*new_token(t_asm *assm)
 
 	if (!(token = (t_token*)ft_memalloc(sizeof(t_token))))
 		handle_error("Malloc failed");
-	token->label = get_token_label(assm->cur->line);
+	token->label = get_token_labels(assm);
 	token->instruction = get_token_instruction(assm, 0);
+	if (!token->instruction)
+		return (token);
 	token->instruction_index = get_instruction_index(token->instruction);
 	get_token_arguments(assm, token);
 	token->argument_type_code = get_argument_type_code(token);
 	token->size = get_token_size(token);
 	assm->champion_size += token->size;
-	//print_token_info(token);
+	ft_printf("%s\n", assm->cur->line);
+	print_token_info(token);
 	return (token);
 }
 
@@ -33,11 +36,8 @@ void		tokenize_file(t_asm *assm)
 {
 	t_token		*cur_token;
 
-	get_name_and_comment(assm);
 	assm->cur = assm->file;
-	while (assm->cur->line && assm->cur->line[0] == '.')
-		assm->cur = assm->cur->next;
-	assm->cur = assm->cur->next;
+	get_name_and_comment(assm);
 	while (assm->cur)
 	{
 		if (line_contains_instruction(assm->cur))

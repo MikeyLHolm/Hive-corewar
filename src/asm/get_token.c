@@ -101,6 +101,44 @@ char			*get_token_instruction(t_asm *assm, int len)
 	return (NULL);
 }
 
+int		get_2d_array_size(char **arr)
+{
+	int i;
+
+	i = 0;
+	if (!arr)
+		return (0);
+	while (arr[i])
+		i++;
+	return (i);
+}
+
+char	**resize_2d_array(char **arr, char *str)
+{
+	char	**new_arr;
+	int		i;
+
+	if (!arr)
+	{
+		new_arr = (char**)ft_memalloc(sizeof(char*) * 2);
+		new_arr[0] = str;
+	}
+	else
+	{
+		new_arr = (char**)ft_memalloc(sizeof(char*) * (get_2d_array_size(arr)
+			+ 2));
+		i = 0;
+		while (i < get_2d_array_size(arr))
+		{
+			new_arr[i] = arr[i];
+			i++;
+		}
+		new_arr[i] = str;
+		free(arr);
+	}
+	return (new_arr);
+}
+
 char			*get_token_label(char *line)
 {
 	int				i;
@@ -115,4 +153,42 @@ char			*get_token_label(char *line)
 	// while (line[i] != LABEL_CHAR)
 	// 	i++;
 	return (ft_strsub(line, 0, i));
+}
+
+
+char			**get_token_labels(t_asm *assm)
+{
+	int		i;
+	char	**arr;
+	t_file	*prev;
+
+	arr = NULL;
+	i = 0;
+	prev = assm->cur;
+	while (1)
+	{
+		if (!assm->cur)
+		{
+			assm->cur = prev;
+			return (arr);
+		}
+		while (assm->cur->line[i] && assm->cur->line[i] != LABEL_CHAR)
+		{
+			if (!ft_strchr(LABEL_CHARS, assm->cur->line[i++]))
+			{
+				assm->cur = prev;
+				return (arr);
+			}
+		}
+		if (assm->cur->line[i] == LABEL_CHAR)
+			arr = resize_2d_array(arr, ft_strsub(assm->cur->line, 0, i));
+		if (assm->cur->line[i + 1])
+		{
+			assm->cur = prev;
+			return (arr);
+		}
+		prev = assm->cur;
+		assm->cur = assm->cur->next;
+		i = 0;
+	}
 }

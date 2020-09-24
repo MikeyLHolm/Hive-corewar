@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   asm.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/17 12:41:59 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/18 15:22:23 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/24 16:17:19 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ typedef struct		s_validator
 
 typedef struct		s_token
 {
-	char			*label;
+	char			**label;
 	char			*instruction;
 	int				instruction_index;
 	char			*arg1;
@@ -102,6 +102,7 @@ char			*get_output_filename(char *input_filename);
 
 void			get_token_arguments(t_asm *assm, t_token *token);
 char			*get_token_instruction(t_asm *assm, int len);
+char			**get_token_labels(t_asm *assm);
 char			*get_token_label(char *line);
 int				get_token_size(t_token *token);
 
