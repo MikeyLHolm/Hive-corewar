@@ -3,14 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   write_statements.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elindber <elindber@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/10 15:37:49 by elindber          #+#    #+#             */
-/*   Updated: 2020/09/17 15:32:03 by elindber         ###   ########.fr       */
+/*   Updated: 2020/09/24 13:45:24 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "disasm.h"
+
+/*
+** By using bit operations this function reads the argument type code byte, that
+** carries the information of the types of the (up to 3) arguments that follows.
+** 01 is REG, 10 is DIR and 11 is IND. 0 is no argument. Argument types are
+** saved to an int array in struct.
+*/
 
 void	get_arg_types(int input, t_command *cmnd)
 {
@@ -39,6 +46,11 @@ void	get_arg_types(int input, t_command *cmnd)
 	}
 }
 
+/*
+** Gets the firs non-zero value from binary file. THen check if that matches any
+** statement from header file and writes that statement followed by a space.
+*/
+
 void	write_statement(int input, int output, t_command *cmnd)
 {
 	unsigned char	byte;
@@ -59,6 +71,13 @@ void	write_statement(int input, int output, t_command *cmnd)
 		write(output, " ", 1);
 	}
 }
+
+/*
+** Loops until all bytes from the champion's code are read. First gets the
+** statement and writes it. Then gets the argument types if necessary and
+** finally writes arguments followed by a newline accordingly. After everything
+** is read closes input and output files.
+*/
 
 void	write_instructions(int input, int output, t_command *cmnd)
 {
