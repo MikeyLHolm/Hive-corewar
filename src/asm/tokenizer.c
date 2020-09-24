@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/17 13:40:07 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 16:16:21 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/24 15:41:15 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ void		tokenize_file(t_asm *assm)
 			if (!assm->token)
 			{
 				cur_token = new_token(assm);
+				if (!cur_token)
+					return ;
 				assm->token = cur_token;
 			}
 			else
@@ -53,6 +55,7 @@ void		tokenize_file(t_asm *assm)
 				cur_token = cur_token->next;
 			}
 		}
-		assm->cur = assm->cur->next;
+		if (assm->cur)
+			assm->cur = assm->cur->next;
 	}
 }
