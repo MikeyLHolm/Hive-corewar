@@ -1,5 +1,9 @@
 # Hive-corewar
  In this project, you will create a virtual “arena” in which programs will fight against one another (the “Champions”). You will also create an assembler to compile those Champions as well as a Champion to show the world that you can create life from coffee.
+ 
+![Visualizer](https://lh3.googleusercontent.com/-R6Di7wh6ZMnWYEjolo-jRS2VLbggVaao9_8A-G6ASTAZ9u_EWvh3JrSDMmunBKE-AaA=w412-h220-rw)
+
+VIZU PLACEHOLDER
 
 ## Objectives
 • **The assembler:** this is the program that will compile your champions and trans- late them from the language you will write them in (assembly language) into “Byte- code”.Bytecode is a machine code, which will be directly interpreted by the virtual machine.
@@ -8,7 +12,7 @@
 
 • **The champion**: Your current champion will only need to prove to us that you can write bits and pieces of Corewar ASM. This means that the champion you should render for this project only needs to scare the bejesus out of a neurasthenic hedgehog.
 
-## Limitations:
+## Limitations
 This project has to be completed respecting our schools norme. Here us some of the rules:
 ```
 ◦ Each function must be maximum 25 lines, not counting the function’s own curly brackets.
@@ -33,3 +37,42 @@ Within the mandatory part, you are allowed to use only the following libc functi
 ◦ strerror
 ◦ write
 ```
+
+## Usage
+
+**Install**
+```
+git clone https://github.com/MikeyLHolm/Hive-corewar.git
+cd Hive-corewar
+make
+```
+**Assembler**
+```
+./asm [filename.s]
+```
+**Virtual Machine**
+```
+./corewar [-a -f -l -v -z -x (-dump n) (-s n) (-n n)] [filename.cor] ([filename.cor] [filename.cor])
+
+-a:        Show advanced visualizer
+-f:        Fix lld instruction bug
+-l:        Print lives to standard output
+-v:        Show visualizer
+-z:        Print aff instructions to standard output
+-x:        Show leaks after program terminates
+-dump n:   Dump memory at cycle n
+-s n:      Start advanced visualizer at cycle n
+-n n:      Set player number
+```
+**Disassembler**
+```
+./disasm [filename.s]
+```
+
+## Grade
+
+**/ 100**
+
+
+
+_under construction since August 2020_
