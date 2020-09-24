@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   write_binary.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/17 12:58:57 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 16:43:25 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/24 15:42:55 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,12 @@ static void			write_instructions(t_asm *assm, int fd)
 	token = assm->token;
 	while (token)
 	{
-		write_statement(token, fd);
-		write_argument_type_code(token, fd);
-		write_arguments(token, fd);
+		if (token->instruction)
+		{
+			write_statement(token, fd);
+			write_argument_type_code(token, fd);
+			write_arguments(token, fd);
+		}
 		token = token->next;
 	}
 }

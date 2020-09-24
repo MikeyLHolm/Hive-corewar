@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   print_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/17 12:51:38 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 13:14:43 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/24 11:32:40 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,11 @@ void	print_tokens(t_token *token)
 
 void	print_token_info(t_token *token)
 {
-	ft_printf("LABEL: %s\n", token->label);
+	int i;
+
+	i = 0;
+	while (token->label && token->label[i])
+		ft_printf("LABEL: %s\n", token->label[i++]);
 	ft_printf("INSTRUCTION: %s\n", token->instruction);
 	ft_printf("INSTRUCTION_INDEX: %d\n", token->instruction_index);
 	ft_printf("ARG1: %s\n", token->arg1);

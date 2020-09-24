@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_rest.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/17 16:31:43 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 16:31:45 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/23 13:51:42 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,17 @@
 int			get_first_arg_index(char *line, char *instruction)
 {
 	int			i;
+	int			len;
 
 	i = 0;
-	while (ft_strchr(LABEL_CHARS, line[i]))
+	len = ft_strlen(line);
+	while (i < len && ft_strchr(LABEL_CHARS, line[i]))
 		i++;
 	i = line[i] == LABEL_CHAR ? i + 1 : 0;
-	while (ft_isspace(line[i]))
+	while (i < len && ft_isspace(line[i]))
 		i++;
 	i += ft_strlen(instruction);
-	while (ft_isspace(line[i]))
+	while (i < len && ft_isspace(line[i]))
 		i++;
 	return (i);
 }

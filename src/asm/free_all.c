@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_all.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/17 10:27:42 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 15:48:32 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/24 14:38:09 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ void		free_tokens(t_asm *assm)
 {
 	t_token		*cur;
 	t_token		*tmp;
+	int			i;
 
 	cur = assm->token;
 	while (cur)
@@ -56,6 +57,9 @@ void		free_tokens(t_asm *assm)
 		free(tmp->arg2);
 		free(tmp->arg3);
 		free(tmp->instruction);
+		i = 0;
+		while (tmp->label && tmp->label[i])
+			free(tmp->label[i++]);
 		free(tmp->label);
 		free(tmp);
 	}
