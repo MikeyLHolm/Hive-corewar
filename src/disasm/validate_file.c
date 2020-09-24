@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validate_file.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elindber <elindber@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/10 15:37:52 by elindber          #+#    #+#             */
-/*   Updated: 2020/09/17 15:23:47 by elindber         ###   ########.fr       */
+/*   Updated: 2020/09/24 13:33:55 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 /*
 ** Reads PROG_NAME_LENGTH of bytes and 4 bytes that should be nulls. Then reads
-** 4 bytes that contain the length of the champion code.  
+** 4 bytes that contain the length of the champion code.
 */
 
 int		validate_name(int input)

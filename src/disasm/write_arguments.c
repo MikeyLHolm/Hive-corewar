@@ -3,14 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   write_arguments.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elindber <elindber@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/10 15:47:50 by elindber          #+#    #+#             */
-/*   Updated: 2020/09/16 12:47:23 by elindber         ###   ########.fr       */
+/*   Updated: 2020/09/24 13:56:49 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "disasm.h"
+
+/*
+** Reads four or two bytes and gets the value of those. Then changes the value
+** to ascii-characters and writes it to the output file.
+*/
 
 void	write_dir_value(int input, int output, int size)
 {
@@ -41,6 +46,11 @@ void	write_dir_value(int input, int output, int size)
 	free(str);
 }
 
+/*
+** Reads two bytes if argument is indirect, one if its a registry. Then changes
+** it to ascii-characters and writes it to the output file.
+*/
+
 void	write_ind_reg_value(int input, int output, int size)
 {
 	unsigned char		byte;
@@ -69,14 +79,25 @@ void	write_arg_sign(int output, int i, t_command *cmnd)
 		write(output, "%", 1);
 }
 
+/*
+** The size of the direct argument differs depending on the statement it
+** follows. This function determines the size of the argument.
+*/
+
 int		get_dir_argument_size(t_command *cmnd)
 {
-	if ((cmnd->statement >= 9 && cmnd->statement <= 12) || cmnd->statement == 14
-	|| cmnd->statement == 15)
+	if ((cmnd->statement >= ZJMP && cmnd->statement <= FORK)
+	|| cmnd->statement == LLDI || cmnd->statement == LFORK)
 		return (2);
 	else
 		return (4);
 }
+
+/*
+** Checks the current values in arg_types array in struct and determines the
+** amount of bytes that will be read. Then writes the sign of the argument type
+** and then the value followed by ", " if needed.
+*/
 
 void	write_arguments(int input, int output, t_command *cmnd)
 {
