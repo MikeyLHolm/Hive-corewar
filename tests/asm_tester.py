@@ -1,5 +1,6 @@
 #! /Users/mlindhol/.brew/bin/python3
 import os, subprocess, sys
+import hexdump
 
 # DONE:
 # 1. is there argument?
@@ -30,6 +31,14 @@ def check_if_cor(file, test_dir, caller):
 		print (red + caller + " KO" + endc)
 		return ("KO")
 
+def run_diff(orig, own):
+
+	print (orig)
+	print (own)
+	print (blue + "Run diff" + endc)
+	# diff = subprocess.run(['diff', os.path.join(test_dir, orig), os.path.join(test_dir, own)], stdout=subprocess.PIPE).stdout.decode('utf-8')
+	# print (diff)
+
 # Check if argument
 if (len(sys.argv) is not 2):
 	sys.exit("USAGE: python3 asm_tester.py [path]")
@@ -48,9 +57,9 @@ yellow = '\033[93m'
 test_dir = sys.argv[1] + "/"
 
 if os.path.exists(test_dir):
-    print ("Running tester on path: " + test_dir)
+    print (blue + "Running tester on path: " + test_dir + endc)
 else:
-	sys.exit("Not a valid path")
+	sys.exit(red + "Not a valid path" + endc)
 
 # Remove .cor files from test_dir
 for file in os.listdir(test_dir):
@@ -73,27 +82,28 @@ diff_log.write("asm_diff_log init...ready to rock!")
 # Loop thru all .s files in test dir
 for file in os.listdir(test_dir):
 	if file.endswith(".s"):
-		print (yellow + "Testing: " + file + endc)
+		print (yellow + "\nTesting: " + file + endc)
+
 		orig = subprocess.run(['./asm_orig', test_dir + file], stdout=subprocess.PIPE).stdout.decode('utf-8')
 		result_orig = check_if_cor(file, test_dir, "orig")
+		if (result_orig is "OK"):
+			print ("last print of friday " + test_dir + os.path.splitext(file)[0]+ ".cor")
+			uberfilu = subprocess.run(['python3', '-m', 'hexdump', test_dir + os.path.splitext(file)[0]+ ".cor"], stdout=subprocess.PIPE).stdout.decode('utf-8')
 
+		own = subprocess.run(['../asm', test_dir + file], stdout=subprocess.PIPE).stdout.decode('utf-8')
+		result_own = check_if_cor(file, test_dir, "own")
 
-		# own = subprocess.run(['../asm', test_dir + file], stdout=subprocess.PIPE).stdout.decode('utf-8')
-		# run asm_orig > hexdump_orig
-		# if error running FAIL otherwise OK
-		# run ../asm > hexdump
-		# if error running FAIL otherwise OK
-		# if both OK, then diff hexdump and hexdump_orig
-		#
-		#
-		# subprocess.run(['diff', 'hexdump', 'hexdump_orig'])
-		#
-		#
-		#
-		#
+		if (result_orig is "OK" and result_own is "OK"):
+			run_diff(orig, own)
+		elif (result_orig is "OK" and result_own is "KO" or
+			  result_orig is "KO" and result_own is "OK"):
+			print ("One OK the other KO")
+		else:
+			print (blue + "No diff, all gud." + endc)
 
-if os.path.exists(asm_path):
-	print (asm_path)
+		#print(binascii.hexlify("batman"))
+# if os.path.exists(asm_path):
+# 	print (asm_path)
 
 
 
