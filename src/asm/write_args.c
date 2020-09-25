@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   write_args.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/17 16:37:58 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 16:46:10 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/25 10:45:39 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,78 @@ static void		write_registry(char *arg, int fd)
 	write(fd, &buf, 1);
 }
 
+int				ft_atoi_edgecase_negative(char *str)
+{
+	size_t	i;
+	char	*long_min;
+
+	long_min = ft_strdup("-9223372036854775808");
+	if (ft_strlen(str) > ft_strlen(long_min))
+	{
+		free(long_min);
+		return (0);
+	}
+	if (ft_strlen(str) == ft_strlen(long_min))
+	{
+		i = 0;
+		while (i < ft_strlen(str))
+		{
+			if (str[i] > long_min[i])
+			{
+				free(long_min);
+				return (0);
+			}
+			i++;
+		}
+	}
+	free(long_min);
+	return (ft_atoi(str));
+}
+
+int				ft_atoi_edgecase_positive(char *str)
+{
+	size_t	i;
+	char	*long_max;
+
+	long_max = ft_strdup("9223372036854775807");
+	if (ft_strlen(str) > ft_strlen(long_max))
+	{
+		free(long_max);
+		return (UINT_MAX);
+	}
+	if (ft_strlen(str) == ft_strlen(long_max))
+	{
+		i = 0;
+		while (i < ft_strlen(str))
+		{
+			if (str[i] > long_max[i])
+			{
+				free(long_max);
+				return (UINT_MAX);
+			}
+			i++;
+		}
+	}
+	free(long_max);
+	return (ft_atoi(str));
+}
+
+int				ft_atoi_edgecase(char *str)
+{
+	int		i;
+
+	i = 0;
+	if (str[0] == '-')
+		return (ft_atoi_edgecase_negative(str));
+	else
+		return (ft_atoi_edgecase_positive(str));
+}
+
 static void		write_direct(t_token *token, char *arg, int fd)
 {
 	int				bytes;
 
-	bytes = ft_atoi(&arg[1]);
+	bytes = ft_atoi_edgecase(&arg[1]);
 	if (!g_op_tab[token->instruction_index].size_t_dir)
 	{
 		write(fd, &((unsigned char*)&bytes)[3], 1);
@@ -49,7 +116,7 @@ static void		write_indirect(char *arg, int fd)
 {
 	short			bytes;
 
-	bytes = ft_atoi(arg);
+	bytes = ft_atoi_edgecase(arg);
 	write(fd, &((unsigned char*)&bytes)[1], 1);
 	write(fd, &((unsigned char*)&bytes)[0], 1);
 }
