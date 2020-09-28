@@ -5,72 +5,55 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/22 17:38:13 by sadawi            #+#    #+#             */
-/*   Updated: 2020/03/21 15:37:28 by sadawi           ###   ########.fr       */
+/*   Created: 2019/11/01 13:16:14 by elindber          #+#    #+#             */
+/*   Updated: 2020/09/23 13:44:24 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stdlib.h>
 
-static	int	count_strings(char *str, char c)
+static int	ft_count(const char *str, int d)
 {
-	int i;
-	int j;
+	int	i;
+	int	count;
 
 	i = 0;
-	j = 0;
-	while (str[j] == c)
-		j++;
-	if (str[j] == '\0')
-		return (0);
-	while (str[j + 1])
+	count = 0;
+	while (str && str[i])
 	{
-		if (str[j] == c && str[j + 1] != c)
-			i++;
-		j++;
+		if ((str[i] != d && str[i + 1] == d) ||
+				(str[i] != d && str[i + 1] == '\0'))
+			count++;
+		i++;
 	}
-	return (i + 1);
+	return (count);
 }
 
-static char	*string(char *s, char c, int index)
+char		**ft_strsplit(char const *s, char c)
 {
-	int		i;
-	int		j;
-	int		strindex;
-	char	*str;
+	unsigned int	i;
+	size_t			start;
+	char			**str;
+	int				y;
 
+	y = 0;
 	i = 0;
-	j = 0;
-	strindex = 0;
-	while (s[i] == c)
-		i++;
-	while (strindex < index)
+	start = 0;
+	if (!s)
+		return (NULL);
+	if (!(str = (char**)ft_memalloc(sizeof(char*) * (ft_count(s, (int)c) + 1))))
+		return (NULL);
+	while (y < ft_count(s, (int)c))
 	{
-		while (s[i] != c && s[i])
+		while (s[i] == (int)c)
 			i++;
-		while (s[i] == c)
+		start = i;
+		while (s[i] && s[i] != (int)c)
 			i++;
-		strindex++;
-	}
-	if (!(s[i]))
-		return (NULL);
-	while (s[i + j] != c && s[i + j] != '\0')
-		j++;
-	return (str = ft_strsub(s, i, j));
-}
-
-char		**ft_strsplit(const char *s, char c)
-{
-	char	**arr;
-	int		i;
-
-	i = 0;
-	if (!(arr = (char**)ft_memalloc(sizeof(arr) *
-		count_strings((char*)s, c) + 1)))
-		return (NULL);
-	while ((arr[i] = string((char*)s, c, i)))
+		if (!(str[y] = ft_strsub(s, start, (i - start))))
+			return (NULL);
 		i++;
-	arr[i] = 0;
-	return (arr);
+		y++;
+	}
+	return (str);
 }

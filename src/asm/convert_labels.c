@@ -3,14 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   convert_labels.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/17 16:20:57 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 16:28:28 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/24 11:40:48 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asm.h"
+
+int					arg_matches_labels(t_token *cur_token, char **arg)
+{
+	int i;
+
+	i = 0;
+	if (!cur_token->label)
+		return (0);
+	while (cur_token->label[i])
+	{
+		if (ft_strequ(cur_token->label[i], ft_strchr(*arg, ':') + 1))
+			return (1);
+		i++;
+	}
+	return (0);
+}
 
 static void			convert_arg_label(t_asm *assm, char **arg, int arg_position)
 {
@@ -22,7 +38,7 @@ static void			convert_arg_label(t_asm *assm, char **arg, int arg_position)
 	cur_token = assm->token;
 	while (cur_token)
 	{
-		if (ft_strequ(cur_token->label, ft_strchr(*arg, ':') + 1))
+		if (arg_matches_labels(cur_token, arg))
 		{
 			if ((*arg)[0] == '%')
 				converted_arg = ft_strjoinfree(ft_strdup("%"),
