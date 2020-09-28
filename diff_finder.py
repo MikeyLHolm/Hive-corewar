@@ -1,4 +1,4 @@
-#! /Users/sadawi/.brew/bin/python3
+#!/usr/bin/env python3
 
 import sys, re, os
 import subprocess
