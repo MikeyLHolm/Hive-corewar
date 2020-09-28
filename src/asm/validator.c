@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 12:44:33 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/18 15:23:06 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/28 17:15:10 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,6 @@ t_validator		*init_validator(void)
 	if (!(vd = (t_validator*)ft_memalloc(sizeof(t_validator))))
 		validation_error("Malloc failed at validator init", 0);
 	vd->row = 1;
-	vd->name = ft_strjoin(NAME_CMD_STRING, " ");
-	vd->comment = ft_strjoin(COMMENT_CMD_STRING, " ");
 	return (vd);
 }
 

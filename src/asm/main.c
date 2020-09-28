@@ -6,13 +6,20 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/25 16:55:28 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/28 17:14:15 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asm.h"
 
-t_asm		*init_assm(void)
+static int		validate_filename(char *filename, char *extension)
+{
+	if (!(ft_strequ(ft_strrchr(filename, '.'), extension)))
+		validation_error("File extension not .s", -1);
+	return (1);
+}
+
+t_asm			*init_assm(void)
 {
 	t_asm		*assm;
 
@@ -21,11 +28,11 @@ t_asm		*init_assm(void)
 	return (assm);
 }
 
-int			main(int argc, char **argv)
+int				main(int argc, char **argv)
 {
 	t_asm		*assm;
 
-	if (argc != 2)
+	if (argc != 2 || !validate_filename(argv[1], ".s"))
 		handle_error("./asm [filename.s]");
 	assm = init_assm();
 	assm->file = read_file(argv[1]);

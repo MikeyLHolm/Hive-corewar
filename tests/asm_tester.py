@@ -60,7 +60,7 @@ if (len(sys.argv) is not 2):
 
 # Set Colors and vars
 asm_path = "../asm"
-asm_orig_path = "./asm_orig "
+asm_orig_path = "./asm_orig"
 
 blue = '\033[94m'
 endc = '\033[0m'
@@ -70,6 +70,10 @@ yellow = '\033[93m'
 
 # Set test directory and verify existance
 test_dir = sys.argv[1] + "/"
+
+print (test_dir)
+print (asm_path)
+print (asm_orig_path)
 
 if os.path.exists(test_dir):
     print (blue + "running tester on path: " + test_dir + endc)
@@ -105,7 +109,7 @@ for file in os.listdir(test_dir):
 		cor = os.path.join(test_dir, os.path.splitext(file)[0]+ ".cor")
 
 		# original asm
-		orig = subprocess.run(['./asm_orig', test_dir + file], stdout=subprocess.PIPE).stdout.decode('utf-8')
+		orig = subprocess.run([asm_orig_path, test_dir + file], stdout=subprocess.PIPE).stdout.decode('utf-8')
 		result_orig = check_if_cor("orig", cor)
 		if (result_orig is "OK"):
 			create_hexdump_file(cor, "1")
@@ -114,7 +118,7 @@ for file in os.listdir(test_dir):
 			os.remove(cor)
 
 		# our asm
-		own = subprocess.run(['../asm', test_dir + file], stdout=subprocess.PIPE).stdout.decode('utf-8')
+		own = subprocess.run([asm_path, test_dir + file], stdout=subprocess.PIPE).stdout.decode('utf-8')
 		result_own = check_if_cor("own", cor)
 		if (result_own is "OK"):
 			create_hexdump_file(cor, "2")

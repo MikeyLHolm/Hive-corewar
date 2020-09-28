@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_all.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/17 10:27:42 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/24 14:38:09 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/28 17:15:15 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,6 @@ void		free_tokens(t_asm *assm)
 
 void		free_validator(t_validator *vd)
 {
-	free(vd->comment);
-	free(vd->name);
 	free_label(vd->label);
 	free(vd);
 }
