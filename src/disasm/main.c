@@ -6,7 +6,7 @@
 /*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/07 15:15:41 by elindber          #+#    #+#             */
-/*   Updated: 2020/09/17 15:18:13 by elindber         ###   ########.fr       */
+/*   Updated: 2020/09/28 13:11:49 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,14 @@ void	write_file(int input, int output, t_command *cmnd)
 	write_instructions(input, output, cmnd);
 }
 
+void	free_memory(char *name, t_command *cmnd)
+{
+	if (name)
+		free(name);
+	if (cmnd)
+		free(cmnd);
+}
+
 int		main(int ac, char **av)
 {
 	int				i;
@@ -80,6 +88,8 @@ int		main(int ac, char **av)
 	t_command		*cmnd;
 
 	i = 0;
+	if (ac < 2)
+		handle_error("USAGE: ./disasm [file.cor]");
 	while (++i < ac)
 	{
 		input = open(av[i], O_RDONLY);
@@ -92,9 +102,8 @@ int		main(int ac, char **av)
 		*ft_strrchr(av[i], '.') = '\0';
 		name = ft_strjoin(av[i], ".s");
 		output = open(name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		free(name);
 		write_file(input, output, cmnd);
-		free(cmnd);
+		free_memory(name, cmnd);
 	}
 	return (0);
 }
