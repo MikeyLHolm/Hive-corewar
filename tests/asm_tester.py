@@ -21,23 +21,44 @@ import hexdump
 # -----------------------------------------------------
 
 # Inside main loop, checks if .cor file has been made out of .s file
-def check_if_cor(file, test_dir, caller):
+def check_if_cor(caller, cor):
 
-	f = os.path.splitext(file)[0]+ ".cor"
-	if os.path.exists(os.path.join(test_dir, f)):
+	if os.path.exists(cor):
 		print (green + caller + " OK" + endc)
 		return ("OK")
 	else:
 		print (red + caller + " KO" + endc)
 		return ("KO")
 
+def create_file(cor, file_nbr):
+
+	hexdump_file = "hexdump_" + file_nbr + ".txt"
+	print ("run hexdump")
+	hex_dump = subprocess.run(['python3', '-m', 'hexdump', cor], stdout=subprocess.PIPE).stdout.decode('utf-8')
+	print (type(hex_dump))
+	with open(hexdump_file, 'a') as h_file:
+	    h_file.write(hex_dump)
+
+
+def remove_hexdump_files():
+
+	if os.path.exists("hexdump_1.txt"):
+		os.remove("hexdump_1.txt")
+	if os.path.exists("hexdump_2.txt"):
+		os.remove("hexdump_2.txt")
+
 def run_diff(orig, own):
 
-	print (orig)
-	print (own)
 	print (blue + "Run diff" + endc)
-	# diff = subprocess.run(['diff', os.path.join(test_dir, orig), os.path.join(test_dir, own)], stdout=subprocess.PIPE).stdout.decode('utf-8')
-	# print (diff)
+	diff = subprocess.run(['diff', 'hexdump_1.txt', 'hexdump_2.txt'], stdout=subprocess.PIPE).stdout.decode('utf-8')
+	print ("Diff is: " + diff)
+	print ("Creating asm_diff_log...")
+	diff_log = open(os.path.join("logs/", "asm_diff_log"), "a")
+	if not diff:
+		diff_log.write("placeholder text, no diff")
+	else:
+		diff_log.write(diff)
+	diff_log.close
 
 # Check if argument
 if (len(sys.argv) is not 2):
@@ -71,27 +92,37 @@ if os.path.exists("logs/asm_diff_log"):
 	print ("Removing asm_diff_log...")
 	os.remove("logs/asm_diff_log")
 	print ("asm_diff_log removed.")
+	os.rmdir("logs")
+	print ("logs/ removed")
+elif os.path.isdir("logs/"):
+	os.rmdir("logs")
+	print ("logs/ removed")
 else:
 	print ("No logs found.")
 
-# Create new log file with placeholder text
-print ("Creating asm_diff_log...")
-diff_log = open(os.path.join("logs/", "asm_diff_log"), "a")
-diff_log.write("asm_diff_log init...ready to rock!")
+print ("creating logs/ ...")
+os.mkdir("logs")
 
 # Loop thru all .s files in test dir
 for file in os.listdir(test_dir):
 	if file.endswith(".s"):
 		print (yellow + "\nTesting: " + file + endc)
+		cor = os.path.join(test_dir, os.path.splitext(file)[0]+ ".cor")
 
+		# original asm
 		orig = subprocess.run(['./asm_orig', test_dir + file], stdout=subprocess.PIPE).stdout.decode('utf-8')
-		result_orig = check_if_cor(file, test_dir, "orig")
+		result_orig = check_if_cor("orig", cor)
 		if (result_orig is "OK"):
-			print ("last print of friday " + test_dir + os.path.splitext(file)[0]+ ".cor")
-			uberfilu = subprocess.run(['python3', '-m', 'hexdump', test_dir + os.path.splitext(file)[0]+ ".cor"], stdout=subprocess.PIPE).stdout.decode('utf-8')
+			create_file(cor, "1")
 
+		if os.path.exists(cor):
+			os.remove(cor)
+
+		# our asm
 		own = subprocess.run(['../asm', test_dir + file], stdout=subprocess.PIPE).stdout.decode('utf-8')
-		result_own = check_if_cor(file, test_dir, "own")
+		result_own = check_if_cor("own", cor)
+		if (result_own is "OK"):
+			create_file(cor, "2")
 
 		if (result_orig is "OK" and result_own is "OK"):
 			run_diff(orig, own)
@@ -100,6 +131,11 @@ for file in os.listdir(test_dir):
 			print ("One OK the other KO")
 		else:
 			print (blue + "No diff, all gud." + endc)
+
+		# remove hexdump files
+		remove_hexdump_files()
+
+		# Create new log file with placeholder text
 
 		#print(binascii.hexlify("batman"))
 # if os.path.exists(asm_path):
@@ -115,7 +151,6 @@ for file in os.listdir(test_dir):
 
 # Close log file at the end
 
-diff_log.close()
 
 # Remove .cor files
 
