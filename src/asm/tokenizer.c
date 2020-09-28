@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/17 13:40:07 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/24 15:41:15 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/25 16:54:35 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ t_token		*new_token(t_asm *assm)
 	token->argument_type_code = get_argument_type_code(token);
 	token->size = get_token_size(token);
 	assm->champion_size += token->size;
-	ft_printf("%s\n", assm->cur->line);
-	print_token_info(token);
+	//ft_printf("%s\n", assm->cur->line);
+	//print_token_info(token);
 	return (token);
 }
 
