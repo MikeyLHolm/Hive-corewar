@@ -2,24 +2,6 @@
 import os, subprocess, sys
 import hexdump
 
-# DONE:
-# 1. is there argument?
-# 2. set test directory from arg
-# 3. remove *.cor from testdir and Diff from main dir.
-
-# NOT DONE:
-# 4. for each .s in test_dir:
-# 	./asm --> hexdump
-# 	Print OK//fail
-# 	./asm_orig --> hexdump2
-# 	Print OK//fail
-# 	if both OK then compare DIFFS hexdump vs hexdump2
-# 		if DIFF then add to diff_log
-# 	Print OK / DIFF FOUND
-# 5. finish.
-
-# -----------------------------------------------------
-
 # Inside main loop, checks if .cor file has been made out of .s file
 def check_if_cor(caller, cor):
 
@@ -37,13 +19,16 @@ def create_hexdump_file(cor, file_nbr):
 	with open(hexdump_file, 'a') as h_file:
 	    h_file.write(hex_dump)
 
-def one_ko(file, msg):
+def one_ko(file, msg, owner):
+
 	print (red + msg + endc)
 	if not os.path.exists("logs/asm_diff_log"):
 		print ("creating asm_diff_log...")
 	diff_log = open(os.path.join("logs/", "asm_diff_log"), "a")
-	diff_log.write("diff in " + file)
-	diff_log.write(msg)
+	diff_log.write("______________________________________\n" +
+				   "error in " + owner + " " + file)
+	diff_log.write("\n\t" + msg +
+				   "______________________________________\n")
 	diff_log.close
 
 def remove_hexdump_files():
@@ -60,8 +45,10 @@ def run_diff(file):
 		if not os.path.exists("logs/asm_diff_log"):
 			print ("creating asm_diff_log...")
 		diff_log = open(os.path.join("logs/", "asm_diff_log"), "a")
-		diff_log.write("diff in " + file)
-		diff_log.write(diff)
+		diff_log.write("______________________________________\n" +
+					   "diff in " + file)
+		diff_log.write("\n\t" + diff +
+					   "______________________________________\n")
 		diff_log.close
 		print (red + diff + endc)
 	else:
@@ -90,24 +77,24 @@ else:
 	sys.exit(red + "not a valid path" + endc)
 
 # Remove .cor files from test_dir
+print ("removing existing .cor files")
 for file in os.listdir(test_dir):
 	if file.endswith(".cor"):
 		os.remove(os.path.join(test_dir, file))
 
 # Remove existing log
 if os.path.exists("logs/asm_diff_log"):
-	print ("removing asm_diff_log...")
+	print ("removing asm_diff_log")
 	os.remove("logs/asm_diff_log")
-	print ("asm_diff_log removed.")
+	print ("removing logs/")
 	os.rmdir("logs")
-	print ("logs/ removed")
 elif os.path.isdir("logs/"):
+	print ("removing logs/")
 	os.rmdir("logs")
-	print ("logs/ removed")
 else:
 	print ("no logs found.")
 
-print ("creating logs/ ...")
+print ("creating logs/")
 os.mkdir("logs")
 
 # Loop thru all .s files in test dir
@@ -135,11 +122,11 @@ for file in os.listdir(test_dir):
 		if (result_orig is "OK" and result_own is "OK"):
 			run_diff(file)
 		elif (result_orig is "OK" and result_own is "KO"):
-			one_ko(file, own)
+			one_ko(file, own, "our")
 		elif (result_orig is "KO" and result_own is "OK"):
-			one_ko(file, orig)
+			one_ko(file, orig, "orig")
 		else:
-			print (blue + "no diff, all gud." + endc)
+			print (blue + "all good, no diff" + endc)
 
 		remove_hexdump_files()
 
