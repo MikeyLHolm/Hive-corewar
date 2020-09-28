@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/24 11:21:20 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/25 16:55:28 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int			main(int argc, char **argv)
 	handle_writing(assm, argv[1]);
 	free_assm(assm);
 	//system("leaks asm");
-	ft_printf("Conversion successful!\n");
+	//ft_printf("Conversion successful!\n");
 	exit(0);
 	return (0);
 }
