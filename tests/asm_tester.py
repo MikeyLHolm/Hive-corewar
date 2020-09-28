@@ -1,4 +1,4 @@
-#! /Users/mlindhol/.brew/bin/python3
+#!/usr/bin/env python3
 import os, subprocess, sys
 import hexdump
 
@@ -35,7 +35,6 @@ def create_file(cor, file_nbr):
 	hexdump_file = "hexdump_" + file_nbr + ".txt"
 	print ("run hexdump")
 	hex_dump = subprocess.run(['python3', '-m', 'hexdump', cor], stdout=subprocess.PIPE).stdout.decode('utf-8')
-	print (type(hex_dump))
 	with open(hexdump_file, 'a') as h_file:
 	    h_file.write(hex_dump)
 
@@ -47,11 +46,12 @@ def remove_hexdump_files():
 	if os.path.exists("hexdump_2.txt"):
 		os.remove("hexdump_2.txt")
 
-def run_diff(orig, own):
+def run_diff():
 
 	print (blue + "Run diff" + endc)
 	diff = subprocess.run(['diff', 'hexdump_1.txt', 'hexdump_2.txt'], stdout=subprocess.PIPE).stdout.decode('utf-8')
 	print ("Diff is: " + diff)
+	# if no log, create log()
 	print ("Creating asm_diff_log...")
 	diff_log = open(os.path.join("logs/", "asm_diff_log"), "a")
 	if not diff:
@@ -125,7 +125,7 @@ for file in os.listdir(test_dir):
 			create_file(cor, "2")
 
 		if (result_orig is "OK" and result_own is "OK"):
-			run_diff(orig, own)
+			run_diff()
 		elif (result_orig is "OK" and result_own is "KO" or
 			  result_orig is "KO" and result_own is "OK"):
 			print ("One OK the other KO")
@@ -137,7 +137,6 @@ for file in os.listdir(test_dir):
 
 		# Create new log file with placeholder text
 
-		#print(binascii.hexlify("batman"))
 # if os.path.exists(asm_path):
 # 	print (asm_path)
 
