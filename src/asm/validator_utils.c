@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/07 16:54:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/24 13:01:23 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/28 12:45:48 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 void		validation_error(char *message, int row)
 {
-	ft_printf("Error at row [%03d]: %s.\n", row, message);
+	ft_fprintf(2, "Error at row [%03d]: %s.\n", row, message);
 	exit(1);
 }
 
