@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   write_binary.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/17 12:58:57 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/24 15:42:55 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/29 18:51:17 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ void				handle_writing(t_asm *assm, char *input_filename)
 	char			*output_filename;
 
 	output_filename = get_output_filename(input_filename);
-	//check if open failed here
-	fd = open(output_filename, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+	if (!(fd = open(output_filename, O_WRONLY | O_CREAT | O_TRUNC, 0666)))
+		handle_error("Creating output file failed");
 	free(output_filename);
 	write_header(fd);
 	write_name(assm, fd);

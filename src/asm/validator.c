@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validator.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 12:44:33 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/28 17:15:10 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/29 18:51:56 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,7 @@ void			validator(t_file *file)
 
 	vd = init_validator();
 	cur = file;
-	//print_filelist(cur);
 	remove_file_comments(cur);
-	//print_filelist(cur);
 	cur = validate_header(cur, vd);
 	cur = increment_validator(cur, vd);
 	row = vd->row;

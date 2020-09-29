@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   get_token.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/17 13:45:03 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/29 17:54:42 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/29 19:15:06 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asm.h"
 
-static int		get_arg_size(t_token *token, int type)
+int		get_arg_size(t_token *token, int type)
 {
 	if (type == REG_CODE)
 		return (1);
@@ -23,7 +23,7 @@ static int		get_arg_size(t_token *token, int type)
 	return (0);
 }
 
-int				get_token_size(t_token *token)
+int		get_token_size(t_token *token)
 {
 	int				type;
 	int				size;
@@ -40,7 +40,7 @@ int				get_token_size(t_token *token)
 	return (size);
 }
 
-void			get_token_arguments(t_asm *assm, t_token *token)
+void	get_token_arguments(t_asm *assm, t_token *token)
 {
 	int				i;
 	char			*line;
@@ -68,11 +68,10 @@ void			get_token_arguments(t_asm *assm, t_token *token)
 	free(args);
 }
 
-char			*get_token_instruction(t_asm *assm, int len)
+char	*get_token_instruction(t_asm *assm, int len)
 {
 	int				i;
 	int				j;
-
 
 	if (!assm->cur)
 		return (NULL);
@@ -82,13 +81,8 @@ char			*get_token_instruction(t_asm *assm, int len)
 		while (assm->cur->line[i] && ft_isspace(assm->cur->line[i]))
 			i++;
 		j = i;
-		while (assm->cur->line[j])
-		{
-			if (ft_isalpha(assm->cur->line[j++]))
-				len++;
-			else
-				break ;
-		}
+		while (ft_isalpha(assm->cur->line[j++]))
+			len++;
 		if (len)
 			return (ft_strsub(assm->cur->line, i, len));
 		assm->cur = assm->cur->next;
@@ -139,7 +133,7 @@ char	**resize_2d_array(char **arr, char *str)
 	return (new_arr);
 }
 
-char			*get_token_label(char *line)
+char	*get_token_label(char *line)
 {
 	int				i;
 
@@ -149,14 +143,10 @@ char			*get_token_label(char *line)
 		if (!ft_strchr(LABEL_CHARS, line[i++]))
 			return (NULL);
 	}
-	// i = 0;
-	// while (line[i] != LABEL_CHAR)
-	// 	i++;
 	return (ft_strsub(line, 0, i));
 }
 
-
-char			**get_token_labels(t_asm *assm)
+char	**get_token_labels(t_asm *assm)
 {
 	int		i;
 	char	**arr;
