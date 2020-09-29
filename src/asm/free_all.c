@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   free_all.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/17 10:27:42 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/24 14:38:09 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/29 10:34:11 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asm.h"
 
-void		free_label(t_label *head)
+static void		free_label(t_label *head)
 {
 	t_label		*cur;
 	t_label		*tmp;
@@ -27,7 +27,7 @@ void		free_label(t_label *head)
 	}
 }
 
-void		free_file(t_file *head)
+static void		free_file(t_file *head)
 {
 	t_file		*cur;
 	t_file		*tmp;
@@ -42,7 +42,7 @@ void		free_file(t_file *head)
 	}
 }
 
-void		free_tokens(t_asm *assm)
+static void		free_tokens(t_asm *assm)
 {
 	t_token		*cur;
 	t_token		*tmp;
@@ -65,20 +65,17 @@ void		free_tokens(t_asm *assm)
 	}
 }
 
-void		free_validator(t_validator *vd)
+void			free_validator(t_validator *vd)
 {
-	free(vd->comment);
-	free(vd->name);
 	free_label(vd->label);
 	free(vd);
 }
 
-void		free_assm(t_asm *assm)
+void			free_assm(t_asm *assm)
 {
 	free(assm->comment);
 	free(assm->name);
 	free_file(assm->file);
-	// Free tokens too? (label, instruction)
 	free_tokens(assm);
 	free(assm);
 }

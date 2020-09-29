@@ -6,11 +6,15 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/17 16:20:34 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 16:27:03 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/29 10:29:54 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asm.h"
+
+/*
+**	Creates new nodes for read lines
+*/
 
 static t_file		*new_file_link(char *line)
 {
@@ -21,6 +25,10 @@ static t_file		*new_file_link(char *line)
 	new->line = line;
 	return (new);
 }
+
+/*
+**	Read .s file and insert each line into a LL as a node
+*/
 
 t_file				*read_file(char *filename)
 {

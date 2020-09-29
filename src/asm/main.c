@@ -3,16 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/24 11:21:20 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/29 10:37:40 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asm.h"
 
-t_asm		*init_assm(void)
+static int		validate_filename(char *filename, char *extension)
+{
+	if (!(ft_strequ(ft_strrchr(filename, '.'), extension)))
+		handle_error("File extension not .s");
+	return (1);
+}
+
+static t_asm	*init_assm(void)
 {
 	t_asm		*assm;
 
@@ -21,11 +28,11 @@ t_asm		*init_assm(void)
 	return (assm);
 }
 
-int			main(int argc, char **argv)
+int				main(int argc, char **argv)
 {
 	t_asm		*assm;
 
-	if (argc != 2)
+	if (argc != 2 || !validate_filename(argv[1], ".s"))
 		handle_error("./asm [filename.s]");
 	assm = init_assm();
 	assm->file = read_file(argv[1]);
@@ -35,7 +42,7 @@ int			main(int argc, char **argv)
 	handle_writing(assm, argv[1]);
 	free_assm(assm);
 	//system("leaks asm");
-	ft_printf("Conversion successful!\n");
+	//ft_printf("Conversion successful!\n");
 	exit(0);
 	return (0);
 }

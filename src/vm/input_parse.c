@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input_parse.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 12:13:13 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/22 13:41:56 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/29 16:04:34 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,16 +45,6 @@ int		count_players(t_vm *vm)
 	if (!i)
 		handle_error("No valid players specified");
 	return (i);
-}
-
-void	check_flags_valid(t_vm *vm)
-{
-	if (vm->flags & VISUALIZER && vm->flags & ADV_VISUALIZER)
-		handle_error("Only one visualizer allowed at once");
-	if (vm->flags & DUMP && vm->flags & (VISUALIZER | ADV_VISUALIZER))
-		handle_error("Memory dumping not possible with visualizer");
-	if (vm->flags & START && (!(vm->flags & ADV_VISUALIZER)))
-		handle_error("Start flag only valid with advanced visualizer");
 }
 
 /*

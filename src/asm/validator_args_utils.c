@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validator_args_utils.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 12:42:42 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/24 14:22:11 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/29 10:25:32 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void		right_n_args(char *statement, int args, int row)
 }
 
 /*
-**	check if last char of line before null and whitespaces is comma
+**	Check if last char of line before null and whitespaces is comma
 */
 
 void		trailing_comma(char *line, int row)
@@ -56,8 +56,8 @@ void		trailing_comma(char *line, int row)
 
 int			arg_traverse_value(char *line, int i, int row, int type)
 {
-	if (ft_isdigit(line[i]) ||
-	(line[i] == '-' && ft_isdigit(line[i + 1]) && (i < 1 || !(ft_isdigit(line[i - 1])))))
+	if (ft_isdigit(line[i]) || (line[i] == '-' &&
+		ft_isdigit(line[i + 1]) && (i < 1 || !(ft_isdigit(line[i - 1])))))
 		return (1);
 	else if (!ft_isspace(line[i]) ||
 			(ft_isspace(line[i]) && line[i + 1] && !ft_isspace(line[i + 1])))

@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 14:48:17 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/17 12:48:32 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/29 10:27:36 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ void				validate_label(char *label, int row, t_label *head)
 	int			i;
 	t_label		*cur;
 
-	//ft_printf("LABEL [%s]\n", label);
 	cur = head;
 	while (cur)
 	{

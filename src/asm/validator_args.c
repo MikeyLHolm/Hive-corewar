@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validator_args.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 14:53:42 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/25 10:48:16 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/29 10:26:21 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,6 @@ void			validate_arg(char *line, char *statement,
 	int			type;
 
 	i = -1;
-	//ft_printf("argument inside [%s]\n", line);
 	while (++i < OP_CODE_AMOUNT)
 	{
 		if (ft_strequ(g_op_tab[i].op_name, statement))

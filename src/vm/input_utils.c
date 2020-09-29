@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 09:48:01 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/24 14:28:49 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/29 16:06:15 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,16 @@ void		check_duplicate_n(t_player *head, t_vm *vm)
 		}
 		head = head->next;
 	}
+}
+
+void		check_flags_valid(t_vm *vm)
+{
+	if (vm->flags & VISUALIZER && vm->flags & ADV_VISUALIZER)
+		handle_error("Only one visualizer allowed at once");
+	if (vm->flags & DUMP && vm->flags & (VISUALIZER | ADV_VISUALIZER))
+		handle_error("Memory dumping not possible with visualizer");
+	if (vm->flags & START && (!(vm->flags & ADV_VISUALIZER)))
+		handle_error("Start flag only valid with advanced visualizer");
 }
 
 /*
