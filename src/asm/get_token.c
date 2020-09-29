@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/17 13:45:03 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/24 16:15:50 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/29 17:54:42 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,7 +182,12 @@ char			**get_token_labels(t_asm *assm)
 		}
 		if (assm->cur->line[i] == LABEL_CHAR)
 			arr = resize_2d_array(arr, ft_strsub(assm->cur->line, 0, i));
-		if (assm->cur->line[i + 1])
+		while (assm->cur->line[++i])
+		{
+			if (!ft_isspace(assm->cur->line[i]))
+				break ;
+		}
+		if (assm->cur->line[i])
 		{
 			assm->cur = prev;
 			return (arr);
