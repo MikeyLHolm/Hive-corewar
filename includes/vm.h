@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/29 13:20:03 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/29 15:46:40 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,8 +146,7 @@ void					op_sub(t_vm *vm, t_carriage *cur);
 void					op_xor(t_vm *vm, t_carriage *cur);
 void					op_zjmp(t_vm *vm, t_carriage *cur);
 
-void					copy_carriage(t_vm *vm, t_carriage *cur, int pos);
-
+// not used anywhere
 t_carriage				*get_carriage_by_id(t_vm *vm, int id);
 
 int						get_direct(t_vm *vm, t_carriage *cur, int offset);

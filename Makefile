@@ -6,7 +6,7 @@
 #    By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/04/10 19:26:38 by sadawi            #+#    #+#              #
-#    Updated: 2020/09/29 15:35:15 by mlindhol         ###   ########.fr        #
+#    Updated: 2020/09/29 15:43:18 by mlindhol         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,7 @@ CFILES_CW = main.c statements.c \
 			op/add.c op/aff.c op/and.c op/fork.c op/ld.c op/ldi.c op/lfork.c \
 			op/live.c op/lld.c op/lldi.c op/or.c op/st.c op/sti.c op/sub.c \
 			op/xor.c op/zjmp.c \
-			get_indirect.c
+			op_get_direct.c op_get_indirect.c op_get_registry.c
 
 SRCS_CW = $(addprefix src/vm/, $(CFILES_CW))
 OBJS_CW = $(addprefix objs/, $(notdir $(SRCS_CW:.c=.o)))

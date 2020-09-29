@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/31 16:04:19 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/29 13:18:23 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/29 15:46:04 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,42 +24,9 @@ int		positive_modulo(int n, int mod)
 	return (n);
 }
 
-int		get_direct(t_vm *vm, t_carriage *cur, int offset)
-{
-	int arg;
-
-	arg = 0;
-	if (g_op_tab[cur->statement - 1].size_t_dir)
-	{
-		arg += vm->arena[(cur->position + offset) % MEM_SIZE] * 256;
-		arg += vm->arena[(cur->position + offset + 1) % MEM_SIZE];
-		return ((short)arg);
-	}
-	else
-	{
-		arg += vm->arena[(cur->position + offset) % MEM_SIZE] * 256 * 256 * 256;
-		arg += vm->arena[(cur->position + offset + 1) % MEM_SIZE] * 256 * 256;
-		arg += vm->arena[(cur->position + offset + 2) % MEM_SIZE] * 256;
-		arg += vm->arena[(cur->position + offset + 3) % MEM_SIZE];
-	}
-	return (arg);
-}
-
-int		get_register(t_vm *vm, t_carriage *cur, int offset)
-{
-	int arg;
-
-	arg = vm->arena[(cur->position + offset) % MEM_SIZE];
-	return (arg);
-}
-
-int		get_register_index(t_vm *vm, t_carriage *cur, int offset)
-{
-	int arg;
-
-	arg = vm->arena[(cur->position + offset) % MEM_SIZE];
-	return (arg - 1);
-}
+/*
+**	Used Nowhere??
+*/
 
 t_carriage	*get_carriage_by_id(t_vm *vm, int id)
 {
@@ -219,20 +186,4 @@ int		get_and_second_arg(t_vm *vm, t_carriage *cur, int *offset)
 		*offset += 1;
 	}
 	return (arg2);
-}
-
-void	copy_carriage(t_vm *vm, t_carriage *cur, int pos)
-{
-	int reg_num;
-
-	vm->carriages = new_carriage(cur->id, vm->carriages);
-	vm->carriages->carry = cur->carry;
-	vm->carriages->last_live_cycle = cur->last_live_cycle;
-	reg_num = 0;
-	while (reg_num < REG_NUMBER)
-	{
-		vm->carriages->reg[reg_num] = cur->reg[reg_num];
-		reg_num++;
-	}
-	vm->carriages->position = pos % MEM_SIZE;
 }
