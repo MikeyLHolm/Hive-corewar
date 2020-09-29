@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/07 15:15:41 by elindber          #+#    #+#             */
-/*   Updated: 2020/09/28 13:11:49 by elindber         ###   ########.fr       */
+/*   Updated: 2020/09/29 19:22:44 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,19 +27,14 @@ void	write_comment(int input, int output)
 {
 	unsigned char	byte;
 	int				i;
-	int				len;
 
 	i = 0;
-	len = 0;
 	write(output, ".comment \"", 10);
 	while (i < COMMENT_LENGTH + 4)
 	{
 		read(input, &byte, 1);
-		if (ft_isprint((int)byte))
-		{
+		if (byte)
 			write(output, &byte, 1);
-			len++;
-		}
 		i++;
 	}
 	write(output, "\"\n\n", 3);
@@ -60,8 +55,11 @@ void	write_file(int input, int output, t_command *cmnd)
 	while (i < PROG_NAME_LENGTH + 8)
 	{
 		read(input, &byte, 1);
-		if (ft_isprint((int)byte))
-			write(output, &byte, 1);
+		if (i > 3)
+		{
+			if (byte)
+				write(output, &byte, 1);
+		}
 		i++;
 	}
 	while (i++ < PROG_NAME_LENGTH + 12)
