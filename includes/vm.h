@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/29 12:55:15 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/29 13:20:03 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,10 +152,13 @@ t_carriage				*get_carriage_by_id(t_vm *vm, int id);
 
 int						get_direct(t_vm *vm, t_carriage *cur, int offset);
 
+int						get_indirect_value(t_vm *vm, t_carriage *cur,
+							int offset, int addition);
+
 int						get_indirect_value_trunc(t_vm *vm, t_carriage *cur,
 							int offset, int addition);
 
-int						get_indirect_value(t_vm *vm, t_carriage *cur,
+int						get_indirect_value_2_bytes(t_vm *vm, t_carriage *cur,
 							int offset, int addition);
 
 int						get_indirect_address_trunc(t_vm *vm, t_carriage *cur,
