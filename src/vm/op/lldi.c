@@ -6,34 +6,11 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/29 13:13:01 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/29 13:13:03 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/29 15:56:53 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
-
-int		get_ldi_first_arg(t_vm *vm, t_carriage *cur, int *offset)
-{
-	int arg1;
-
-	if (((cur->act >> 7) & 0x01) && !((cur->act >> 6) & 0x01))
-	{
-		arg1 = get_direct(vm, cur, *offset);
-		*offset += 2;
-	}
-	else if (((cur->act >> 7) & 0x01) && ((cur->act >> 6) & 0x01))
-	{
-		arg1 = get_indirect_value_trunc(vm, cur, *offset, 0);
-		*offset += 2;
-	}
-	else
-	{
-		arg1 = get_register_index(vm, cur, *offset);
-		arg1 = cur->reg[arg1];
-		*offset += 1;
-	}
-	return (arg1);
-}
 
 void	op_lldi(t_vm *vm, t_carriage *cur)
 {
