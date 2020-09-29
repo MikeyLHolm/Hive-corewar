@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/28 17:14:15 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/29 10:37:40 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 static int		validate_filename(char *filename, char *extension)
 {
 	if (!(ft_strequ(ft_strrchr(filename, '.'), extension)))
-		validation_error("File extension not .s", -1);
+		handle_error("File extension not .s");
 	return (1);
 }
 
-t_asm			*init_assm(void)
+static t_asm	*init_assm(void)
 {
 	t_asm		*assm;
 

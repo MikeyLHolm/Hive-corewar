@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 14:51:13 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/18 15:17:29 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/29 10:27:13 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ char		*get_statement(char *line, int row)
 	int len;
 
 	i = 0;
-	//ft_printf("[%s]\n", line);
 	while (ft_strchr(LABEL_CHARS, line[i]))
 		i++;
 	i = line[i] == LABEL_CHAR ? i + 1 : 0;
@@ -102,7 +101,6 @@ void		validate_args(char *line, char *statement, t_validator *vd)
 
 	trailing_comma(line, vd->row);
 	i = get_first_arg_index(line, statement);
-	//ft_printf("whole line [%s]\n", line);
 	args = ft_strsplit(&line[i], SEPARATOR_CHAR);
 	i = 0;
 	while (args[i])
