@@ -98,6 +98,7 @@ int		main(int ac, char **av)
 		name = ft_strjoin(av[i], ".s");
 		output = open(name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		write_file(input, output, cmnd);
+		ft_printf("Writing output program to %s\n", name);
 		free_memory(name, cmnd);
 	}
 	return (0);
