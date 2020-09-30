@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/30 09:09:50 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/30 10:49:35 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -317,6 +317,9 @@ void					state_get_lives(t_vm *vm, t_state *state);
 
 int						*get_changed_memory(t_vm *vm, t_state *prev);
 
+unsigned char			*resize_memory(unsigned char *player_code, int size,
+							int size_to_add);
+
 t_state					*new_state(t_vm *vm, t_state *prev);
 
 void					save_state(t_vm *vm);
@@ -338,6 +341,12 @@ void					handle_cycle_carriages(t_vm *vm);
 void					battle_loop(t_vm *vm);
 
 void					print_arena(t_vm *vm);
+
+/*
+**	Printers
+*/
+
+void					print_usage(void);
 
 /*
 ** Visualizer

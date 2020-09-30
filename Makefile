@@ -6,7 +6,7 @@
 #    By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/04/10 19:26:38 by sadawi            #+#    #+#              #
-#    Updated: 2020/09/30 09:23:45 by mlindhol         ###   ########.fr        #
+#    Updated: 2020/09/30 10:51:12 by mlindhol         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,8 +24,9 @@ CFILES_ASM = main.c convert_labels.c free_all.c \
 SRCS_ASM = $(addprefix src/asm/, $(CFILES_ASM))
 OBJS_ASM = $(addprefix objs/, $(notdir $(SRCS_ASM:.c=.o)))
 
-CFILES_CW = main.c carriage.c check_args.c get_player.c memory.c save_state.c\
-			statement.c \
+CFILES_CW = main.c arena.c battle_loop.c battle_loop_utils.c carriage.c \
+			check_args.c get_player.c memory.c print.c \
+			save_state.c statement.c statement_utils.c vm_utils.c  \
 			input_parse.c input_sort.c input_utils.c validate_players.c \
 			op/add.c op/aff.c op/and.c op/fork.c op/ld.c op/ldi.c op/lfork.c \
 			op/live.c op/lld.c op/lldi.c op/or.c op/st.c op/sti.c op/sub.c \
@@ -33,7 +34,7 @@ CFILES_CW = main.c carriage.c check_args.c get_player.c memory.c save_state.c\
 			op/op_get_direct.c op/op_get_indirect.c op/op_get_registry.c \
 			op/op_ldi_lldi_utils.c op/op_st_sti_utils.c op/op_utils.c \
 			vfx.c vfx_draw.c vfx_get.c vfx_print_arena.c vfx_print_player.c \
-			vfx_state.c vfx_utils.c\
+			vfx_print_utils.c vfx_state.c vfx_utils.c\
 
 SRCS_CW = $(addprefix src/vm/, $(CFILES_CW))
 OBJS_CW = $(addprefix objs/, $(notdir $(SRCS_CW:.c=.o)))

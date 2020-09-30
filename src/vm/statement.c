@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 09:07:08 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/30 09:19:46 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/30 10:18:53 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,20 +30,6 @@ void	execute_statement(t_vm *vm, t_carriage *cur)
 	cur->statement == LLDI ? op_lldi(vm, cur) : 0;
 	cur->statement == LFORK ? op_lfork(vm, cur) : 0;
 	cur->statement == AFF ? op_aff(vm, cur) : 0;
-}
-
-void	move_carriage_next_statement(t_carriage *cur)
-{
-	if (cur->statement != 9 || !cur->carry)
-		cur->position = (cur->position + cur->bytes_to_jump) % MEM_SIZE;
-	cur->bytes_to_jump = 0;
-}
-
-void	get_statement(t_vm *vm, t_carriage *cur)
-{
-	cur->statement = vm->arena[cur->position];
-	if (cur->statement > 0 && cur->statement <= OP_CODE_AMOUNT)
-		cur->cycles_left = g_op_tab[cur->statement - 1].cycles;
 }
 
 void	set_statement_codes(t_vm *vm, t_carriage *cur)
