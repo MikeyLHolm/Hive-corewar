@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 14:47:54 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/30 12:22:58 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/30 12:57:02 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ static t_file		*validate_name(t_file *cur, t_validator *vd)
 		if (ft_strchr(name, '"'))
 			break ;
 	}
-	if (!(*(ft_strrchr(name, '"') + 1)  == '\0'))
+	if (!(*(ft_strrchr(name, '"') + 1) == '\0'))
 		validation_error("Extra chars after name", vd->row);
 	if (ft_strlen(name) > PROG_NAME_LENGTH)
 		validation_error("Champion name too long", vd->row);
@@ -104,7 +104,7 @@ static t_file		*validate_comment(t_file *cur, t_validator *vd)
 		if (ft_strchr(comment, '"'))
 			break ;
 	}
-	if (!(*(ft_strrchr(comment, '"') + 1)  == '\0'))
+	if (!(*(ft_strrchr(comment, '"') + 1) == '\0'))
 		validation_error("Extra chars after comment", vd->row);
 	if (ft_strlen(comment) > COMMENT_LENGTH)
 		validation_error("Champion comment too long", vd->row);
