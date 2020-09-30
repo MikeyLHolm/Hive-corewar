@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/07 15:15:41 by elindber          #+#    #+#             */
-/*   Updated: 2020/09/29 19:22:44 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/29 19:30:25 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,8 @@ void	write_file(int input, int output, t_command *cmnd)
 	while (i < PROG_NAME_LENGTH + 8)
 	{
 		read(input, &byte, 1);
-		if (i > 3)
-		{
-			if (byte)
-				write(output, &byte, 1);
-		}
+		if (i > 3 && byte)
+			write(output, &byte, 1);
 		i++;
 	}
 	while (i++ < PROG_NAME_LENGTH + 12)
