@@ -114,7 +114,7 @@ for file in os.listdir(test_dir):
 			os.remove(cor)
 
 		# our asm
-		own = subprocess.run([asm_path, test_dir + file], stdout=subprocess.PIPE).stdout.decode('utf-8')
+		own = subprocess.run([asm_path, test_dir + file], stdout=subprocess.PIPE, stderr=subprocess.STDOUT).stdout.decode('utf-8')
 		result_own = check_if_cor("own", cor)
 		if (result_own is "OK"):
 			create_hexdump_file(cor, "2")
