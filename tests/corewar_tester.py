@@ -16,7 +16,8 @@ if (len(sys.argv) != 2):
 
 cor_files = []
 for file in os.listdir(sys.argv[1]):
-	cor_files.append(sys.argv[1] + "/" + str(file))
+	if ".cor" in file:
+		cor_files.append(sys.argv[1] + "/" + str(file))
 
 for i in range(100):
 	args = []
