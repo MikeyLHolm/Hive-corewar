@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: elindber <elindber@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/30 11:18:25 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/30 11:44:19 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ int				main(int argc, char **argv)
 	tokenize_file(assm);
 	convert_labels(assm);
 	handle_writing(assm, argv[1]);
-	
 	free_assm(assm);
 	exit(0);
 	return (0);

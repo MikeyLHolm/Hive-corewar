@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: elindber <elindber@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/07 15:15:41 by elindber          #+#    #+#             */
-/*   Updated: 2020/09/30 11:21:33 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/30 11:47:20 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ void	write_file(int input, int output, t_command *cmnd)
 
 void	free_memory(char *name, t_command *cmnd)
 {
+	ft_printf("Writing output program to %s\n", name);
 	if (name)
 		free(name);
 	if (cmnd)
@@ -98,7 +99,6 @@ int		main(int ac, char **av)
 		name = ft_strjoin(av[i], ".s");
 		output = open(name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		write_file(input, output, cmnd);
-		ft_printf("Writing output program to %s\n", name);
 		free_memory(name, cmnd);
 	}
 	return (0);
