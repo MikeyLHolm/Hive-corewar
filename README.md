@@ -1,9 +1,8 @@
 # Hive-corewar
  In this project, you will create a virtual “arena” in which programs will fight against one another (the “Champions”). You will also create an assembler to compile those Champions as well as a Champion to show the world that you can create life from coffee.
  
-![Visualizer](https://lh3.googleusercontent.com/-R6Di7wh6ZMnWYEjolo-jRS2VLbggVaao9_8A-G6ASTAZ9u_EWvh3JrSDMmunBKE-AaA=w412-h220-rw)
+![Visualizer](https://github.com/MikeyLHolm/Hive-corewar/blob/master/cw_vfx.png)
 
-VIZU PLACEHOLDER
 
 ## Objectives
 • **The assembler:** this is the program that will compile your champions and trans- late them from the language you will write them in (assembly language) into “Byte- code”.Bytecode is a machine code, which will be directly interpreted by the virtual machine.
