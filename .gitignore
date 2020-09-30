@@ -1,11 +1,10 @@
 *.o
 .DS_Store
 .vscode/
-*.cor*
-*.s
 *.a
 /asm
 /corewar
 /disasm
 notes
 tests/logs/
+vm_champs

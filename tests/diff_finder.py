@@ -11,8 +11,8 @@ diff = ""
 i = 1
 sys.argv.pop(0)
 while not diff:
-	result = subprocess.run(['./corewar', '-dump', str(i), *sys.argv], stdout=subprocess.PIPE, stderr=subprocess.PIPE).stdout.decode('utf-8')
-	result2 = subprocess.run(['./vm_champs/corewar', '-d', str(i), *sys.argv], stdout=subprocess.PIPE, stderr=subprocess.PIPE).stdout.decode('utf-8')
+	result = subprocess.run(['../corewar', '-dump', str(i), *sys.argv], stdout=subprocess.PIPE, stderr=subprocess.PIPE).stdout.decode('utf-8')
+	result2 = subprocess.run(['./corewar_orig', '-d', str(i), *sys.argv], stdout=subprocess.PIPE, stderr=subprocess.PIPE).stdout.decode('utf-8')
 
 	splitA = set(result.split("\n"))
 	splitB = set(result2.split("\n"))
@@ -32,8 +32,8 @@ if not diff or "Error" in diff:
 i -= 1000
 diff = ""
 while not diff:
-	result = subprocess.run(['./corewar', '-dump', str(i), *sys.argv], stdout=subprocess.PIPE).stdout.decode('utf-8')
-	result2 = subprocess.run(['./vm_champs/corewar', '-d', str(i), *sys.argv], stdout=subprocess.PIPE).stdout.decode('utf-8')
+	result = subprocess.run(['../corewar', '-dump', str(i), *sys.argv], stdout=subprocess.PIPE).stdout.decode('utf-8')
+	result2 = subprocess.run(['./corewar_orig', '-d', str(i), *sys.argv], stdout=subprocess.PIPE).stdout.decode('utf-8')
 
 	splitA = set(result.split("\n"))
 	splitB = set(result2.split("\n"))
@@ -48,8 +48,8 @@ while not diff:
 i -= 100
 diff = ""
 while not diff:
-	result = subprocess.run(['./corewar', '-dump', str(i), *sys.argv], stdout=subprocess.PIPE).stdout.decode('utf-8')
-	result2 = subprocess.run(['./vm_champs/corewar', '-d', str(i), *sys.argv], stdout=subprocess.PIPE).stdout.decode('utf-8')
+	result = subprocess.run(['../corewar', '-dump', str(i), *sys.argv], stdout=subprocess.PIPE).stdout.decode('utf-8')
+	result2 = subprocess.run(['./corewar_orig', '-d', str(i), *sys.argv], stdout=subprocess.PIPE).stdout.decode('utf-8')
 
 	splitA = set(result.split("\n"))
 	splitB = set(result2.split("\n"))
@@ -64,8 +64,8 @@ while not diff:
 i -= 10
 diff = ""
 while not diff:
-	result = subprocess.run(['./corewar', '-dump', str(i), *sys.argv], stdout=subprocess.PIPE).stdout.decode('utf-8')
-	result2 = subprocess.run(['./vm_champs/corewar', '-d', str(i), *sys.argv], stdout=subprocess.PIPE).stdout.decode('utf-8')
+	result = subprocess.run(['../corewar', '-dump', str(i), *sys.argv], stdout=subprocess.PIPE).stdout.decode('utf-8')
+	result2 = subprocess.run(['./corewar_orig', '-d', str(i), *sys.argv], stdout=subprocess.PIPE).stdout.decode('utf-8')
 
 	splitA = set(result.split("\n"))
 	splitB = set(result2.split("\n"))
