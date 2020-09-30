@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_champion.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/17 14:00:46 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/29 10:39:12 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/29 18:52:39 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@ static char		*get_champion_name(t_asm *assm)
 
 	name = NULL;
 	name = ft_strjoin(name, ft_strchr(assm->cur->line, '"') + 1);
-	// if (!name)
-	// 	handle_error("Champion name invalid");
 	assm->cur = assm->cur->next;
 	while (!ft_strchr(name, '"') && assm->cur)
 	{
@@ -34,8 +32,6 @@ static char		*get_champion_name(t_asm *assm)
 			break ;
 	}
 	*ft_strrchr(name, '"') = '\0';
-	// if (ft_strlen(name) > PROG_NAME_LENGTH)
-	// 	handle_error("Champion name too long");
 	return (name);
 }
 
@@ -49,8 +45,6 @@ static char		*get_champion_comment(t_asm *assm)
 
 	comment = NULL;
 	comment = ft_strjoin(comment, ft_strchr(assm->cur->line, '"') + 1);
-	// if (!comment)
-	// 	handle_error("Champion comment invalid");
 	assm->cur = assm->cur->next;
 	while (!ft_strchr(comment, '"') && assm->cur)
 	{
@@ -61,8 +55,6 @@ static char		*get_champion_comment(t_asm *assm)
 			break ;
 	}
 	*ft_strrchr(comment, '"') = '\0';
-	// if (ft_strlen(comment) > COMMENT_LENGTH)
-	// 	handle_error("Champion comment too long");
 	return (comment);
 }
 
@@ -77,19 +69,11 @@ void			get_name_and_comment(t_asm *assm)
 		if (assm->name && assm->comment)
 			break ;
 		if (ft_strnequ(assm->cur->line, NAME_CMD_STRING,
-			ft_strlen(NAME_CMD_STRING)))
-		{
-			// if (assm->name)
-			// 	handle_error("Name already exists");
+		ft_strlen(NAME_CMD_STRING)))
 			assm->name = get_champion_name(assm);
-		}
 		else if (ft_strnequ(assm->cur->line, COMMENT_CMD_STRING,
-			ft_strlen(COMMENT_CMD_STRING)))
-		{
-			// if (assm->comment)
-			// 	handle_error("Comment already exists");
+		ft_strlen(COMMENT_CMD_STRING)))
 			assm->comment = get_champion_comment(assm);
-		}
 		else
 			assm->cur = assm->cur->next;
 	}

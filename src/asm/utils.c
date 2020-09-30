@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/17 12:55:39 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/18 15:19:33 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/29 18:55:24 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 int			ft_isspace(int c)
 {
 	return (c == ' ' || (8 < c && c < 14));
-	// return (c == ' ' || c == '\t');
 }
 
 /*

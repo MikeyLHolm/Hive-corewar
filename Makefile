@@ -6,7 +6,7 @@
 #    By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/04/10 19:26:38 by sadawi            #+#    #+#              #
-#    Updated: 2020/09/30 10:51:12 by mlindhol         ###   ########.fr        #
+#    Updated: 2020/09/30 12:03:23 by mlindhol         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,9 +14,9 @@ NAME_ASM = asm
 NAME_CW = corewar
 NAME_DISASM = disasm
 
-CFILES_ASM = main.c convert_labels.c free_all.c \
-			get_rest.c get_champion.c get_token.c \
-			print_utils.c read_file.c tokenizer.c utils.c \
+CFILES_ASM = main.c convert_labels.c free_all.c get_rest.c \
+			get_champion.c get_token_labels.c get_token_arg_ins_size.c \
+			print_utils.c read_file.c tokenizer.c utils.c utils_atoi.c \
 			validator.c validator_args.c validator_args_utils.c \
 			validator_header.c validator_instructions.c validator_label.c \
 			validator_utils.c write_binary.c write_args.c write_header.c

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: elindber <elindber@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/29 10:37:40 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/30 11:44:19 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int				main(int argc, char **argv)
 	t_asm		*assm;
 
 	if (argc != 2 || !validate_filename(argv[1], ".s"))
-		handle_error("./asm [filename.s]");
+		handle_error("Usage: ./asm [filename.s]");
 	assm = init_assm();
 	assm->file = read_file(argv[1]);
 	validator(assm->file);
@@ -41,8 +41,6 @@ int				main(int argc, char **argv)
 	convert_labels(assm);
 	handle_writing(assm, argv[1]);
 	free_assm(assm);
-	//system("leaks asm");
-	//ft_printf("Conversion successful!\n");
 	exit(0);
 	return (0);
 }

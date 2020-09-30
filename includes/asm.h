@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   asm.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: elindber <elindber@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/17 12:41:59 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/28 17:14:55 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/30 11:19:31 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,9 @@ int				line_contains_instruction(t_file *cur);
 void			remove_file_comments(t_file *file);
 t_label			*save_labels(t_file *head, t_validator *vd);
 int				skip_label(char *line);
+int				ft_atoi_edgecase(char *str);
+int				ft_atoi_edgecase_positive(char *str);
+int				ft_atoi_edgecase_negative(char *str);
 
 /*
 **	Writers

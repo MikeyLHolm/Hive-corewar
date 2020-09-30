@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: elindber <elindber@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/07 15:15:41 by elindber          #+#    #+#             */
-/*   Updated: 2020/09/29 19:22:44 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/30 11:47:20 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,8 @@ void	write_file(int input, int output, t_command *cmnd)
 	while (i < PROG_NAME_LENGTH + 8)
 	{
 		read(input, &byte, 1);
-		if (i > 3)
-		{
-			if (byte)
-				write(output, &byte, 1);
-		}
+		if (i > 3 && byte)
+			write(output, &byte, 1);
 		i++;
 	}
 	while (i++ < PROG_NAME_LENGTH + 12)
@@ -71,6 +68,7 @@ void	write_file(int input, int output, t_command *cmnd)
 
 void	free_memory(char *name, t_command *cmnd)
 {
+	ft_printf("Writing output program to %s\n", name);
 	if (name)
 		free(name);
 	if (cmnd)
@@ -87,7 +85,7 @@ int		main(int ac, char **av)
 
 	i = 0;
 	if (ac < 2)
-		handle_error("USAGE: ./disasm [file.cor]");
+		handle_error("Usage: ./disasm [file.cor]");
 	while (++i < ac)
 	{
 		input = open(av[i], O_RDONLY);

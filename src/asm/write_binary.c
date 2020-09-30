@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/17 12:58:57 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/24 15:42:55 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/30 11:19:38 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,13 @@ void				handle_writing(t_asm *assm, char *input_filename)
 	char			*output_filename;
 
 	output_filename = get_output_filename(input_filename);
-	//check if open failed here
-	fd = open(output_filename, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-	free(output_filename);
+	if (!(fd = open(output_filename, O_WRONLY | O_CREAT | O_TRUNC, 0666)))
+		handle_error("Creating output file failed");
 	write_header(fd);
 	write_name(assm, fd);
 	write_exec_code_size(assm, fd);
 	write_comment(assm, fd);
 	write_instructions(assm, fd);
+	ft_printf("Writing output program to %s\n", output_filename);
+	free(output_filename);
 }

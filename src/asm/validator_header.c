@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validator_header.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 14:47:54 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/29 12:15:11 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/29 18:55:10 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,6 @@ static t_file		*validate_comment(t_file *cur, t_validator *vd)
 			validation_error("EOF, closing quote not found", vd->row);
 		comment = ft_strjoinfree(comment, ft_strdup("\n"));
 		comment = ft_strjoinfree(comment, ft_strdup(cur->line));
-		// does it need this?
 		if (ft_strchr(comment, '"'))
 			break ;
 	}

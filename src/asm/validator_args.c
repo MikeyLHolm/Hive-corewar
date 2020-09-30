@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validator_args.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 14:53:42 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/29 10:26:21 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/29 18:45:43 by elindber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,6 @@ void			validate_dir_value(char *line, t_validator *vd)
 		r = ft_atoilong(ft_strsub(line, 1, len));
 	else if (len > 0)
 		validate_label(ft_strsub(line, 2, len), vd->row, vd->label);
-	// if (len < 1 || (line[1] != LABEL_CHAR && (r < INT_MIN || r > UINT_MAX)))
-	// 	validation_error("Direct value not an int or label", vd->row);
 	free(line);
 }
 
@@ -108,8 +106,6 @@ void			validate_ind_value(char *line, t_validator *vd)
 		r = ft_atoilong(ft_strsub(line, 0, len));
 	else if (len > 0)
 		validate_label(ft_strsub(line, 1, len), vd->row, vd->label);
-	// if (len < 1 || (line[0] != LABEL_CHAR && (r < INT_MIN || r > UINT_MAX)))
-	// 	validation_error("Indirect value not an int or label", vd->row);
 	free(line);
 }
 
