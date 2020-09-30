@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 18:03:47 by sadawi            #+#    #+#             */
-/*   Updated: 2020/09/29 18:50:07 by elindber         ###   ########.fr       */
+/*   Updated: 2020/09/30 11:18:25 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,14 @@ int				main(int argc, char **argv)
 	t_asm		*assm;
 
 	if (argc != 2 || !validate_filename(argv[1], ".s"))
-		handle_error("./asm [filename.s]");
+		handle_error("Usage: ./asm [filename.s]");
 	assm = init_assm();
 	assm->file = read_file(argv[1]);
 	validator(assm->file);
 	tokenize_file(assm);
 	convert_labels(assm);
 	handle_writing(assm, argv[1]);
+	
 	free_assm(assm);
 	exit(0);
 	return (0);
