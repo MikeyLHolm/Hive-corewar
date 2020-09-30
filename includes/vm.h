@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/30 12:26:17 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/30 12:27:48 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,8 +196,10 @@ void					check_duplicate_n(t_player *head, t_vm *vm);
 void					validate_player(t_player *player);
 
 /*
-**	remove these!
+**	...
 */
+
+
 
 void					display_list(t_player *head);
 
@@ -245,11 +247,11 @@ t_vm					*init_vm(void);
 
 void					check_magic_header(int fd);
 
-char					*get_player_name(int fd);
+// char					*get_player_name(int fd);
 
-int						get_player_size(int fd);
+// int						get_player_size(int fd);
 
-char					*get_player_comment(int fd);
+// char					*get_player_comment(int fd);
 
 void					get_player_info(t_player *player);
 
@@ -259,7 +261,7 @@ void					print_player_code(t_player *player);
 
 void					print_player(t_player *player);
 
-void					manually_create_players(t_vm *vm);
+// void					manually_create_players(t_vm *vm);
 
 void					load_players(t_vm *vm);
 
@@ -314,6 +316,9 @@ void					state_get_lives(t_vm *vm, t_state *state);
 
 int						*get_changed_memory(t_vm *vm, t_state *prev);
 
+unsigned char			*resize_memory(unsigned char *player_code, int size,
+							int size_to_add);
+
 t_state					*new_state(t_vm *vm, t_state *prev);
 
 void					save_state(t_vm *vm);
@@ -335,6 +340,16 @@ void					handle_cycle_carriages(t_vm *vm);
 void					battle_loop(t_vm *vm);
 
 void					print_arena(t_vm *vm);
+
+/*
+**	Printers
+*/
+
+void					print_usage(void);
+
+/*
+** Visualizer
+*/
 
 void					init_visualizer(t_vm *vm);
 

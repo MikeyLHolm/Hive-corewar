@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 09:48:01 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/29 16:06:15 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/30 10:52:29 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,22 @@ void		check_flags_valid(t_vm *vm)
 		handle_error("Memory dumping not possible with visualizer");
 	if (vm->flags & START && (!(vm->flags & ADV_VISUALIZER)))
 		handle_error("Start flag only valid with advanced visualizer");
+}
+
+t_player	*save_player(t_vm *vm, char *filename, char *n)
+{
+	t_player	*player;
+	static int	id;
+
+	(void)vm;
+	if (!(player = (t_player*)ft_memalloc(sizeof(t_player))))
+		handle_error("Malloc failed at save_player.");
+	player->id = ++id;
+	validate_filename(filename, ".cor");
+	player->filename = filename;
+	player->player_nbr = n ? ft_atoi(n) : 0;
+	get_player_info(player);
+	return (player);
 }
 
 /*

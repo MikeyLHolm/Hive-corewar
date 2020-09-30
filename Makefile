@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: elindber <elindber@student.hive.fi>        +#+  +:+       +#+         #
+#    By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/04/10 19:26:38 by sadawi            #+#    #+#              #
-#    Updated: 2020/09/30 11:20:01 by elindber         ###   ########.fr        #
+#    Updated: 2020/09/30 12:07:19 by mlindhol         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,14 +24,18 @@ CFILES_ASM = main.c convert_labels.c free_all.c get_rest.c \
 SRCS_ASM = $(addprefix src/asm/, $(CFILES_ASM))
 OBJS_ASM = $(addprefix objs/, $(notdir $(SRCS_ASM:.c=.o)))
 
-CFILES_CW = main.c \
+CFILES_CW = main.c arena.c battle_loop.c battle_loop_utils.c carriage.c \
+			check_args.c get_player.c memory.c print.c \
+			save_state.c statement.c statement_utils.c vm_utils.c  \
 			input_parse.c input_sort.c input_utils.c validate_players.c \
-			visualize.c \
 			op/add.c op/aff.c op/and.c op/fork.c op/ld.c op/ldi.c op/lfork.c \
 			op/live.c op/lld.c op/lldi.c op/or.c op/st.c op/sti.c op/sub.c \
 			op/xor.c op/zjmp.c \
-			op_get_direct.c op_get_indirect.c op_get_registry.c \
-			op_ldi_lldi_utils.c op_st_sti_utils.c op_utils.c
+			op/op_get_direct.c op/op_get_indirect.c op/op_get_registry.c \
+			op/op_ldi_lldi_utils.c op/op_st_sti_utils.c op/op_utils.c \
+			vfx/vfx.c vfx/vfx_draw.c vfx/vfx_get.c vfx/vfx_print_arena.c \
+			vfx/vfx_print_player.c vfx/vfx_print_utils.c vfx/vfx_state.c \
+			vfx/vfx_utils.c\
 
 SRCS_CW = $(addprefix src/vm/, $(CFILES_CW))
 OBJS_CW = $(addprefix objs/, $(notdir $(SRCS_CW:.c=.o)))
@@ -41,7 +45,7 @@ SRCS_DISASM = $(addprefix src/disasm/, $(CFILES_DISASM))
 OBJS_DISASM = $(addprefix objs/, $(notdir $(SRCS_DISASM:.c=.o)))
 
 INCLUDES = -I libft/includes -I includes
-FLAGS = -Wall -Wextra -Werror -g
+FLAGS = -Wall -Wextra -Werror
 RUN_LIB = make --no-print-directory -C libft/
 
 all:
