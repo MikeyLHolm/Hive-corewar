@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_token.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/17 13:45:03 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/29 19:15:06 by elindber         ###   ########.fr       */
+/*   Updated: 2020/09/30 11:05:59 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,12 @@ char	*get_token_label(char *line)
 	return (ft_strsub(line, 0, i));
 }
 
+char	**revert_file_line(t_asm *assm, t_file *prev, char **arr)
+{
+	assm->cur = prev;
+	return (arr);
+}
+
 char	**get_token_labels(t_asm *assm)
 {
 	int		i;
@@ -158,30 +164,17 @@ char	**get_token_labels(t_asm *assm)
 	while (1)
 	{
 		if (!assm->cur)
-		{
-			assm->cur = prev;
-			return (arr);
-		}
+			return (revert_file_line(assm, prev, arr));
 		while (assm->cur->line[i] && assm->cur->line[i] != LABEL_CHAR)
-		{
 			if (!ft_strchr(LABEL_CHARS, assm->cur->line[i++]))
-			{
-				assm->cur = prev;
-				return (arr);
-			}
-		}
+				return (revert_file_line(assm, prev, arr));
 		if (assm->cur->line[i] == LABEL_CHAR)
 			arr = resize_2d_array(arr, ft_strsub(assm->cur->line, 0, i));
 		while (assm->cur->line[++i])
-		{
 			if (!ft_isspace(assm->cur->line[i]))
 				break ;
-		}
 		if (assm->cur->line[i])
-		{
-			assm->cur = prev;
-			return (arr);
-		}
+			return (revert_file_line(assm, prev, arr));
 		prev = assm->cur;
 		assm->cur = assm->cur->next;
 		i = 0;
