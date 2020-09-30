@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   arena.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 10:34:56 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/30 16:22:48 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/30 16:39:47 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	load_players(t_vm *vm)
 	offset = MEM_SIZE / vm->player_amount;
 	while (i < vm->player_amount)
 	{
-		if (i * offset + cur_player->size > MEM_SIZE)
+		if (i * offset + cur_player->size >= MEM_SIZE)
 			handle_error("Player does not fit into arena");
 		ft_memcpy(&vm->arena[i++ * offset], cur_player->code, cur_player->size);
 		cur_player = cur_player->next;
