@@ -71,10 +71,6 @@ yellow = '\033[93m'
 # Set test directory and verify existance
 test_dir = sys.argv[1] + "/"
 
-print (test_dir)
-print (asm_path)
-print (asm_orig_path)
-
 if os.path.exists(test_dir):
     print (blue + "running tester on path: " + test_dir + endc)
 else:
