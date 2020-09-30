@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elindber <elindber@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/07 15:15:41 by elindber          #+#    #+#             */
-/*   Updated: 2020/09/29 19:30:25 by elindber         ###   ########.fr       */
+/*   Updated: 2020/09/30 11:21:33 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ int		main(int ac, char **av)
 
 	i = 0;
 	if (ac < 2)
-		handle_error("USAGE: ./disasm [file.cor]");
+		handle_error("Usage: ./disasm [file.cor]");
 	while (++i < ac)
 	{
 		input = open(av[i], O_RDONLY);
@@ -98,6 +98,7 @@ int		main(int ac, char **av)
 		name = ft_strjoin(av[i], ".s");
 		output = open(name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		write_file(input, output, cmnd);
+		ft_printf("Writing output program to %s\n", name);
 		free_memory(name, cmnd);
 	}
 	return (0);
