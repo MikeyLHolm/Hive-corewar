@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/30 08:44:21 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/30 09:21:40 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,13 @@ void	handle_error(char *message)
 	system("leaks corewar");
 	exit(1);
 }
+
+void		validate_filename(char *filename, char *extension)
+{
+	if (!(ft_strequ(ft_strrchr(filename, '.'), extension)))
+		handle_error("File extension not .cor");
+}
+
 
 void		init_controls(t_vm *vm)
 {
@@ -58,101 +65,6 @@ void	check_magic_header(int fd)
 	buf[2] != ((unsigned char*)&magic_num)[1] ||
 	buf[3] != ((unsigned char*)&magic_num)[0])
 		handle_error("Magic header is incorrect");
-}
-
-char	*get_player_name(int fd)
-{
-	char buf[PROG_NAME_LENGTH + 4];
-
-	if (read(fd, buf, PROG_NAME_LENGTH + 4) != PROG_NAME_LENGTH + 4)
-		handle_error("File ended too soon");
-	return (ft_strdup(buf));
-}
-
-int		get_player_size(int fd)
-{
-	unsigned char	buf[4];
-	int				size;
-
-	if (read(fd, buf, 4) != 4)
-		handle_error("File ended too soon");
-	size = buf[3];
-	size += buf[2] * 16 * 16;
-	size += buf[1] * 16 * 16 * 16 * 16;
-	size += buf[0] * 16 * 16 * 16 * 16 * 16 * 16;
-	if (size > CHAMP_MAX_SIZE)
-		handle_error("Player exceeds maximum champion size");
-	return (size);
-}
-
-char	*get_player_comment(int fd)
-{
-	char buf[COMMENT_LENGTH + 4];
-
-	if (read(fd, buf, COMMENT_LENGTH + 4) != COMMENT_LENGTH + 4)
-		handle_error("File ended too soon");
-	return (ft_strdup(buf));
-}
-
-unsigned char	*resize_memory(unsigned char *player_code, int size,
-	int size_to_add)
-{
-	unsigned char *tmp;
-
-	if (!(tmp = malloc(size + size_to_add)))
-		handle_error("Malloc failed");
-	ft_memcpy(tmp, player_code, size);
-	free(player_code);
-	return (tmp);
-}
-
-unsigned char	*get_player_code(t_player *player, int fd, int amount_read,
-int total_read)
-{
-	char			buf[BUFFER_SIZE];
-	unsigned char	*player_code;
-
-	player_code = NULL;
-	while ((amount_read = read(fd, buf, BUFFER_SIZE)) > 0)
-	{
-		if (!player_code)
-		{
-			if (!(player_code = malloc(amount_read)))
-				handle_error("Malloc failed");
-			ft_memcpy(player_code, buf, amount_read);
-		}
-		else
-		{
-			player_code = resize_memory(player_code, total_read, amount_read);
-			ft_memcpy(&player_code[total_read], buf, amount_read);
-		}
-		total_read += amount_read;
-		if (amount_read != BUFFER_SIZE)
-			break ;
-	}
-	if (total_read != player->size)
-		handle_error("Player size does not match code size");
-	return (player_code);
-}
-
-void	get_player_info(t_player *player)
-{
-	int fd;
-
-	if (((fd = open(player->filename, O_RDONLY)) == -1))
-		handle_error("PLayer file could not be opened");
-	check_magic_header(fd);
-	player->name = get_player_name(fd);
-	player->size = get_player_size(fd);
-	player->comment = get_player_comment(fd);
-	player->code = get_player_code(player, fd, 0, 0);
-	validate_player(player);
-}
-
-void		validate_filename(char *filename, char *extension)
-{
-	if (!(ft_strequ(ft_strrchr(filename, '.'), extension)))
-		handle_error("File extension not .cor");
 }
 
 t_player	*save_player(t_vm *vm, char *filename, char *n)
@@ -196,16 +108,16 @@ void	print_player(t_player *player)
 	print_player_code(player);
 }
 
-void	manually_create_players(t_vm *vm)
-{
-	t_player *player;
+// void	manually_create_players(t_vm *vm)
+// {
+// 	t_player *player;
 
-	vm->player_amount = 2;
-	player = save_player(vm, "test.cor", NULL);
-	player->next = save_player(vm, "test.cor", NULL);
-	vm->players = player;
-	vm->player_last_alive = vm->player_amount;
-}
+// 	vm->player_amount = 2;
+// 	player = save_player(vm, "test.cor", NULL);
+// 	player->next = save_player(vm, "test.cor", NULL);
+// 	vm->players = player;
+// 	vm->player_last_alive = vm->player_amount;
+// }
 
 void	load_players(t_vm *vm)
 {
@@ -220,51 +132,6 @@ void	load_players(t_vm *vm)
 	{
 		ft_memcpy(&vm->arena[i++ * offset], cur_player->code, cur_player->size);
 		cur_player = cur_player->next;
-	}
-}
-
-t_carriage	*new_carriage(int id, t_carriage *next)
-{
-	t_carriage *carriage;
-
-	if (!(carriage = (t_carriage*)ft_memalloc(sizeof(t_carriage))))
-		handle_error("Malloc failed");
-	if (REG_NUMBER)
-		carriage->reg[0] = id * -1;
-	carriage->id = id;
-	carriage->alive = 1;
-	carriage->next = next;
-	return (carriage);
-}
-
-void	init_carriages(t_vm *vm)
-{
-	t_carriage	*head;
-	t_player	*cur_player;
-
-	head = NULL;
-	cur_player = vm->players;
-	while (cur_player)
-	{
-		head = new_carriage(cur_player->id, head);
-		cur_player = cur_player->next;
-	}
-	vm->carriages = head;
-}
-
-void	set_carriage_positions(t_vm *vm)
-{
-	t_carriage	*cur_carriage;
-	int			offset;
-	int			i;
-
-	i = vm->player_amount - 1;
-	offset = MEM_SIZE / vm->player_amount;
-	cur_carriage = vm->carriages;
-	while (cur_carriage)
-	{
-		cur_carriage->position = i-- * offset;
-		cur_carriage = cur_carriage->next;
 	}
 }
 
@@ -357,90 +224,11 @@ int		check_carriages_alive(t_vm *vm)
 	return (0);
 }
 
-void	get_statement(t_vm *vm, t_carriage *cur)
-{
-	cur->statement = vm->arena[cur->position];
-	if (cur->statement > 0 && cur->statement <= OP_CODE_AMOUNT)
-		cur->cycles_left = g_op_tab[cur->statement - 1].cycles;
-}
-
-void	set_statement_codes(t_vm *vm, t_carriage *cur)
-{
-	if (!cur->cycles_left)
-		get_statement(vm, cur);
-}
-
 void	reduce_cycles(t_vm *vm, t_carriage *cur)
 {
 	(void)vm;
 	if (cur->cycles_left)
 		cur->cycles_left--;
-}
-
-int		check_argument_indirect(t_carriage *cur, int *offset, int n)
-{
-	if (!(g_op_tab[cur->statement - 1].args_type[n] & T_IND))
-		return (0);
-	*offset += 2;
-	return (1);
-}
-
-int		check_argument_registry(t_vm *vm, t_carriage *cur, int *offset, int n)
-{
-	if (vm->arena[(cur->position + *offset) % MEM_SIZE] <= 0
-	|| vm->arena[(cur->position + *offset) % MEM_SIZE] > REG_NUMBER)
-		return (0);
-	if (!(g_op_tab[cur->statement - 1].args_type[n] & T_REG))
-		return (0);
-	*offset += 1;
-	return (1);
-}
-
-int		check_argument_direct(t_carriage *cur, int *offset, int n)
-{
-	if (!(g_op_tab[cur->statement - 1].args_type[n] & T_DIR))
-		return (0);
-	if (g_op_tab[cur->statement - 1].size_t_dir)
-		*offset += 2;
-	else
-		*offset += 4;
-	return (1);
-}
-
-int		check_argument_type_code(t_vm *vm, t_carriage *cur)
-{
-	int				offset;
-	int				n;
-	int				bit;
-	int				return_value;
-
-	offset = 2;
-	n = 0;
-	bit = 7;
-	while (n < g_op_tab[cur->statement - 1].args_n)
-	{
-		if (((cur->act >> bit) & 0x01) && ((cur->act >> (bit - 1)) & 0x01))
-			return_value = check_argument_indirect(cur, &offset, n);
-		else if (!((cur->act >> bit) & 1) && ((cur->act >> (bit - 1)) & 0x01))
-			return_value = check_argument_registry(vm, cur, &offset, n);
-		else if (((cur->act >> bit) & 1) && !((cur->act >> (bit - 1)) & 0x01))
-			return_value = check_argument_direct(cur, &offset, n);
-		else
-			return (0);
-		if (!return_value)
-			return (0);
-		bit -= 2;
-		n++;
-	}
-	return (1);
-}
-
-int		check_arguments_valid(t_vm *vm, t_carriage *cur)
-{
-	if (g_op_tab[cur->statement - 1].args_type_code)
-		if (!check_argument_type_code(vm, cur))
-			return (0);
-	return (1);
 }
 
 int		skip_direct_bytes(t_carriage *cur)
@@ -480,56 +268,6 @@ void	count_bytes_to_skip(t_carriage *cur)
 	}
 }
 
-void	move_carriage_next_statement(t_carriage *cur)
-{
-	if (cur->statement != 9 || !cur->carry)
-		cur->position = (cur->position + cur->bytes_to_jump) % MEM_SIZE;
-	cur->bytes_to_jump = 0;
-}
-
-void	execute_statement(t_vm *vm, t_carriage *cur)
-{
-	cur->statement == LIVE ? op_live(vm, cur) : 0;
-	cur->statement == LD ? op_ld(vm, cur) : 0;
-	cur->statement == ST ? op_st(vm, cur) : 0;
-	cur->statement == ADD ? op_add(vm, cur) : 0;
-	cur->statement == SUB ? op_sub(vm, cur) : 0;
-	cur->statement == AND ? op_and(vm, cur) : 0;
-	cur->statement == OR ? op_or(vm, cur) : 0;
-	cur->statement == XOR ? op_xor(vm, cur) : 0;
-	cur->statement == ZJMP ? op_zjmp(vm, cur) : 0;
-	cur->statement == LDI ? op_ldi(vm, cur) : 0;
-	cur->statement == STI ? op_sti(vm, cur) : 0;
-	cur->statement == FORK ? op_fork(vm, cur) : 0;
-	cur->statement == LLD ? op_lld(vm, cur) : 0;
-	cur->statement == LLDI ? op_lldi(vm, cur) : 0;
-	cur->statement == LFORK ? op_lfork(vm, cur) : 0;
-	cur->statement == AFF ? op_aff(vm, cur) : 0;
-}
-
-void	handle_statement(t_vm *vm, t_carriage *cur)
-{
-	if (cur->statement > 0 && cur->statement <= OP_CODE_AMOUNT)
-	{
-		cur->act = (vm->arena[(cur->position + 1) % MEM_SIZE]);
-		if (check_arguments_valid(vm, cur))
-			execute_statement(vm, cur);
-		count_bytes_to_skip(cur);
-		move_carriage_next_statement(cur);
-	}
-	else
-		cur->position = (cur->position + 1) % MEM_SIZE;
-}
-
-void	perform_statements(t_vm *vm, t_carriage *cur)
-{
-	if (cur->alive)
-	{
-		if (!cur->cycles_left)
-			handle_statement(vm, cur);
-	}
-}
-
 void	get_winner(t_vm *vm)
 {
 	t_player *cur_player;
@@ -545,112 +283,7 @@ void	get_winner(t_vm *vm)
 		cur_player->id, cur_player->name);
 }
 
-void	state_get_lives(t_vm *vm, t_state *state)
-{
-	t_player *cur_player;
 
-	cur_player = vm->players;
-	state->player1_last_live = cur_player ? cur_player->last_live_cycle : 0;
-	cur_player = cur_player ? cur_player->next : cur_player;
-	state->player2_last_live = cur_player ? cur_player->last_live_cycle : 0;
-	cur_player = cur_player ? cur_player->next : cur_player;
-	state->player3_last_live = cur_player ? cur_player->last_live_cycle : 0;
-	cur_player = cur_player ? cur_player->next : cur_player;
-	state->player4_last_live = cur_player ? cur_player->last_live_cycle : 0;
-	cur_player = cur_player ? cur_player->next : cur_player;
-	state->last_live_player = vm->player_last_alive;
-}
-
-int		count_carriages(t_vm *vm)
-{
-	t_carriage	*cur;
-	int			j;
-
-	j = 0;
-	cur = vm->carriages;
-	while (cur)
-	{
-		j++;
-		cur = cur->next;
-	}
-	return (j);
-}
-
-int		*get_changed_memory(t_vm *vm, t_state *prev)
-{
-	int	i;
-	int	*changed_mem;
-
-	if (!(changed_mem = (int*)ft_memalloc(sizeof(int) * MEM_SIZE)))
-		handle_error("Malloc failed");
-	i = 0;
-	if (prev)
-	{
-		i = 0;
-		while (i < MEM_SIZE)
-		{
-			if (vm->updated_changed_mem[i])
-				changed_mem[i] = vm->updated_changed_mem[i];
-			else
-				changed_mem[i] = prev->changed_mem[i] - 1 > 0 ?
-					prev->changed_mem[i] - 1 : 0;
-			i++;
-		}
-	}
-	ft_bzero(vm->updated_changed_mem, MEM_SIZE * sizeof(int));
-	return (changed_mem);
-}
-
-t_state	*new_state(t_vm *vm, t_state *prev)
-{
-	t_state	*state;
-	int		i;
-
-	if (!(state = (t_state*)ft_memalloc(sizeof(t_state))))
-		handle_error("Malloc failed");
-	i = 0;
-	while (i < MEM_SIZE)
-	{
-		state->arena[i] = vm->arena[i];
-		i++;
-	}
-	state->cursor_mem = get_cursor_mem(vm, prev);
-	state->color_mem = get_color_mem(vm, prev);
-	state->changed_mem = get_changed_memory(vm, prev);
-	state->carriage_amount = count_carriages(vm);
-	state->cycle = vm->cycles;
-	state->cycles_to_die = vm->cycles_to_die;
-	state->prev = prev;
-	state_get_lives(vm, state);
-	return (state);
-}
-
-void	save_state(t_vm *vm)
-{
-	if (!vm->arena_history_head)
-	{
-		vm->arena_history_head = new_state(vm, NULL);
-		vm->cur_state = vm->arena_history_head;
-	}
-	else
-	{
-		vm->cur_state->next = new_state(vm, vm->cur_state);
-		vm->cur_state = vm->cur_state->next;
-	}
-}
-
-void	update_changed_memory(t_vm *vm)
-{
-	int i;
-
-	i = 0;
-	while (i < MEM_SIZE)
-	{
-		if (vm->changed_mem[i] > 0)
-			vm->changed_mem[i]--;
-		i++;
-	}
-}
 
 void	dump_memory(t_vm *vm)
 {
