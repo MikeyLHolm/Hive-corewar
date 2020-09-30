@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/29 16:05:34 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/30 08:39:14 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,8 +197,10 @@ void					check_duplicate_n(t_player *head, t_vm *vm);
 void					validate_player(t_player *player);
 
 /*
-**	remove these!
+**	...
 */
+
+
 
 void					display_list(t_player *head);
 
@@ -336,6 +338,10 @@ void					handle_cycle_carriages(t_vm *vm);
 void					battle_loop(t_vm *vm);
 
 void					print_arena(t_vm *vm);
+
+/*
+** Visualizer
+*/
 
 void					init_visualizer(t_vm *vm);
 

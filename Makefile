@@ -6,7 +6,7 @@
 #    By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/04/10 19:26:38 by sadawi            #+#    #+#              #
-#    Updated: 2020/09/29 15:58:07 by mlindhol         ###   ########.fr        #
+#    Updated: 2020/09/30 08:49:39 by mlindhol         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,12 +26,13 @@ OBJS_ASM = $(addprefix objs/, $(notdir $(SRCS_ASM:.c=.o)))
 
 CFILES_CW = main.c \
 			input_parse.c input_sort.c input_utils.c validate_players.c \
-			visualize.c \
 			op/add.c op/aff.c op/and.c op/fork.c op/ld.c op/ldi.c op/lfork.c \
 			op/live.c op/lld.c op/lldi.c op/or.c op/st.c op/sti.c op/sub.c \
 			op/xor.c op/zjmp.c \
 			op_get_direct.c op_get_indirect.c op_get_registry.c \
-			op_ldi_lldi_utils.c op_st_sti_utils.c op_utils.c
+			op_ldi_lldi_utils.c op_st_sti_utils.c op_utils.c \
+			vfx.c vfx_draw.c vfx_get.c vfx_print_arena.c vfx_print_player.c \
+			vfx_state.c vfx_utils.c\
 
 SRCS_CW = $(addprefix src/vm/, $(CFILES_CW))
 OBJS_CW = $(addprefix objs/, $(notdir $(SRCS_CW:.c=.o)))

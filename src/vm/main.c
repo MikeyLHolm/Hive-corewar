@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 13:26:04 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/28 12:44:25 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/30 08:44:21 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -684,21 +684,6 @@ void	print_cycle_loading(t_vm *vm)
 	clear();
 }
 
-void	handle_visualization(t_vm *vm)
-{
-	if (vm->flags & VISUALIZER)
-		visualize(vm);
-	if (vm->flags & ADV_VISUALIZER)
-		save_state(vm);
-}
-
-void	save_visualizer_memory(t_vm *vm)
-{
-	vm->color_mem = get_color_mem_old(vm, vm->color_mem);
-	vm->cursor_mem = get_cursor_mem_old(vm, vm->cursor_mem);
-	update_changed_memory(vm);
-}
-
 void	handle_cycle_carriages(t_vm *vm)
 {
 	t_carriage *cur;
@@ -744,33 +729,6 @@ void	print_arena(t_vm *vm)
 		ft_printf("%02x ", (unsigned char)vm->arena[i++]);
 		if (!(i % 64))
 			ft_printf("\n");
-	}
-}
-
-void	init_visualizer(t_vm *vm)
-{
-	(void)vm;
-	initscr();
-	noecho();
-	curs_set(0);
-	keypad(stdscr, true);
-	if (has_colors())
-	{
-		use_default_colors();
-		start_color();
-		init_pair(1, -1, COLOR_BLUE);
-		init_pair(2, -1, COLOR_GREEN);
-		init_pair(3, -1, COLOR_RED);
-		init_pair(4, -1, COLOR_YELLOW);
-		init_pair(5, COLOR_BLUE, -1);
-		init_pair(6, COLOR_GREEN, -1);
-		init_pair(7, COLOR_RED, -1);
-		init_pair(8, COLOR_YELLOW, -1);
-		init_pair(9, COLOR_WHITE, COLOR_WHITE);
-		init_pair(10, COLOR_BLUE, COLOR_WHITE);
-		init_pair(11, COLOR_GREEN, COLOR_WHITE);
-		init_pair(12, COLOR_RED, COLOR_WHITE);
-		init_pair(13, COLOR_YELLOW, COLOR_WHITE);
 	}
 }
 
