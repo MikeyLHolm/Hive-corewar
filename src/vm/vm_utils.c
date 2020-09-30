@@ -6,7 +6,7 @@
 /*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 10:26:43 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/30 10:46:27 by mlindhol         ###   ########.fr       */
+/*   Updated: 2020/09/30 12:58:34 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 void		handle_error(char *message)
 {
 	ft_fprintf(2, "%s.\n", message);
-	//system("leaks corewar");
 	exit(1);
 }
 

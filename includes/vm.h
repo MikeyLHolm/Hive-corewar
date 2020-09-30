@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/26 12:58:05 by mlindhol          #+#    #+#             */
-/*   Updated: 2020/09/30 12:27:48 by sadawi           ###   ########.fr       */
+/*   Updated: 2020/09/30 13:03:33 by mlindhol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,8 +199,6 @@ void					validate_player(t_player *player);
 **	...
 */
 
-
-
 void					display_list(t_player *head);
 
 int						count_carriages(t_vm *vm);
@@ -247,12 +245,6 @@ t_vm					*init_vm(void);
 
 void					check_magic_header(int fd);
 
-// char					*get_player_name(int fd);
-
-// int						get_player_size(int fd);
-
-// char					*get_player_comment(int fd);
-
 void					get_player_info(t_player *player);
 
 void					validate_filename(char *filename, char *extension);
@@ -261,7 +253,7 @@ void					print_player_code(t_player *player);
 
 void					print_player(t_player *player);
 
-// void					manually_create_players(t_vm *vm);
+void					manually_create_players(t_vm *vm);
 
 void					load_players(t_vm *vm);
 
