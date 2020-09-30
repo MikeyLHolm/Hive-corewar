@@ -6,7 +6,7 @@
 #    By: mlindhol <mlindhol@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/04/10 19:26:38 by sadawi            #+#    #+#              #
-#    Updated: 2020/09/30 12:03:23 by mlindhol         ###   ########.fr        #
+#    Updated: 2020/09/30 12:07:19 by mlindhol         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,8 +33,9 @@ CFILES_CW = main.c arena.c battle_loop.c battle_loop_utils.c carriage.c \
 			op/xor.c op/zjmp.c \
 			op/op_get_direct.c op/op_get_indirect.c op/op_get_registry.c \
 			op/op_ldi_lldi_utils.c op/op_st_sti_utils.c op/op_utils.c \
-			vfx.c vfx_draw.c vfx_get.c vfx_print_arena.c vfx_print_player.c \
-			vfx_print_utils.c vfx_state.c vfx_utils.c\
+			vfx/vfx.c vfx/vfx_draw.c vfx/vfx_get.c vfx/vfx_print_arena.c \
+			vfx/vfx_print_player.c vfx/vfx_print_utils.c vfx/vfx_state.c \
+			vfx/vfx_utils.c\
 
 SRCS_CW = $(addprefix src/vm/, $(CFILES_CW))
 OBJS_CW = $(addprefix objs/, $(notdir $(SRCS_CW:.c=.o)))
@@ -44,7 +45,7 @@ SRCS_DISASM = $(addprefix src/disasm/, $(CFILES_DISASM))
 OBJS_DISASM = $(addprefix objs/, $(notdir $(SRCS_DISASM:.c=.o)))
 
 INCLUDES = -I libft/includes -I includes
-FLAGS = -Wall -Wextra -Werror -g
+FLAGS = -Wall -Wextra -Werror
 RUN_LIB = make --no-print-directory -C libft/
 
 all:
