@@ -70,8 +70,7 @@ make
 
 ## Grade
 
-**/ 100**
+**125 / 100**
 
 
-
-_under construction since August 2020_
+_Completed: October 1st 2020_
