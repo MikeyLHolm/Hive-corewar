@@ -3,7 +3,7 @@
  
  This is the final project of the algorithm branch in Hive's Foundation part of studies. Onwards to Internships and Mastery studies...
  
-![Visualizer](https://github.com/MikeyLHolm/Hive-corewar/blob/master/cw_vfx.png)
+![Visualizer](https://github.com/MikeyLHolm/Hive-corewar/blob/master/cw.gif)
 
 
 ## Objectives
